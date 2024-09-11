@@ -1,0 +1,127 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <cc:attribute  name="value" required="true"  />
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <div class="ui-xl-2 ui-lg-4 ui-md-6 ui-g-12" >
+            <div class="widget-internal" >
+                <div class="text-left">
+                    <h:outputText value="#{texto.texto(662)}" styleClass="widget-title" />    
+                </div>
+                <hr/>
+                <div class="widget-body text-right text-big">
+                    <p:commandLink 
+                        styleClass="text-big"
+                        value="#{qoopoFormater.formatearMoneda(cc.attrs.value.totalVendido)}" 
+                        actionListener="#{facturasClientesBean.filtrarContacto(cc.attrs.value)}"
+                        update=":frmMain"                                                     
+                        oncomplete="window.location.href='/facturacion/facturas/facturasClientes.jsf'">                            
+                        <f:setPropertyActionListener value="1" target="#{facturasClientesBean.viewOption.value}" />  
+                    </p:commandLink>
+                </div>
+            </div>
+        </div>
+        <div class="ui-xl-2 ui-lg-4 ui-md-6 ui-g-12" >
+            <div class="widget-internal" >
+                <div class="text-left">
+                    <h:outputText value="#{texto.texto(660)}" styleClass="widget-title" />    
+                </div>
+                <hr/>
+                <div class="widget-body text-right text-big">
+                    <p:commandLink 
+                        styleClass="text-big"
+                        value="#{qoopoFormater.formatearMoneda(cc.attrs.value.valorPorCobrar)}" 
+                        actionListener="#{facturasClientesBean.filtrarContacto(cc.attrs.value)}"
+                        update=":frmMain"                                                     
+                        oncomplete="window.location.href='/facturacion/facturas/facturasClientes.jsf'">                            
+                        <f:setPropertyActionListener value="1" target="#{facturasClientesBean.viewOption.value}" />  
+                    </p:commandLink>
+                </div>
+            </div>
+        </div>
+        <div class="ui-xl-2 ui-lg-4 ui-md-6 ui-g-12" >
+            <div class="widget-internal" >
+                <div class="text-left">
+                    <h:outputText value="#{texto.texto(1917)}" styleClass="widget-title" />    
+                </div>
+                <hr/>
+                <div class="widget-body text-right text-big">
+                    <p:commandLink 
+                        styleClass="text-big"
+                        value="#{qoopoFormater.formatearNumero(cc.attrs.value.numeroOportunidades)}/#{qoopoFormater.formatearMoneda(cc.attrs.value.valorOportunidades)}" 
+                        actionListener="#{oportunidadesBean.filtrarContacto(cc.attrs.value)}"
+                        update=":frmMain"                                                     
+                        oncomplete="window.location.href='/ventas/oportunidades.jsf'">                            
+                        <f:setPropertyActionListener value="2" target="#{oportunidadesBean.viewOption.value}" />  
+                    </p:commandLink>
+
+                </div>
+            </div>
+        </div>                                
+        <div class="ui-xl-2 ui-lg-4 ui-md-6 ui-g-12" >
+            <div class="widget-internal" >
+                <div class="text-left">
+                    <h:outputText value="#{texto.texto(1247)}" styleClass="widget-title" />    
+                </div>
+                <hr/>
+                <div class="widget-body text-right text-big">                   
+                    <p:commandLink 
+                        styleClass="text-big"
+                        value="#{qoopoFormater.formatearNumero(cc.attrs.value.numeroSuscripciones)}/#{qoopoFormater.formatearMoneda(cc.attrs.value.valorSuscripciones)}" 
+                        actionListener="#{suscripcionesBean.filtrarContacto(cc.attrs.value)}"
+                        update=":frmMain"                                                     
+                        oncomplete="window.location.href='/suscripciones/suscripciones.jsf'">                            
+                        <f:setPropertyActionListener value="1" target="#{suscripcionesBean.viewOption.value}" />  
+                    </p:commandLink>
+                </div>
+            </div>
+        </div>                                
+
+        <div class="ui-xl-2 ui-lg-4 ui-md-6 ui-g-12" >
+            <div class="widget-internal" >
+                <div class="text-left">
+                    <h:outputText value="#{texto.texto(663)}" styleClass="widget-title" />    
+                </div>
+                <hr/>
+                <div class="widget-body text-right text-big">
+                    <p:commandLink 
+                        styleClass="text-big"
+                        value="#{qoopoFormater.formatearMoneda(cc.attrs.value.totalComprado)}" 
+                        actionListener="#{facturasProveedoresBean.filtrarContacto(cc.attrs.value)}"
+                        update=":frmMain"                                                     
+                        oncomplete="window.location.href='/facturacion/facturas/facturasProveedores.jsf'">                            
+                        <f:setPropertyActionListener value="1" target="#{facturasProveedoresBean.viewOption.value}" />  
+                    </p:commandLink>
+                </div>
+            </div>
+        </div>
+        <div class="ui-xl-2 ui-lg-4 ui-md-6 ui-g-12" >
+            <div class="widget-internal" >
+                <div class="text-left">
+                    <h:outputText value="#{texto.texto(661)}" styleClass="widget-title" />    
+                </div>
+                <hr/>
+                <div class="widget-body text-right text-big">
+                    <p:commandLink 
+                        styleClass="text-big"
+                        value="#{qoopoFormater.formatearMoneda(cc.attrs.value.valorPorPagar)}" 
+                        actionListener="#{facturasProveedoresBean.filtrarContacto(cc.attrs.value)}"
+                        update=":frmMain"                                                     
+                        oncomplete="window.location.href='/facturacion/facturas/facturasProveedores.jsf'">                            
+                        <f:setPropertyActionListener value="1" target="#{facturasProveedoresBean.viewOption.value}" />  
+                    </p:commandLink>
+                </div>
+            </div>
+        </div>
+    </cc:implementation>
+</html>

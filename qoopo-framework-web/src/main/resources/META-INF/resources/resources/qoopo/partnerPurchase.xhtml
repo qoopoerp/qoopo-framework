@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <cc:attribute  name="value" required="true"  />
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <div class="widget-internal">
+            <div class="text-left">
+                <h:outputText value="#{texto.texto(1919)}"  styleClass="widget-title" />
+                <p:commandLink  style="margin-left: 1rem;" actionListener="#{widComprasTercero.cargar(cc.attrs.value)}" styleClass="widget-update-btn" update=":frmMain" >
+                    <p:graphicImage rendered="true" library="imagenes" name="#{temas.temaIconos}/general/actualizar.png" width="12"   />
+                </p:commandLink>  
+            </div>
+            <hr/>    
+            <p:barChart model="#{widComprasTercero.chart.modeloBarra}" styleClass="widget-chart"/>
+        </div>
+    </cc:implementation>
+
+</html>

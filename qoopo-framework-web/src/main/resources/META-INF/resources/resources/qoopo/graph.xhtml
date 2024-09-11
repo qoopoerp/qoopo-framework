@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+    xmlns:p="http://primefaces.org/ui" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<!-- INTERFACE -->
+<cc:interface>
+    <cc:attribute name="value" required="true" />
+</cc:interface>
+
+<!-- IMPLEMENTATION -->
+<cc:implementation>
+    <div class="ui-g chart">
+        <h:panelGroup id="chart" styleClass="ui-g-12">
+            <div class="ui-g-12 top">
+                <p:selectBooleanButton title="#{texto.texto(4018)}" onIcon="pi pi-database" offIcon="pi pi-database"
+                    value="#{cc.attrs.value.stacked}">
+                    <p:ajax update="chart" listener="#{cc.attrs.value.recargar()}" />
+                </p:selectBooleanButton>
+
+                <p:selectBooleanButton title="#{texto.texto(4073)}" onIcon="pi pi-sort-amount-up-alt"
+                    offIcon="pi pi-sort-amount-up-alt" value="#{cc.attrs.value.acumular}">
+                    <p:ajax update="chart" listener="#{cc.attrs.value.recargar()}" />
+                </p:selectBooleanButton>
+
+                <p:selectBooleanButton title="#{texto.texto(4019)}" onIcon="pi pi-align-left" offIcon="pi pi-align-left"
+                    value="#{cc.attrs.value.leyenda}">
+                    <p:ajax update="chart" listener="#{cc.attrs.value.recargar()}" />
+                </p:selectBooleanButton>
+
+                <p:selectBooleanButton rendered="false" title="#{texto.texto(4020)}" onIcon="pi pi-bars"
+                    offIcon="pi pi-bars" value="#{cc.attrs.value.mostrarTitulo}">
+                    <p:ajax update="chart" listener="#{cc.attrs.value.recargar()}" />
+                </p:selectBooleanButton>
+
+                <p:menuButton icon="pi #{cc.attrs.value.iconChart}" title="#{texto.texto(1589)}">
+                    <p:menuitem icon="pi pi-chart-bar" title="#{texto.texto(1590)}" update="chart"
+                        actionListener="#{cc.attrs.value.updateOpcionGrafico(1)}" />
+                    <p:menuitem icon="pi pi-chart-line" title="#{texto.texto(1591)}" update="chart"
+                        actionListener="#{cc.attrs.value.updateOpcionGrafico(2)}" />
+                    <p:menuitem icon="pi pi-chart-pie" title="#{texto.texto(1592)}" update="chart"
+                        actionListener="#{cc.attrs.value.updateOpcionGrafico(3)}" />
+                    <p:menuitem icon="pi pi-chart-bar" title="#{texto.texto(4027)}" update="chart"
+                        actionListener="#{cc.attrs.value.updateOpcionGrafico(4)}" />
+                    <p:menuitem icon="pi pi-align-left" title="#{texto.texto(1592)}" update="chart"
+                        actionListener="#{cc.attrs.value.updateOpcionGrafico(5)}" />
+                </p:menuButton>
+
+                <p:menuButton icon="pi #{cc.attrs.value.iconSort}" title="#{texto.texto(4014)}">
+                    <p:menuitem icon="pi pi-sort-alt-slash" title="#{texto.texto(4015)}" update="chart"
+                        actionListener="#{cc.attrs.value.updateOrderType(0)}" />
+                    <p:menuitem icon="pi pi-sort-amount-up" title="#{texto.texto(4016)}" update="chart"
+                        actionListener="#{cc.attrs.value.updateOrderType(1)}" />
+                    <p:menuitem icon="pi pi-sort-amount-down-alt" title="#{texto.texto(4017)}" update="chart"
+                        actionListener="#{cc.attrs.value.updateOrderType(2)}" />
+                </p:menuButton>
+
+                <h:outputText styleClass="chart-top-item ui-sm-hidden" value="#{texto.texto(1593)}:" />
+                <div class="chart-top-item">
+                    <p:selectOneMenu value="#{cc.attrs.value.opcionMetrica.codigo}" styleClass="select">
+                        <f:selectItems value="#{cc.attrs.value.opcionesMetrica}" var="p" itemValue="#{p.codigo}"
+                            itemLabel="#{texto.texto(p.codigoTexto)}" />
+                        <p:ajax update="chart" listener="#{cc.attrs.value.recargar()}" />
+                    </p:selectOneMenu>
+                </div>
+                <h:outputText styleClass="chart-top-item ui-sm-hidden" value="#{texto.texto(1594)}:" />
+                <div class="chart-top-item ">
+                    <p:selectOneMenu value="#{cc.attrs.value.opcionGrupo.codigo}" styleClass="select">
+                        <f:selectItems value="#{cc.attrs.value.opcionesGrupo}" var="p" itemValue="#{p.codigo}"
+                            itemLabel="#{texto.texto(p.codigoTexto)}" />
+                        <p:ajax update="chart" listener="#{cc.attrs.value.recargar()}" />
+                    </p:selectOneMenu>
+                </div>
+                <h:outputText styleClass="chart-top-item ui-sm-hidden" value="#{texto.texto(1594)} 2 :" />
+                <div class="chart-top-item ">
+                    <p:selectOneMenu value="#{cc.attrs.value.opcionGrupo2.codigo}" styleClass="select">
+                        <f:selectItem itemValue="-100" itemLabel="--" noSelectionOption="true" />
+                        <f:selectItems value="#{cc.attrs.value.opcionesGrupo}" var="p" itemValue="#{p.codigo}"
+                            itemLabel="#{texto.texto(p.codigoTexto)}" />
+                        <p:ajax update="chart" listener="#{cc.attrs.value.recargar()}" />
+                    </p:selectOneMenu>
+                </div>
+            </div>
+
+            <div class="ui-g-12">
+                <p:barChart rendered="#{cc.attrs.value.opcionGrafico eq 1}" model="#{cc.attrs.value.chart.modeloBarra}"
+                    styleClass="qoopo-chart" style="max-width: 100%; max-height: 450px;" />
+                <p:lineChart rendered="#{cc.attrs.value.opcionGrafico eq 2}" model="#{cc.attrs.value.chart.modeloArea}"
+                    styleClass="qoopo-chart" style="max-width: 100%; max-height: 450px;" />
+                <p:pieChart rendered="#{cc.attrs.value.opcionGrafico eq 3}" model="#{cc.attrs.value.chart.modeloPie}"
+                    styleClass="qoopo-chart" style="max-width: 100%; max-height: 450px;" />
+                <p:barChart rendered="#{cc.attrs.value.opcionGrafico eq 4}" model="#{cc.attrs.value.chart.modeloBarra}"
+                    styleClass="widget-chart" style="max-width: 100%; max-height: 450px;" />
+                <p:barChart rendered="#{cc.attrs.value.opcionGrafico eq 5}"
+                    model="#{cc.attrs.value.chart.modeloBarraHorizontal}" styleClass="widget-chart"
+                    style="max-width: 100%; max-height: 450px;" />
+            </div>
+        </h:panelGroup>
+    </div>
+</cc:implementation>
+
+</html>

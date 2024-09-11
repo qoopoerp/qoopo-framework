@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+    xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html">
+<!-- INTERFACE -->
+<cc:interface>
+    <cc:attribute name="value" required="true" />
+    <cc:attribute name="chatter" required="true" />
+    <cc:attribute name="id" required="false" default="#{cc.attrs.value.id}" />
+    <cc:attribute name="full" required="false" default="true" />
+</cc:interface>
+
+<!-- IMPLEMENTATION -->
+<cc:implementation>
+    <p:commandLink id="btn-activities-plus-btn#{cc.attrs.id}"
+        title="#{(cc.attrs.value.metadato.activity eq null)?texto.texto(1946):cc.attrs.value.metadato.activity.nombre}">
+        <i
+            class="#{cc.attrs.value.metadato.activity.onLate?'activity-onlate':(cc.attrs.value.metadato.activity.onToday?'activity-ontoday':(cc.attrs.value.metadato.activity.onTime?'activity-ontime':''))} pi #{(cc.attrs.value.metadato.activity eq null)?'pi-clock':((cc.attrs.value.metadato.activity.tipo.icon eq null)?'pi-clock':cc.attrs.value.metadato.activity.tipo.icon)}"></i>
+        <f:setPropertyActionListener value="#{cc.attrs.value.metadato}" target="#{cc.attrs.chatter.objeto}" />
+        <h:outputText value="#{cc.attrs.value.metadato.activity.nombre}"
+            rendered="#{!(cc.attrs.value.metadato.activity eq null) and cc.attrs.full}" styleClass="ml12" />
+    </p:commandLink>
+
+    <p:overlayPanel id="g-activity-plus-panel" for="btn-activities-plus-btn#{cc.attrs.id}" style="width: 350px">
+        <ui:repeat value="#{cc.attrs.value.metadato.actividades}" var="item"
+            rendered="${cc.attrs.value.metadato.actividades.size() gt 0}">
+            <h:panelGroup rendered="#{item.estado eq 0}">
+                <div class="ui-g-12 ui-g-nopad border-bottom">
+                    <div class="ui-g-12 ui-g-nopad">
+                        <i
+                            class="pi #{item.tipo.icon} #{item.onLate?'activity-onlate':(item.onToday?'activity-ontoday':(item.onTime?'activity-ontime':''))}"></i>
+                        <h:outputText value="#{item.nombre}" title="#{item.nombre}" styleClass="ml12" />
+                        <p:commandLink rendered="#{item.tipoItem eq 1 or item.tipoItem eq 2 or item.tipoItem eq 4}"
+                            actionListener="#{cc.attrs.chatter.deleteItem(item)}" styleClass="widget-update-btn ml12"
+                            update=":frmMain">
+                            <i class="pi pi-trash"></i>
+                            <p:confirm header="#{texto.texto(1289)}" message="#{texto.texto(1290)}"
+                                icon="pi pi-exclamation-triangle" />
+                        </p:commandLink>
+
+                        <p:commandLink rendered="#{item.tipoItem eq 1 and item.estado eq 0}" id="activity-pi-check"
+                            title="#{texto.texto(1947)}" type="button" styleClass="widget-update-btn">
+                            <i class="pi pi-check"></i>
+                            <f:setPropertyActionListener value="#{cc.attrs.value.metadato}"
+                                target="#{cc.attrs.chatter.objeto}" />
+                        </p:commandLink>
+                        <p:overlayPanel rendered="#{item.tipoItem eq 1}" id="activity-plus-panel"
+                            for="activity-pi-check" style="width: 250px">
+                            <h:panelGrid columns="1">
+                                <h:outputText value="#{texto.texto(1948)}" />
+                                <p:inputTextarea id="actividadComentario" value="#{item.resumen}" />
+                                <p:commandButton value="#{texto.texto(1947)}"
+                                    actionListener="#{cc.attrs.chatter.marcarHecho(item)}" update=":frmMain" />
+                            </h:panelGrid>
+                        </p:overlayPanel>
+                    </div>
+                    <div class="ui-g-12 ui-g-nopad">
+                        <p:graphicImage rendered="false" styleClass="listaImg"
+                            value="#{imagenesBean.getPhoto(item.user.persona.foto)}" />
+                        <h:outputText value="#{item.user.nombre}" title="#{item.user.nombre}" styleClass="ml12" />
+                        <h:outputText value=" - #{qoopoFormater.formatearFechaHoraHumano(item.date)}"
+                            title="#{qoopoFormater.formatearFechaHora(item.date)}" />
+                    </div>
+                </div>
+            </h:panelGroup>
+        </ui:repeat>
+        <h:panelGroup rendered="#{!(cc.attrs.value.metadato.actividades.size() gt 0)}">
+            <div class="ui-g-12 ui-g-nopad border-bottom">
+                <h:outputText value="#{texto.texto(1959)}" />
+            </div>
+        </h:panelGroup>
+
+        <div class="ui-g-12 border-bottom">
+            <p:commandLink title="#{texto.texto(1946)}" update=":frmMain" oncomplete="PF('nuevaActividad').show();"
+                actionListener="#{cc.attrs.chatter.nuevaActividad()}">
+                <i class="pi pi-clock"></i>
+                <h:outputText value="#{texto.texto(1946)}" styleClass="ml12" />
+                <f:setPropertyActionListener value="#{cc.attrs.value.metadato}" target="#{cc.attrs.chatter.objeto}" />
+            </p:commandLink>
+        </div>
+    </p:overlayPanel>
+
+    <!--ANEXOS A SER UTILIZAOS EN LAS FUNCIONES CHATTER  COMO PROGRAMAR UNA ACTIVIDAD-->
+
+    <!--CREAR ACTIVIDAD-->
+    <p:dialog styleClass="dialogo" id="nuevaActividad" widgetVar="nuevaActividad" header="#{texto.texto(1946)}"
+        modal="true" dynamic="true" style="width: 500px; height: 300px;">
+        <h:panelGrid rendered="#{!(cc.attrs.chatter eq null) and !(cc.attrs.chatter.nuevaActividad eq null)}" id="nuevaActividadPanel" style="width: 100%;" columns="2"
+            columnClasses="ui-g-12 ui-md-3 ui-g-nopad,ui-g-12 ui-md-9 ui-g-nopad"
+            styleClass="ui-panelgrid-blank ui-fluid">
+
+            <h:outputText value="#{texto.texto(1943)}:" />
+            <p:selectOneMenu styleClass="seleccion" id="menuTipoActividad"
+                value="#{cc.attrs.chatter.nuevaActividad.tipo}"
+                converter="#{net.qoopo.qoopo.configuracion.web.converters.TipoActividadConverter}" filter="true"
+                filterMatchMode="contains">
+                <f:selectItem itemLabel="#{texto.texto(58)}" itemValue="#{null}" noSelectionOption="true" />
+                <f:selectItems value="#{tiposActividadBean.lista}" var="item" itemLabel="#{item.nombre}"
+                    itemValue="#{item}" />
+                <p:ajax update="nuevaActividadPanel" process="@form"
+                    listener="#{cc.attrs.chatter.seleccionarTipoActividad()}" />
+            </p:selectOneMenu>
+
+            <h:outputText value="#{texto.texto(64)}:" />
+            <p:inputText value="#{cc.attrs.chatter.nuevaActividad.nombre}" />
+
+            <h:outputText value="#{texto.texto(1172)}:" />
+            <p:datePicker value="#{cc.attrs.chatter.nuevaActividad.fechaLimite}" locale="#{gestorFecha.locale}"
+                pattern="#{gestorFecha.patron}" />
+
+            <h:outputText value="#{texto.texto(4)}:" />
+            <p:selectOneMenu styleClass="seleccion" value="#{cc.attrs.chatter.nuevaActividad.usuario}" filter="true"
+                filterMatchMode="contains"
+                converter="#{net.qoopo.qoopo.web.modulos.configuracion.converters.Usuarioconverter}">
+                <f:selectItem itemLabel="#{texto.texto(1014)}" itemValue="" noSelectionOption="true" />
+                <f:selectItems value="#{usuarios.lista}" var="usuario" itemLabel="#{usuario.nombre}"
+                    itemValue="#{usuario}" />
+            </p:selectOneMenu>
+
+            <h:outputText value="#{texto.texto(956)}:" />
+            <p:textEditor value="#{cc.attrs.chatter.nuevaActividad.notas}" height="150" />
+
+        </h:panelGrid>
+        <f:facet name="footer">
+            <p:commandButton disabled="#{!principal.comandoSeleccionado.create}" value="#{texto.texto(1011)}"
+                actionListener="#{cc.attrs.chatter.agregarActividad()}" oncomplete="PF('nuevaActividad').hide();"
+                update=":frmMain" />
+        </f:facet>
+    </p:dialog>
+
+</cc:implementation>
+
+</html>

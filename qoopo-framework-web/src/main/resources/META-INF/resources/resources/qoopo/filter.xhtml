@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui">
+
+<!-- INTERFACE -->
+<cc:interface>
+    <cc:attribute name="value" required="true" />
+</cc:interface>
+
+<!-- IMPLEMENTATION -->
+<cc:implementation>
+
+    <h:panelGrid columns="10" styleClass="float-right">
+        <p:autoComplete styleClass="seleccion ui-g-nopad" value="#{cc.attrs.value.condiciones}" multiple="true"
+            completeMethod="#{cc.attrs.value.completarFiltros}" var="criterio" itemLabel="#{criterio.nombre}"
+            itemValue="#{criterio}" converter="criterioConverterComplete" forceSelection="true" accesskey="q"
+            dropdown="false">
+            <p:column style="width:80%">
+                #{criterio.nombre}
+            </p:column>
+            <p:ajax event="itemSelect" listener="#{cc.attrs.value.seleccionar}" update=":frmMain" />
+            <p:ajax event="itemUnselect" listener="#{cc.attrs.value.desSeleccionar}" update=":frmMain" />
+        </p:autoComplete>
+
+        <p:commandButton icon="pi pi-filter" id="valueBtnSm" type="button" accesskey="w" />
+        <p:commandButton icon="pi pi-server" id="groupBtnSm" type="button" accesskey="j" />
+        <p:commandButton icon="pi pi-sort" id="sortBtnSm" type="button" />
+
+        <p:overlayPanel id="valuePanelSm" for="valueBtnSm">
+            <ui:repeat value="#{cc.attrs.value.condicionesDisponibles}" var="value">
+                <p:commandLink update=":frmMain" styleClass="list-group-item"
+                    style="padding-left: 15px; padding-top: 2px; padding-bottom: 2px;"
+                    actionListener="#{cc.attrs.value.seleccionarCondicion(value)}">
+                    <h:outputText styleClass="textoMenu" value="#{value.nombre}" />
+                </p:commandLink>
+            </ui:repeat>
+        </p:overlayPanel>
+        <p:overlayPanel id="groupPanelSm" for="groupBtnSm">
+            <p:commandLink update=":frmMain" styleClass="list-group-item"
+                style="padding-left: 15px; padding-top: 2px; padding-bottom: 2px;"
+                actionListener="#{cc.attrs.value.elimiminarGrupo()}">
+                <h:outputText styleClass="textoMenu" value="#{texto.texto(1914)}" />
+            </p:commandLink>
+            <ui:repeat value="#{cc.attrs.value.camposGrupo}" var="grupo">
+                <p:commandLink update=":frmMain"
+                    styleClass="list-group-item #{cc.attrs.value.campoGrupo eq grupo?'bg-color-1':''}"
+                    style="padding-left: 15px; padding-top: 2px; padding-bottom: 2px;"
+                    actionListener="#{cc.attrs.value.agruparPor(grupo)}">
+                    <h:outputText styleClass="textoMenu #{cc.attrs.value.campoGrupo eq grupo?'bg-color-1':''}"
+                        value="#{texto.texto(grupo.codigoTexto)}" />
+                </p:commandLink>
+            </ui:repeat>
+        </p:overlayPanel>
+        <p:overlayPanel id="sortPanelSm" for="sortBtnSm">
+            <p:commandLink update=":frmMain"
+                styleClass="list-group-item #{cc.attrs.value.filtro.orderDirection eq 'asc'?'bg-color-1':''}"
+                style="padding-left: 15px; padding-top: 2px; padding-bottom: 2px;"
+                actionListener="#{cc.attrs.value.orderAsc()}">
+                <h:outputText styleClass="textoMenu #{cc.attrs.value.filtro.orderDirection eq 'asc'?'bg-color-1':''}" value="asc" />
+            </p:commandLink>
+            <p:commandLink update=":frmMain"
+                styleClass="list-group-item #{cc.attrs.value.filtro.orderDirection eq 'desc'?'bg-color-1':''}"
+                style="padding-left: 15px; padding-top: 2px; padding-bottom: 2px;"
+                actionListener="#{cc.attrs.value.orderDesc()}">
+                <h:outputText styleClass="textoMenu #{cc.attrs.value.filtro.orderDirection eq 'desc'?'bg-color-1':''}"
+                    value="desc" />
+            </p:commandLink>
+        </p:overlayPanel>
+    </h:panelGrid>
+</cc:implementation>
+
+</html>

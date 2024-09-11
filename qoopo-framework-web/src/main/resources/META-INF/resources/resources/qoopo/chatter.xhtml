@@ -1,0 +1,237 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+    xmlns:p="http://primefaces.org/ui" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<!-- INTERFACE -->
+<cc:interface>
+    <cc:attribute name="value" required="true" />
+</cc:interface>
+
+<!-- IMPLEMENTATION -->
+<cc:implementation>
+
+    <div class="q-chatter">
+        <div class="ui-g ui-g-nopad">
+            <p:commandButton rendered="#{cc.attrs.value.mostrarMetadatos}" icon="pi pi-envelope"
+                actionListener="#{cc.attrs.value.sendMail()}" update=":frmMain" oncomplete="PF('nuevoEmail').show();"
+                title="#{texto.texto(28)}" />
+
+            <p:commandButton rendered="#{cc.attrs.value.mostrarMetadatos}" icon="pi pi-plus" id="g-note-plus-btn"
+                title="#{texto.texto(1950)}" type="button" />
+            <p:overlayPanel id="g-note-plus-panel" for="g-note-plus-btn">
+                <h:panelGrid columns="1">
+                    <h:outputText value="#{texto.texto(1169)}" />
+                    <p:textEditor value="#{cc.attrs.value.nuevaNota}" height="60" immediate="true" id="nota" />
+                    <p:commandButton value="#{texto.texto(10)}" disabled="#{!principal.comandoSeleccionado.create}"
+                        actionListener="#{cc.attrs.value.agregarNota()}" update="tabtab" />
+                </h:panelGrid>
+            </p:overlayPanel>
+
+            <p:commandButton rendered="#{cc.attrs.value.mostrarMetadatos}" icon="pi pi-clock" id="g-activities-plus-btn"
+                title="#{texto.texto(1946)}" update=":frmMain" oncomplete="PF('nuevaActividad').show();"
+                actionListener="#{cc.attrs.value.nuevaActividad()}" />
+
+            <p:commandButton rendered="#{cc.attrs.value.mostrarMetadatos}" icon="pi pi-file"
+                title="#{texto.texto(1949)}" onclick="PF('cargarArchivosMetadatos').show()" />
+        </div>
+        <p:tabView id="tabtab" rendered="#{cc.attrs.value.mostrarMetadatos}">
+            <p:tab title="Chatter">
+                <ui:repeat value="#{cc.attrs.value.objeto.todos}" var="objeto">
+                    <div class="ui-g border-bottom text-left">
+                        <div class="ui-g-2">
+                            <p:graphicImage styleClass="listaImg" value="#{imagenesBean.getPhoto(objeto.user.foto)}" />
+                        </div>
+                        <div class="ui-g-10 ui-g-nopad">
+                            <div class="ui-g-12 ui-g-nopad">
+                                <h:outputText value="#{objeto.user.nombre}" title="#{objeto.user.nombre}"
+                                    styleClass="bold" />
+                                    
+                                <h:outputText value=" - #{qoopoFormater.formatearFechaHoraHumano(objeto.date)}"
+                                    title="#{qoopoFormater.formatearFechaHora(objeto.date)}" />
+
+                                <p:commandLink
+                                    rendered="#{objeto.tipoItem eq 1 or objeto.tipoItem eq 2 or objeto.tipoItem eq 4}"
+                                    style="margin-left: 1rem;" actionListener="#{cc.attrs.value.deleteItem(objeto)}"
+                                    styleClass="widget-update-btn" update=":frmMain">
+                                    <i class="pi pi-trash"></i>
+                                    <p:confirm header="#{texto.texto(1289)}" message="#{texto.texto(1290)}"
+                                        icon="pi pi-exclamation-triangle" />
+                                </p:commandLink>
+
+                                <p:commandLink rendered="#{objeto.tipoItem eq 1 and objeto.estado eq 0}"
+                                    icon="pi pi-check" id="activity-pi-check" title="#{texto.texto(1947)}" type="button"
+                                    styleClass="widget-update-btn">
+                                    <i class="pi pi-check"></i>
+                                </p:commandLink>
+
+                                <p:overlayPanel rendered="#{objeto.tipoItem eq 1}" id="activity-plus-panel"
+                                    for="activity-pi-check">
+                                    <h:panelGrid columns="1">
+                                        <h:outputText value="#{texto.texto(1948)}" />
+                                        <p:inputTextarea value="#{objeto.resumen}" />
+                                        <p:commandButton value="#{texto.texto(1947)}"
+                                            actionListener="#{cc.attrs.value.marcarHecho(objeto)}" update=":frmMain" />
+                                    </h:panelGrid>
+                                </p:overlayPanel>
+                            </div>
+                            <div class="ui-g-12 ui-g-nopad">
+                                <p:outputLabel value="#{objeto.title}" escape="false" />
+                            </div>
+                            <div class="ui-g-12 ui-g-nopad">
+                                <p:outputLabel value="#{objeto.body}" escape="false" />
+                            </div>
+                        </div>
+
+                    </div>
+                </ui:repeat>
+            </p:tab>
+
+            <p:tab title="#{texto.texto(887)}" rendered="#{cc.attrs.value.objeto.archivos.size() > 0}">
+                <!--ARCHIVOS-->
+                <div class="ui-g">
+                    <ui:repeat value="#{cc.attrs.value.objeto.archivos}" var="archivo">
+                        <div class="ui-g-5 item-email-attachment transicion_03 overFlowHidden">
+                            <div class="ui-g-12">
+                                <p:graphicImage styleClass="item-email-attachment-icon"
+                                    value="#{archivosBean.getImagen(archivo)}" />
+                            </div>
+                            <div class="ui-g-12">
+                                <div class="widget-title">
+                                    <h:outputText value="#{archivo.nombre}" title="#{archivo.nombre}" />
+                                </div>
+                                <div class="ui-g-12 ui-g-nopad">
+                                    <h:outputText value="#{qoopoFormater.formatearFechaHoraHumano(archivo.fecha)}"
+                                        title="#{qoopoFormater.formatearFechaHora(archivo.fecha)}" />
+                                </div>
+                                <div class="ui-g-12 ui-g-nopad">
+                                    <h:outputText value="#{archivo.tamanioString}" />
+                                </div>
+                                <div class="widget-footer text-right border-top">
+                                    <p:commandLink styleClass="widget-update-btn" update=":frmMain"
+                                        title="#{texto.texto(908)}"
+                                        actionListener="#{archivosBean.prepararVistaPrevia(archivo)}"
+                                        oncomplete="PF('dlgVistaPreviaChatter').show();">
+                                        <i class="pi pi-search"></i>
+                                    </p:commandLink>
+                                    <p:commandLink style="margin-left: 1rem;"
+                                        actionListener="#{cc.attrs.value.deleteFile(archivo)}"
+                                        styleClass="widget-update-btn" update=":frmMain">
+                                        <i class="pi pi-trash"></i>
+                                        <p:confirm header="#{texto.texto(1289)}" message="#{texto.texto(1290)}"
+                                            icon="pi pi-exclamation-triangle" />
+                                    </p:commandLink>
+                                    <p:commandLink title="#{texto.texto(891)}" ajax="false">
+                                        <i class="pi pi-download"></i>
+                                        <p:fileDownload value="#{archivo.contenido.contenido}" />
+                                    </p:commandLink>
+                                </div>
+                            </div>
+                        </div>
+                    </ui:repeat>
+                </div>
+            </p:tab>
+
+            <p:tab title="#{texto.texto(1968)}"
+                rendered="#{!(cc.attrs.value.propiedades eq null) and cc.attrs.value.propiedades.size() gt 0}">
+                <h:outputText value="#{texto.texto(1969)}" />
+                <hr />
+                <p:dataTable reflow="#{globalBean.tableReflow}" id="lstPropierties"
+                    value="#{cc.attrs.value.propiedades}" var="property" emptyMessage="#{texto.texto(33)}"
+                    sortBy="#{property.clave}">
+                    <p:column>
+                        <h:outputText value="#{property.clave}" />
+                    </p:column>
+                    <p:column>
+                        <p:inputText value="#{property.valor}" />
+                    </p:column>
+                </p:dataTable>
+            </p:tab>
+        </p:tabView>
+    </div>
+
+    <!--ANEXOS A SER UTILIZAOS EN EL CHATTER-->
+
+    <!--SUBIR ARCHIVO-->
+    <p:dialog styleClass="dialogo" id="subirArchivosMetadaso" widgetVar="cargarArchivosMetadatos"
+        header="#{texto.texto(890)}" modal="true" dynamic="true" style="width: 500px; height: 300px;">
+        <p:fileUpload listener="#{cc.attrs.value.subirArchivo}" mode="advanced" multiple="true" auto="true"
+            label="#{texto.texto(889)}" uploadLabel="#{texto.texto(890)}" cancelLabel="#{texto.texto(1013)}"
+            oncomplete="PF('cargarArchivosMetadatos').hide()" update=":frmMain" />
+    </p:dialog>
+
+    <!--CREAR ACTIVIDAD-->
+    <p:dialog styleClass="dialogo" id="nuevaActividad" widgetVar="nuevaActividad" header="#{texto.texto(1946)}"
+        modal="true" dynamic="true" style="width: 500px; height: 300px;">
+        <h:panelGrid id="nuevaActividadPanel" style="width: 100%;" columns="2"
+            columnClasses="ui-g-12 ui-md-3 ui-g-nopad,ui-g-12 ui-md-9 ui-g-nopad"
+            styleClass="ui-panelgrid-blank ui-fluid">
+
+            <h:outputText value="#{texto.texto(1943)}:" />
+            <p:selectOneMenu styleClass="seleccion" id="tipoActividad" value="#{cc.attrs.value.nuevaActividad.tipo}"
+                converter="#{net.qoopo.qoopo.configuracion.web.converters.TipoActividadConverter}" filter="true"
+                filterMatchMode="contains">
+                <f:selectItem itemLabel="#{texto.texto(58)}" itemValue="#{null}" noSelectionOption="true" />
+                <f:selectItems value="#{tiposActividadBean.lista}" var="item" itemLabel="#{item.nombre}"
+                    itemValue="#{item}" />
+                <p:ajax update="nuevaActividadPanel" process="@form"
+                    listener="#{cc.attrs.value.seleccionarTipoActividad()}" />
+            </p:selectOneMenu>
+
+            <h:outputText value="#{texto.texto(64)}:" />
+            <p:inputText value="#{cc.attrs.value.nuevaActividad.nombre}" />
+
+            <h:outputText value="#{texto.texto(1172)}:" />
+            <p:datePicker value="#{cc.attrs.value.nuevaActividad.fechaLimite}" locale="#{gestorFecha.locale}"
+                pattern="#{gestorFecha.patron}" />
+
+            <h:outputText value="#{texto.texto(4)}:" />
+            <p:selectOneMenu styleClass="seleccion" value="#{cc.attrs.value.nuevaActividad.usuario}" filter="true"
+                filterMatchMode="contains"
+                converter="#{net.qoopo.qoopo.web.modulos.configuracion.converters.Usuarioconverter}">
+                <f:selectItem itemLabel="#{texto.texto(1014)}" itemValue="" noSelectionOption="true" />
+                <f:selectItems value="#{usuarios.lista}" var="usuario" itemLabel="#{usuario.nombre}"
+                    itemValue="#{usuario}" />
+            </p:selectOneMenu>
+
+            <h:outputText value="#{texto.texto(956)}:" />
+            <p:textEditor value="#{cc.attrs.value.nuevaActividad.notas}" height="150" />
+
+        </h:panelGrid>
+        <f:facet name="footer">
+            <p:commandButton disabled="#{!principal.comandoSeleccionado.create}" value="#{texto.texto(1011)}"
+                actionListener="#{cc.attrs.value.agregarActividad()}" oncomplete="PF('nuevaActividad').hide();"
+                update=":frmMain" />
+        </f:facet>
+    </p:dialog>
+
+
+    <p:dialog class="dialogo" id="vistaPreviaChatter" widgetVar="dlgVistaPreviaChatter" header="Vista Previa"
+        dynamic="true" minimizable="true" maximizable="true" width="800" height="600">
+        <hr />
+        <h:panelGroup id="vistaPreviaGrupo"
+            rendered="#{archivosBean.archivoTmp != null and (archivosBean.archivoVistaPrevia.contentType.contains('application/pdf') or archivosBean.archivoTmp.contains('pdf') or archivosBean.archivoTmp.contains('.flv') or archivosBean.archivoTmp.contains('.mp4') or archivosBean.archivoTmp.contains('.mp3') or archivosBean.archivoTmp.contains('.ogg'))}">
+            <p:media value="#{archivosBean.archivoTmp}" width="100%;" height="100%;">
+                No se puede ver el archivo, <h:outputLink value="#{archivosBean.archivoTmp}">click</h:outputLink> para
+                descargar
+            </p:media>
+
+        </h:panelGroup>
+        <h:panelGroup id="vistaPreviaGrupoIMG"
+            rendered="#{archivosBean.archivoTmp != null and (archivosBean.archivoTmp.contains('png') or archivosBean.archivoTmp.contains('jpg') or archivosBean.archivoTmp.contains('jpeg') or archivosBean.archivoTmp.contains('gif'))}">
+            <p:graphicImage value="#{archivosBean.archivoTmp}" />
+        </h:panelGroup>
+        <h:panelGroup id="vistaPreviaGrupoQDOC"
+            rendered="#{archivosBean.archivoVistaPrevia != null and (archivosBean.archivoVistaPrevia.contentType.contains('application/qdoc') or archivosBean.archivoVistaPrevia.contentType.contains('text/html') or archivosBean.archivoVistaPrevia.contentType.contains('text/xml') or archivosBean.archivoVistaPrevia.contentType.contains('text/'))}">
+            <div class="ql-container">
+                <div class="ql-editor">
+                    <h:outputText value="#{archivosBean.contenidoTmp}" escape="false" />
+                </div>
+            </div>
+        </h:panelGroup>
+    </p:dialog>
+</cc:implementation>
+
+</html>

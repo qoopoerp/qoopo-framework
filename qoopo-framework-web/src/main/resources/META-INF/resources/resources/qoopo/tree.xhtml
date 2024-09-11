@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+    xmlns:p="http://primefaces.org/ui" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<!-- INTERFACE -->
+<cc:interface>
+    <!--<cc:attribute name="value" type="net.qoopo.qoopo.web.components.tree.TreeController" required="true" />-->
+    <cc:attribute name="value" required="true" />
+    <cc:attribute name="rowKey" required="true" />
+    <cc:attribute name="bean" required="true" />
+    <cc:attribute name="selection" />
+    <cc:attribute name="var" default="item" />
+    <cc:attribute name="lazy" default="false" />
+    <cc:attribute name="actionColumn" default="true" />
+    <cc:attribute name="id" required="false" default="#{cc.attrs.value.id}" />
+    <cc:attribute name="sortable" default="false" />
+</cc:interface>
+
+<!-- IMPLEMENTATION -->
+<cc:implementation>
+
+    <!--
+        <h:panelGrid columns="6" rendered="false">
+        <h:outputText value="# {texto.texto(1594)}:" />
+        <p:selectOneMenu value="# {cc.attrs.value.opcionGrupo.codigo}">
+            <f:selectItems value="# {cc.attrs.value.opcionesGrupo}" var="p" itemValue="# {p.codigo}"
+                itemLabel="#{texto.texto(p.codigoTexto)}" />
+            <p:ajax update=":frmMain" process="@form" listener="# {cc.attrs.value.recargar()}" />
+        </p:selectOneMenu>
+        <p:selectOneMenu value="# {cc.attrs.value.opcionGrupo2.codigo}">
+            <f:selectItems value="# {cc.attrs.value.opcionesGrupo}" var="p" itemValue="# {p.codigo}"
+                itemLabel="#{texto.texto(p.codigoTexto)}" />
+            <p:ajax update=":frmMain" process="@form" listener="# {cc.attrs.value.recargar()}" />
+        </p:selectOneMenu>
+        <p:selectOneMenu value="# {cc.attrs.value.opcionGrupo3.codigo}">
+            <f:selectItems value="# {cc.attrs.value.opcionesGrupo}" var="p" itemValue="# {p.codigo}"
+                itemLabel="# {texto.texto(p.codigoTexto)}" />
+            <p:ajax update=":frmMain" process="@form" listener="# {cc.attrs.value.recargar()}" />
+        </p:selectOneMenu>
+    </h:panelGrid>
+
+    <hr />
+    <p:treeTable id="# {cc.attrs.id}" value="# {cc.attrs.value.nodo}" var="# {cc.attrs.var}">
+        <cc:insertChildren />
+    </p:treeTable>
+    <p:dataTable reflow="# {globalBean.tableReflow}" value="# {cc.attrs.value}" selection="# {cc.attrs.selection}"
+        var="# {cc.attrs.var}" id="dt# {cc.attrs.id}" emptyMessage="# {texto.texto(33)}" paginator="true" rows="10"
+        rowsPerPageTemplate="# {qoopoBean.paginadorTemplate}" paginatorPosition="bottom" rowKey="# {cc.attrs.rowKey}"
+        lazy="# {cc.attrs.lazy}">
+-->
+
+    <p:dataTable id="dt#{cc.attrs.id}" value="#{cc.attrs.value}" var="item"
+        selection="#{cc.attrs.bean.listaSeleccionados}" emptyMessage="#{texto.texto(33)}" paginator="true" rows="10"
+        rowsPerPageTemplate="#{qoopoBean.paginadorTemplate}" paginatorPosition="bottom" rowKey="#{cc.attrs.rowKey}"
+        lazy="#{cc.attrs.lazy}" draggableRows="#{cc.attrs.sortable}" selectionPageOnly="false">
+
+        <p:column selectionMode="multiple" styleClass="column-select" />
+
+        <p:column rendered="#{cc.attrs.sortable}" styleClass="column-sort" sortBy="#{item.order}">
+            <span class="ui-g-12 ui-g-nopad pi pi-chevron-up" />
+            <span class="ui-g-12 ui-g-nopad pi pi-chevron-down" />
+        </p:column>
+
+        <p:ajax rendered="#{cc.attrs.sortable}" event="rowReorder" listener="#{cc.attrs.bean.onRowReorder}"
+            update=":frmMain" />
+        <cc:insertChildren />
+
+        <p:column rendered="#{cc.attrs.actionColumn}" headerText="#{texto.texto(45)}" styleClass="column-action">
+
+            <f:facet name="header">
+                <p:commandButton id="toggler" type="button" icon="pi pi-align-justify" />
+                <p:columnToggler datasource="dt#{cc.attrs.id}" trigger="toggler">
+                    <p:ajax />
+                </p:columnToggler>
+            </f:facet>
+            <p:commandButton update=":frmMain" icon="pi pi-pencil" styleClass="q-autohide" title="#{texto.texto(156)}"
+                actionListener="#{cc.attrs.bean.edit(item)}" />
+            <p:commandButton update=":frmMain " disabled="#{!principal.comandoSeleccionado.delete}" icon="pi pi-trash"
+                styleClass="q-autohide" title="#{texto.texto(157)}" actionListener="#{cc.attrs.bean.delete(item)}">
+                <p:confirm header="#{texto.texto(1289)}" message="#{texto.texto(1290)}"
+                    icon="pi pi-exclamation-triangle" />
+            </p:commandButton>
+        </p:column>
+    </p:dataTable>
+
+</cc:implementation>
+
+</html>

@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+
+<!-- INTERFACE -->
+<cc:interface>
+    <cc:attribute name="value" required="true" />
+    <cc:attribute name="comparable" required="false" default="true" />
+    <cc:attribute name="showStarDate" required="false" default="true" />
+    <cc:attribute name="showEndDate" required="false" default="true" />
+</cc:interface>
+
+<!-- IMPLEMENTATION -->
+<cc:implementation>
+    <p:commandButton value="#{texto.texto(1050)}" icon="pi pi-filter" onclick="PF('dlgFilter').show()" />
+    <p:dialog styleClass="dialogo" header="#{texto.texto(1050)}" widgetVar="dlgFilter" minHeight="40" width="350"
+        showEffect="fade">
+        <h:panelGrid id="informFilter" style="width: 100%;" columns="2"
+            columnClasses="ui-g-12 ui-md-3 ui-g-nopad, ui-g-12 ui-md-9 ui-g-nopad"
+            styleClass="ui-panelgrid-blank ui-fluid">
+
+            <h:outputText value="#{texto.texto(599)}" />
+            <h:panelGrid style="width: 100%;" columns="4">
+                <p:commandButton value="#{texto.texto(4005)}" styleClass="other-button"
+                    actionListener="#{cc.attrs.value.selectToday()}" update="informFilter" />
+                <p:commandButton value="#{texto.texto(4006)}" styleClass="other-button"
+                    actionListener="#{cc.attrs.value.selectThisMonth()}" update="informFilter" />
+                <p:commandButton value="#{texto.texto(4007)}" styleClass="other-button"
+                    actionListener="#{cc.attrs.value.selectThisQuarter()}" update="informFilter" />
+                <p:commandButton value="#{texto.texto(4008)}" styleClass="other-button"
+                    actionListener="#{cc.attrs.value.selectThisYear()}" update="informFilter" />
+                <p:commandButton value="#{texto.texto(4009)}" styleClass="other-button"
+                    actionListener="#{cc.attrs.value.selectLastMonth()}" update="informFilter" />
+                <p:commandButton value="#{texto.texto(4010)}" styleClass="other-button"
+                    actionListener="#{cc.attrs.value.selectLastQuarter()}" update="informFilter" />
+                <p:commandButton value="#{texto.texto(4011)}" styleClass="other-button"
+                    actionListener="#{cc.attrs.value.selectLastYear()}" update="informFilter" />
+            </h:panelGrid>
+
+            <h:outputText rendered="#{cc.attrs.showStarDate}" value="#{texto.texto(595)}" />
+
+            <p:datePicker rendered="#{cc.attrs.showStarDate}" value="#{cc.attrs.value.fechaInicio}"
+                styleClass="text-center" locale="#{gestorFecha.locale}" pattern="#{gestorFecha.patronSimple}" />
+            <h:outputText rendered="#{cc.attrs.showEndDate}" value="#{texto.texto(596)}" />
+            <p:datePicker rendered="#{cc.attrs.showEndDate}" value="#{cc.attrs.value.fecha}" style="text-align: center;"
+                locale="#{gestorFecha.locale}" pattern="#{gestorFecha.patronSimple}" />
+
+            <h:outputText rendered="#{cc.attrs.comparable}" value="#{texto.texto(1998)}" />
+            <p:selectBooleanCheckbox rendered="#{cc.attrs.comparable}" value="#{cc.attrs.value.comparar}">
+                <p:ajax update="informFilter" />
+            </p:selectBooleanCheckbox>
+
+            <h:outputText value="#{texto.texto(4013)}" rendered="#{cc.attrs.comparable and cc.attrs.value.comparar}" />
+            <p:selectBooleanCheckbox value="#{cc.attrs.value.verVariacion}"
+                rendered="#{cc.attrs.comparable and cc.attrs.value.comparar}" />
+
+            <h:outputText value="#{texto.texto(1999)}" rendered="#{cc.attrs.comparable and cc.attrs.value.comparar}" />
+            <p:inputText value="#{cc.attrs.value.periodos}"
+                rendered="#{cc.attrs.comparable and cc.attrs.value.comparar}" />
+            <h:outputText value="#{texto.texto(4000)}" rendered="#{cc.attrs.comparable and cc.attrs.value.comparar}" />
+            <p:selectOneMenu value="#{cc.attrs.value.tipoPeriodo}"
+                rendered="#{cc.attrs.comparable and cc.attrs.value.comparar}">
+                <f:selectItem itemLabel="#{texto.texto(4001)}" itemValue="1" />
+                <f:selectItem itemLabel="#{texto.texto(4002)}" itemValue="2" />
+                <f:selectItem itemLabel="#{texto.texto(4003)}" itemValue="3" />
+                <f:selectItem itemLabel="#{texto.texto(4004)}" itemValue="4" />
+            </p:selectOneMenu>
+
+            <h:outputText value="#{texto.texto(115)}" rendered="#{!cc.attrs.value.lstReportes.isEmpty()}" />
+            <p:selectOneMenu styleClass="seleccion" value="#{cc.attrs.value.tipoReporte}"
+                rendered="#{!cc.attrs.value.lstReportes.isEmpty()}">
+                <f:selectItems value="#{cc.attrs.value.lstReportes}" />
+            </p:selectOneMenu>
+
+            <h:outputText value="#{cc.attrs.value.optionsLabels.get(1)}"
+                rendered="#{!cc.attrs.value.lstOptions1.isEmpty()}" />
+            <p:selectOneMenu styleClass="seleccion" value="#{cc.attrs.value.optionValue1}" filter="true"
+                filterMatchMode="contains" rendered="#{!cc.attrs.value.lstOptions1.isEmpty()}">
+                <f:selectItems value="#{cc.attrs.value.lstOptions1}" />
+            </p:selectOneMenu>
+
+            <h:outputText value="#{cc.attrs.value.optionsLabels.get(2)}"
+                rendered="#{!cc.attrs.value.lstOptions2.isEmpty()}" />
+            <p:selectOneMenu styleClass="seleccion" value="#{cc.attrs.value.optionValue2}" filter="true"
+                filterMatchMode="contains" rendered="#{!cc.attrs.value.lstOptions2.isEmpty()}">
+                <f:selectItems value="#{cc.attrs.value.lstOptions2}" />
+            </p:selectOneMenu>
+
+            <h:outputText value="#{cc.attrs.value.optionsLabels.get(3)}"
+                rendered="#{!cc.attrs.value.lstOptions3.isEmpty()}" />
+            <p:selectOneMenu styleClass="seleccion" value="#{cc.attrs.value.optionValue3}" filter="true"
+                filterMatchMode="contains" rendered="#{!cc.attrs.value.lstOptions3.isEmpty()}">
+                <f:selectItems value="#{cc.attrs.value.lstOptions3}" />
+            </p:selectOneMenu>
+
+            <h:outputText value="#{cc.attrs.value.optionsLabels.get(4)}"
+                rendered="#{!cc.attrs.value.lstOptions4.isEmpty()}" />
+            <p:selectOneMenu styleClass="seleccion" value="#{cc.attrs.value.optionValue4}" filter="true"
+                filterMatchMode="contains" rendered="#{!cc.attrs.value.lstOptions4.isEmpty()}">
+                <f:selectItems value="#{cc.attrs.value.lstOptions4}" />
+            </p:selectOneMenu>
+
+        </h:panelGrid>
+    </p:dialog>
+</cc:implementation>
+
+</html>

@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+    xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<!-- INTERFACE -->
+<cc:interface>
+    <cc:attribute name="value" required="true" />
+</cc:interface>
+
+<!-- IMPLEMENTATION -->
+<cc:implementation>
+
+    <h:panelGroup id="vistasform" styleClass="ui-sm-hidden">
+        <p:selectOneButton styleClass="vistasbtn" value="#{cc.attrs.value.value}">
+            <f:selectItem itemLabel="" itemValue="1" itemDisabled="#{!(cc.attrs.value.enableList)}" />
+            <f:selectItem itemLabel="" itemValue="2" itemDisabled="#{!(cc.attrs.value.enableGrid)}" />
+            <f:selectItem itemLabel="" itemValue="3" itemDisabled="#{!(cc.attrs.value.enableForm)}" />
+            <f:selectItem itemLabel="" itemValue="4" itemDisabled="#{!(cc.attrs.value.enableGraph)}" />
+            <f:selectItem itemLabel="" itemValue="5" itemDisabled="#{!(cc.attrs.value.enableCalendar)}" />
+            <f:selectItem itemLabel="" itemValue="6" itemDisabled="#{!(cc.attrs.value.enableTimeline)}" />
+            <p:ajax update=":frmMain" process="@this" listener="#{cc.attrs.value.execute()}" />
+        </p:selectOneButton>
+    </h:panelGroup>
+
+    <p:menuButton icon="pi #{cc.attrs.value.currentIcon}" title="Sort" style="display: none;"
+        styleClass="ui-sm-visible">
+        <p:menuitem icon="pi pi-bars" rendered="#{cc.attrs.value.enableList}" update=":frmMain" actionListener="#{cc.attrs.value.updateValue(1)}" />
+        <p:menuitem icon="pi pi-th-large" rendered="#{cc.attrs.value.enableGrid}" update=":frmMain" actionListener="#{cc.attrs.value.updateValue(2)}" />
+        <p:menuitem icon="pi pi-tablet" rendered="#{cc.attrs.value.enableForm}" update=":frmMain" actionListener="#{cc.attrs.value.updateValue(3)}" />
+        <p:menuitem icon="pi pi-chart-bar" rendered="#{cc.attrs.value.enableGraph}" update=":frmMain" actionListener="#{cc.attrs.value.updateValue(4)}" />
+        <p:menuitem icon="pi pi-calendar" rendered="#{cc.attrs.value.enableCalendar}" update=":frmMain" actionListener="#{cc.attrs.value.updateValue(5)}" />
+        <p:menuitem icon="pi pi-align-left" rendered="#{cc.attrs.value.enableTimeline}" update=":frmMain" actionListener="#{cc.attrs.value.updateValue(6)}" />
+    </p:menuButton>
+</cc:implementation>
+
+</html>

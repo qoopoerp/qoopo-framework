@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+    xmlns:p="http://primefaces.org/ui" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+    xmlns:qoopo="http://xmlns.jcp.org/jsf/composite/qoopo">
+
+<!-- INTERFACE -->
+<cc:interface>
+    <cc:attribute name="bean" required="true" />
+    <cc:attribute name="var" default="item" />
+</cc:interface>
+
+<!-- IMPLEMENTATION -->
+<cc:implementation>
+    <!--con columnas estilo kanban-->
+    <h:panelGroup rendered="#{cc.attrs.bean.columnas.size() gt 0}">
+        <div class="kanban-board q-flex q-flex-row">
+            <ui:repeat value="#{cc.attrs.bean.columnas}" var="columna">
+                <h:panelGroup id="columna" styleClass="kanban-column">
+                    <div class="q-flex">
+                        <div class="q-flex-header">
+                            <h:panelGrid columns="2" columnClasses=",derecha">
+                                <h:outputText styleClass="kanban-column-title" value="#{columna.nombre}" />
+                                <cc:renderFacet rendered="#{columna.icon == null}" name="column-icon" />
+                                <p:graphicImage rendered="#{columna.icon != null}" styleClass="grid-item-img-small-2"
+                                    library="imagenes" name="#{temas.temaIconos}#{columna.icon}" />
+                            </h:panelGrid>
+                            <hr />
+                            <div class="text-right">
+                                <h:outputText styleClass="text-bold"
+                                    value="#{qoopoFormater.formatearNumero(columna.total)}" />
+                            </div>
+                            <hr />
+                        </div>
+                        <div class="q-flex-content">
+                            <ui:repeat value="#{columna.items}" var="item">
+                                <c:set target="#{component}" property="var" value="#{cc.attrs.var}" />
+                                <h:panelGroup id="item-card" class="kanban-card">
+                                    <div class="ribbon-icon-item ui-g-3 bg-success #{item.archived?'':'hidden'}">
+                                        #{texto.texto(4024)} 
+                                    </div>
+                                    <p:commandLink  update=":frmMain"
+                                        actionListener="#{cc.attrs.bean.edit(item)}">
+                                        <cc:renderFacet name="item-card" />
+                                    </p:commandLink>
+                                    <cc:renderFacet name="item-card-links" />
+                                </h:panelGroup>
+                                <div>
+                                    <p:draggable rendered="#{columna.permitirDrag}" for="item-card" revert="true" 
+                                        helper="clone"
+                                         />
+                                </div>
+                            </ui:repeat>
+                        </div>
+                    </div>
+                </h:panelGroup>
+                <p:droppable rendered="#{columna.permitirDrag}" for="columna" tolerance="pointer"
+                    hoverStyleClass="bg-black-50">
+                    <p:ajax listener="#{cc.attrs.bean.onItemColumnDrop}" update=":frmMain" />
+                </p:droppable>
+            </ui:repeat>
+        </div>
+    </h:panelGroup>
+
+    <!--sin columnas, tarjetas flotantes-->
+    <h:panelGroup rendered="#{cc.attrs.bean.columnas.size() eq 0}">
+        <div class="ui-g">
+            <!--<ui:repeat value="# {cc.attrs.bean.lista}" var="item">-->
+            <!--<p:dataScroller value="# {cc.attrs.bean.lista}" var="item" chunkSize="30" styleClass="ui-g-12 ui-g-nopad" >-->
+            <p:dataScroller value="#{cc.attrs.bean.data}" var="item" chunkSize="30" styleClass="ui-g-12 ui-g-nopad">
+                <c:set target="#{component}" property="var" value="#{cc.attrs.var}" />
+                <div class="ui-lg-3 ui-md-6 ui-g-12 transicion_03">
+                    <div class="grid-item ">
+                        <div class="ribbon-icon-item ui-g-3 bg-success #{item.archived?'':'hidden'}">#{texto.texto(4024)} </div>
+                        <p:commandLink actionListener="#{cc.attrs.bean.edit(item)}" update=":frmMain">
+                            <cc:renderFacet name="item-card" />
+                        </p:commandLink>
+                        <cc:renderFacet name="item-card-links" />
+                    </div>
+                </div>
+            </p:dataScroller>
+            <!--</ui:repeat>-->
+        </div>
+    </h:panelGroup>
+
+    <!--        <ui:fragment binding="# {cc.childContainer}">
+            <cc:insertChildren/>
+        </ui:fragment>-->
+
+</cc:implementation>
+
+</html>
