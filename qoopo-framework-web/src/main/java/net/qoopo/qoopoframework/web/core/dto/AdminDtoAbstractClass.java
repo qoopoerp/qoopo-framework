@@ -244,9 +244,12 @@ public abstract class AdminDtoAbstractClass<S extends EntidadBase, T extends Dto
         this.opcionesGrupos.addAll(opcionesGrupos);
         this.condicionesDisponibles.addAll(condicionesDisponibles);
         this.entityClass = entityClass;
+
     }
 
     protected final ViewOption viewOption = new ViewOption(accion);
+
+    protected abstract void initChatter();
 
     public abstract void initObjeto();
 
@@ -270,6 +273,7 @@ public abstract class AdminDtoAbstractClass<S extends EntidadBase, T extends Dto
     public void postConstruct() {
         graph = new GraphController<T>(languageProvider);
         tree = new TreeController();
+        initChatter();
         // chatter = new Chatter(sessionBean, languageProvider);
     }
 
@@ -642,8 +646,10 @@ public abstract class AdminDtoAbstractClass<S extends EntidadBase, T extends Dto
                         // actualiza el item para que ya no apunte a los metadato
                         ((Auditable) item).setMetadato(null);
                         GenericBusiness.edit(item);
-                        GenericBusiness.deleteAll(metaDatos.getAuditorias());
-                        GenericBusiness.delete(metaDatos);
+                        if (metaDatos != null) {
+                            GenericBusiness.deleteAll(metaDatos.getAuditorias());
+                            GenericBusiness.delete(metaDatos);
+                        }
                     }
                 }
                 GenericBusiness.delete(item);
@@ -675,9 +681,10 @@ public abstract class AdminDtoAbstractClass<S extends EntidadBase, T extends Dto
                         // actualiza el item para que ya no apunte a los metadato
                         ((Auditable) objeto).setMetadato(null);
                         GenericBusiness.edit(objeto);
-
-                        GenericBusiness.deleteAll(metaDatos.getAuditorias());
-                        GenericBusiness.delete(metaDatos);
+                        if (metaDatos != null) {
+                            GenericBusiness.deleteAll(metaDatos.getAuditorias());
+                            GenericBusiness.delete(metaDatos);
+                        }
                     }
                 }
                 GenericBusiness.delete(objeto);

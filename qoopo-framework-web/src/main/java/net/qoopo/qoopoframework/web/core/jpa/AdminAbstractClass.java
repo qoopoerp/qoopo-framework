@@ -235,6 +235,8 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
 
     protected final ViewOption viewOption = new ViewOption(accion);
 
+    protected abstract void initChatter();
+
     public abstract void initObjeto();
 
     public abstract void loadData();
@@ -257,6 +259,7 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
     public void postConstruct() {
         graph = new GraphController<T>(languageProvider);
         tree = new TreeController();
+        initChatter();
         // chatter = new Chatter(sessionBean, languageProvider);
     }
 
@@ -605,11 +608,17 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
                     if (((Auditable) item).getMetadato() != null) {
                         CoreMetadata metaDatos = (CoreMetadata) GenericBusiness.buscar(CoreMetadata.class,
                                 ((Auditable) item).getMetadato().getId());
+                        if (metaDatos == null) {
+                            log.severe("[x] Los metadatos no se pudieron obtener para eliminar el objeto, el id es="
+                                    + ((Auditable) objeto).getMetadato().getId());
+                        }
                         // actualiza el item para que ya no apunte a los metadato
                         ((Auditable) item).setMetadato(null);
                         GenericBusiness.edit(item);
-                        GenericBusiness.deleteAll(metaDatos.getAuditorias());
-                        GenericBusiness.delete(metaDatos);
+                        if (metaDatos != null) {
+                            GenericBusiness.deleteAll(metaDatos.getAuditorias());
+                            GenericBusiness.delete(metaDatos);
+                        }
                     }
                 }
                 GenericBusiness.delete(item);
@@ -638,12 +647,17 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
                         CoreMetadata metaDatos = (CoreMetadata) GenericBusiness.buscar(CoreMetadata.class,
                                 ((Auditable) objeto).getMetadato().getId());
 
+                        if (metaDatos == null) {
+                            log.severe("[x] Los metadatos no se pudieron obtener para eliminar el objeto, el id es="
+                                    + ((Auditable) objeto).getMetadato().getId());
+                        }
                         // actualiza el item para que ya no apunte a los metadato
                         ((Auditable) objeto).setMetadato(null);
                         GenericBusiness.edit(objeto);
-
-                        GenericBusiness.deleteAll(metaDatos.getAuditorias());
-                        GenericBusiness.delete(metaDatos);
+                        if (metaDatos != null) {
+                            GenericBusiness.deleteAll(metaDatos.getAuditorias());
+                            GenericBusiness.delete(metaDatos);
+                        }
                     }
                 }
                 GenericBusiness.delete(objeto);
