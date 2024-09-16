@@ -10,12 +10,12 @@ import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
 
-import net.qoopo.qoopoframework.core.business.Filtros;
-import net.qoopo.qoopoframework.core.db.core.base.EntidadBase;
-import net.qoopo.qoopoframework.core.db.core.base.dtos.base.OpcionBase;
-import net.qoopo.qoopoframework.core.db.filtro.Filtro;
-import net.qoopo.qoopoframework.core.db.filtro.condicion.Campo;
-import net.qoopo.qoopoframework.core.db.filtro.condicion.Condicion;
+import net.qoopo.qoopoframework.jpa.core.EntidadBase;
+import net.qoopo.qoopoframework.jpa.filter.Filter;
+import net.qoopo.qoopoframework.jpa.filter.condicion.Campo;
+import net.qoopo.qoopoframework.jpa.filter.condicion.Condicion;
+import net.qoopo.qoopoframework.models.OpcionBase;
+import net.qoopo.qoopoframework.repository.FilterJpaRepository;
 import net.qoopo.qoopoframework.web.components.viewoption.ViewOption;
 import net.qoopo.qoopoframework.web.core.jpa.AdminAbstractClass;
 import net.qoopo.qoopoframework.web.util.FacesUtils;
@@ -29,7 +29,7 @@ import net.qoopo.qoopoframework.web.util.FacesUtils;
  */
 public abstract class AdminLazyAbstractClass<T extends EntidadBase> extends AdminAbstractClass<T> {
 
-    public AdminLazyAbstractClass(String entityClassName, Class<T> entityClass, Filtro inicial,
+    public AdminLazyAbstractClass(String entityClassName, Class<T> entityClass, Filter inicial,
             List<Condicion> condicionesDisponibles,
             List<Campo> campos, List<OpcionBase> opcionesGrupos) {
         super(entityClassName, entityClass, inicial, condicionesDisponibles, campos, opcionesGrupos);
@@ -86,16 +86,16 @@ public abstract class AdminLazyAbstractClass<T extends EntidadBase> extends Admi
                                 filter.getFiltro().setPosterior(posterior);
                                 if (listaSeleccionados != null)
                                     listaSeleccionados.clear();
-                                return Filtros.filtrar(filter.getFiltro(), first, pageSize);
+                                return FilterJpaRepository.filtrar(filter.getFiltro(), first, pageSize);
                             }
 
                             @Override
                             public int count(Map<String, FilterMeta> map) {
-                                return Filtros.filtrarCount(filter.getFiltro()).intValue();
+                                return FilterJpaRepository.filtrarCount(filter.getFiltro()).intValue();
                             }
                         };
                     }
-                    lista.setRowCount(Filtros.filtrarCount(filter.getFiltro()).intValue());
+                    lista.setRowCount(FilterJpaRepository.filtrarCount(filter.getFiltro()).intValue());
                     setData(lista.getWrappedData());// la data para poder exportar la pagina actual
                     // super.loadData(lista); //carga la data para las otras vistas
                     break;
@@ -104,7 +104,7 @@ public abstract class AdminLazyAbstractClass<T extends EntidadBase> extends Admi
                 case ViewOption.FORM:
                 case ViewOption.CALENDAR:
                 case ViewOption.TIMELINE:
-                    super.loadData(Filtros.filtrar(filter.getFiltro()));
+                    super.loadData(FilterJpaRepository.filtrar(filter.getFiltro()));
                     break;
             }
         } catch (Exception ex) {

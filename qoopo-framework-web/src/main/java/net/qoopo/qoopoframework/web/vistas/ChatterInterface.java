@@ -2,12 +2,12 @@ package net.qoopo.qoopoframework.web.vistas;
 
 import org.primefaces.event.FileUploadEvent;
 
-import net.qoopo.qoopoframework.core.db.core.base.interfaces.Auditable;
-import net.qoopo.qoopoframework.core.db.core.base.interfaces.CoreMetadata;
-import net.qoopo.qoopoframework.core.db.core.base.interfaces.CoreMetadataActividad;
-import net.qoopo.qoopoframework.core.db.core.base.interfaces.CoreMetadataFile;
-import net.qoopo.qoopoframework.core.db.core.base.interfaces.CoreMetadataNote;
-import net.qoopo.qoopoframework.core.db.core.base.interfaces.ItemChatter;
+import net.qoopo.qoopoframework.jpa.core.interfaces.Auditable;
+import net.qoopo.qoopoframework.jpa.core.interfaces.CoreMetadata;
+import net.qoopo.qoopoframework.jpa.core.interfaces.CoreMetadataActividad;
+import net.qoopo.qoopoframework.jpa.core.interfaces.CoreMetadataFile;
+import net.qoopo.qoopoframework.jpa.core.interfaces.CoreMetadataNote;
+import net.qoopo.qoopoframework.jpa.core.interfaces.ItemChatter;
 
 /**
  * Interface para el bean bean maneja la pantalla que muestra los metadatos
@@ -44,9 +44,6 @@ public interface ChatterInterface {
 
     public void seleccionarTipoActividad();
 
-    /**
-     * Guarda una nueva actividad
-     */
     public void agregarActividad();
 
     public void marcarHecho(CoreMetadataActividad actividad);

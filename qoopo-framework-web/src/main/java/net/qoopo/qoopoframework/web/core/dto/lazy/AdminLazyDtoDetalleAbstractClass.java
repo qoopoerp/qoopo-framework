@@ -3,13 +3,13 @@ package net.qoopo.qoopoframework.web.core.dto.lazy;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.qoopo.qoopoframework.core.business.GenericBusiness;
-import net.qoopo.qoopoframework.core.db.core.base.EntidadBase;
-import net.qoopo.qoopoframework.core.db.core.base.dtos.DtoBase;
-import net.qoopo.qoopoframework.core.db.core.base.dtos.base.OpcionBase;
-import net.qoopo.qoopoframework.core.db.filtro.Filtro;
-import net.qoopo.qoopoframework.core.db.filtro.condicion.Campo;
-import net.qoopo.qoopoframework.core.db.filtro.condicion.Condicion;
+import net.qoopo.qoopoframework.jpa.core.EntidadBase;
+import net.qoopo.qoopoframework.jpa.core.dtos.DtoBase;
+import net.qoopo.qoopoframework.jpa.filter.Filter;
+import net.qoopo.qoopoframework.jpa.filter.condicion.Campo;
+import net.qoopo.qoopoframework.jpa.filter.condicion.Condicion;
+import net.qoopo.qoopoframework.models.OpcionBase;
+import net.qoopo.qoopoframework.repository.QoopoJpaRepository;
 import net.qoopo.qoopoframework.web.util.FacesUtils;
 
 /**
@@ -22,7 +22,7 @@ import net.qoopo.qoopoframework.web.util.FacesUtils;
 public abstract class AdminLazyDtoDetalleAbstractClass<R extends EntidadBase, S extends DtoBase, T>
         extends AdminLazyDtoAbstractClass<R, S> {
 
-    public AdminLazyDtoDetalleAbstractClass(String entityClassName, Class<R> entityClass, Filtro inicial,
+    public AdminLazyDtoDetalleAbstractClass(String entityClassName, Class<R> entityClass, Filter inicial,
             List<Condicion> condicionesDisponibles,
             List<Campo> campos, List<OpcionBase> opcionesGrupos) {
         super(entityClassName, entityClass, inicial, condicionesDisponibles, campos, opcionesGrupos);
@@ -42,7 +42,7 @@ public abstract class AdminLazyDtoDetalleAbstractClass<R extends EntidadBase, S 
     public void update() {
         try {
             for (T det : listaEliminar) {
-                GenericBusiness.delete(det);
+                QoopoJpaRepository.delete(det);
             }
         } catch (Exception e) {
             FacesUtils.addErrorMessage(languageProvider.getTextValue(20) + e.getMessage());

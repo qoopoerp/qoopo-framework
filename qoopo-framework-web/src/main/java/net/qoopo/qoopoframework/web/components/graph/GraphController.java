@@ -7,12 +7,14 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.poi.ss.formula.functions.T;
+
 import lombok.Getter;
 import lombok.Setter;
-import net.qoopo.qoopoframework.core.db.core.base.EntidadBase;
-import net.qoopo.qoopoframework.core.db.core.base.dtos.base.OpcionBase;
-import net.qoopo.qoopoframework.core.db.core.base.interfaces.Graficable;
-import net.qoopo.qoopoframework.core.lang.LanguageProvider;
+import net.qoopo.qoopoframework.jpa.core.EntidadBase;
+import net.qoopo.qoopoframework.jpa.core.interfaces.Graficable;
+import net.qoopo.qoopoframework.lang.LanguageProvider;
+import net.qoopo.qoopoframework.models.OpcionBase;
 import net.qoopo.qoopoframework.web.core.jpa.AdminAbstractClass;
 import net.qoopo.util.NVL;
 import net.qoopo.util.graph.QChartJS;

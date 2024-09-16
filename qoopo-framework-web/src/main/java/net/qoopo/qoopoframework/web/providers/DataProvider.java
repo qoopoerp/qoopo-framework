@@ -3,10 +3,12 @@ package net.qoopo.qoopoframework.web.providers;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import org.apache.poi.ss.formula.functions.T;
+
 import jakarta.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
-import net.qoopo.qoopoframework.core.db.core.base.EntidadBase;
+import net.qoopo.qoopoframework.jpa.core.EntidadBase;
 import net.qoopo.qoopoframework.web.AppSessionBeanInterface;
 
 @Getter

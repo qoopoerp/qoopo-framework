@@ -7,8 +7,8 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.qoopo.qoopoframework.core.db.core.base.dtos.base.OpcionBase;
-import net.qoopo.qoopoframework.core.db.core.base.interfaces.Graficable;
+import net.qoopo.qoopoframework.jpa.core.interfaces.Graficable;
+import net.qoopo.qoopoframework.models.OpcionBase;
 
 /**
  * DTO que representa una columna en la vista de kanban

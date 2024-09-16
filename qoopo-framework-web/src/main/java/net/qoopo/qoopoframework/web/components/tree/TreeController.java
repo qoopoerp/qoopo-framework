@@ -11,10 +11,10 @@ import java.util.logging.Logger;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
-import net.qoopo.qoopoframework.core.db.core.base.EntidadBase;
-import net.qoopo.qoopoframework.core.db.core.base.dtos.base.Columna;
-import net.qoopo.qoopoframework.core.db.core.base.dtos.base.OpcionBase;
-import net.qoopo.qoopoframework.core.db.core.base.interfaces.Agrupable;
+import net.qoopo.qoopoframework.jpa.core.EntidadBase;
+import net.qoopo.qoopoframework.jpa.core.interfaces.Agrupable;
+import net.qoopo.qoopoframework.models.Columna;
+import net.qoopo.qoopoframework.models.OpcionBase;
 import net.qoopo.qoopoframework.web.core.jpa.AdminAbstractClass;
 
 /**

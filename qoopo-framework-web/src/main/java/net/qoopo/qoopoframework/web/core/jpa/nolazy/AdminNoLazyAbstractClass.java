@@ -2,12 +2,12 @@ package net.qoopo.qoopoframework.web.core.jpa.nolazy;
 
 import java.util.List;
 
-import net.qoopo.qoopoframework.core.business.Filtros;
-import net.qoopo.qoopoframework.core.db.core.base.EntidadBase;
-import net.qoopo.qoopoframework.core.db.core.base.dtos.base.OpcionBase;
-import net.qoopo.qoopoframework.core.db.filtro.Filtro;
-import net.qoopo.qoopoframework.core.db.filtro.condicion.Campo;
-import net.qoopo.qoopoframework.core.db.filtro.condicion.Condicion;
+import net.qoopo.qoopoframework.jpa.core.EntidadBase;
+import net.qoopo.qoopoframework.jpa.filter.Filter;
+import net.qoopo.qoopoframework.jpa.filter.condicion.Campo;
+import net.qoopo.qoopoframework.jpa.filter.condicion.Condicion;
+import net.qoopo.qoopoframework.models.OpcionBase;
+import net.qoopo.qoopoframework.repository.FilterJpaRepository;
 import net.qoopo.qoopoframework.web.core.jpa.AdminAbstractClass;
 
 /**
@@ -19,7 +19,7 @@ import net.qoopo.qoopoframework.web.core.jpa.AdminAbstractClass;
  */
 public abstract class AdminNoLazyAbstractClass<T extends EntidadBase> extends AdminAbstractClass<T> {
 
-    public AdminNoLazyAbstractClass(String entityClassName, Class<T> entityClass, Filtro inicial,
+    public AdminNoLazyAbstractClass(String entityClassName, Class<T> entityClass, Filter inicial,
             List<Condicion> condicionesDisponibles,
             List<Campo> campos, List<OpcionBase> opcionesGrupos) {
         super(entityClassName, entityClass, inicial, condicionesDisponibles, campos, opcionesGrupos);
@@ -95,7 +95,7 @@ public abstract class AdminNoLazyAbstractClass<T extends EntidadBase> extends Ad
      * implementaciones
      */
     public void loadData() {
-        setLista(Filtros.filtrar(filter.getFiltro()));
+        setLista(FilterJpaRepository.filtrar(filter.getFiltro()));
         listaSeleccionados.clear();
         // QoopoUtil.launchErrorTrace();
     }

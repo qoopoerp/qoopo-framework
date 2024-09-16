@@ -10,7 +10,7 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.ServletContext;
-import net.qoopo.qoopoframework.core.lang.LanguageProvider;
+import net.qoopo.qoopoframework.lang.LanguageProvider;
 import net.qoopo.qoopoframework.web.AppSessionBeanInterface;
 import net.qoopo.util.reports.Reporte;
 import net.sf.jasperreports.engine.JRException;

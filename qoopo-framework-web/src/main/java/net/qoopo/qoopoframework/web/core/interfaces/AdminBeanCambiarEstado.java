@@ -1,6 +1,6 @@
 package net.qoopo.qoopoframework.web.core.interfaces;
 
-import net.qoopo.qoopoframework.core.db.core.base.dtos.Estado;
+import net.qoopo.qoopoframework.jpa.core.dtos.Estado;
 
 /**
  * Interface que debe implementar los beans que manejan entidades que cambian de

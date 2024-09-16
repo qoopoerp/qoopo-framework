@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.qoopo.qoopoframework.core.db.core.base.dtos.ActionWrapper;
+import net.qoopo.qoopoframework.util.ActionWrapper;
 import net.qoopo.util.Accion;
 
 /**

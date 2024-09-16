@@ -50,22 +50,22 @@ import net.qoopo.qoopo.exporter.xls.XlsExporter;
 import net.qoopo.qoopo.exporter.xls.XlsImporter;
 import net.qoopo.qoopo.exporter.xlsx.XlsxExporter;
 import net.qoopo.qoopo.exporter.xlsx.XlsxImporter;
-import net.qoopo.qoopoframework.core.business.GenericBusiness;
-import net.qoopo.qoopoframework.core.db.core.base.EntidadBase;
-import net.qoopo.qoopoframework.core.db.core.base.dtos.base.OpcionBase;
-import net.qoopo.qoopoframework.core.db.core.base.interfaces.Agrupable;
-import net.qoopo.qoopoframework.core.db.core.base.interfaces.Auditable;
-import net.qoopo.qoopoframework.core.db.core.base.interfaces.CoreMetadata;
-import net.qoopo.qoopoframework.core.db.core.base.interfaces.Eventable;
-import net.qoopo.qoopoframework.core.db.core.base.interfaces.Graficable;
-import net.qoopo.qoopoframework.core.db.core.base.interfaces.Ordenable;
-import net.qoopo.qoopoframework.core.db.filtro.Filtro;
-import net.qoopo.qoopoframework.core.db.filtro.GeneralFilter;
-import net.qoopo.qoopoframework.core.db.filtro.condicion.Campo;
-import net.qoopo.qoopoframework.core.db.filtro.condicion.Condicion;
-import net.qoopo.qoopoframework.core.db.filtro.condicion.Valor;
-import net.qoopo.qoopoframework.core.lang.LanguageProvider;
-import net.qoopo.qoopoframework.core.util.QoopoUtil;
+import net.qoopo.qoopoframework.jpa.core.EntidadBase;
+import net.qoopo.qoopoframework.jpa.core.interfaces.Agrupable;
+import net.qoopo.qoopoframework.jpa.core.interfaces.Auditable;
+import net.qoopo.qoopoframework.jpa.core.interfaces.CoreMetadata;
+import net.qoopo.qoopoframework.jpa.core.interfaces.Eventable;
+import net.qoopo.qoopoframework.jpa.core.interfaces.Graficable;
+import net.qoopo.qoopoframework.jpa.core.interfaces.Ordenable;
+import net.qoopo.qoopoframework.jpa.filter.Filter;
+import net.qoopo.qoopoframework.jpa.filter.GeneralFilter;
+import net.qoopo.qoopoframework.jpa.filter.condicion.Campo;
+import net.qoopo.qoopoframework.jpa.filter.condicion.Condicion;
+import net.qoopo.qoopoframework.jpa.filter.condicion.Valor;
+import net.qoopo.qoopoframework.lang.LanguageProvider;
+import net.qoopo.qoopoframework.models.OpcionBase;
+import net.qoopo.qoopoframework.repository.QoopoJpaRepository;
+import net.qoopo.qoopoframework.util.QoopoUtil;
 import net.qoopo.qoopoframework.web.AppSessionBeanInterface;
 import net.qoopo.qoopoframework.web.ImagenesBean;
 import net.qoopo.qoopoframework.web.components.filter.FilterController;
@@ -169,7 +169,7 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
 
     protected final List<Condicion> condicionesDisponibles = new ArrayList<>();
 
-    protected Filtro inicial = null;
+    protected Filter inicial = null;
 
     protected Condicion condicionFija = null;
 
@@ -221,7 +221,7 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
         }
     };
 
-    public AdminAbstractClass(String entityClassName, Class<T> entityClass, Filtro inicial,
+    public AdminAbstractClass(String entityClassName, Class<T> entityClass, Filter inicial,
             List<Condicion> condicionesDisponibles,
             List<Campo> campos,
             List<OpcionBase> opcionesGrupos) {
@@ -340,7 +340,7 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
             if (viewOption.getValue() == ViewOption.FORM) {
                 // carga un objeto con el id del parametro
                 if (FacesUtils.getRequestParameter("id") != null) {
-                    edit((T) GenericBusiness.buscar(entityClass, Long.valueOf(FacesUtils.getRequestParameter("id"))));
+                    edit((T) QoopoJpaRepository.find(entityClass, Long.valueOf(FacesUtils.getRequestParameter("id"))));
                 }
             }
         } catch (Exception e) {
@@ -370,7 +370,7 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
      */
     public void buildFilter() {
         try {
-            Filtro _inicial = null;
+            Filter _inicial = null;
 
             if (this.inicial == null)
                 _inicial = GeneralFilter.all(entityClassName);
@@ -606,22 +606,21 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
                 if (item instanceof Auditable) {
                     // solo agrega un metadato en caso que no exista uno
                     if (((Auditable) item).getMetadato() != null) {
-                        CoreMetadata metaDatos = (CoreMetadata) GenericBusiness.buscar(CoreMetadata.class,
-                                ((Auditable) item).getMetadato().getId());
-                        if (metaDatos == null) {
-                            log.severe("[x] Los metadatos no se pudieron obtener para eliminar el objeto, el id es="
-                                    + ((Auditable) objeto).getMetadato().getId());
-                        }
+                        // CoreMetadata metaDatos = (CoreMetadata)
+                        // GenericBusiness.buscar(CoreMetadata.class,((Auditable)
+                        // item).getMetadato().getId());
+                        CoreMetadata metaDatos = ((Auditable) objeto).getMetadato();
                         // actualiza el item para que ya no apunte a los metadato
                         ((Auditable) item).setMetadato(null);
-                        GenericBusiness.edit(item);
+                        QoopoJpaRepository.edit(item);
                         if (metaDatos != null) {
-                            GenericBusiness.deleteAll(metaDatos.getAuditorias());
-                            GenericBusiness.delete(metaDatos);
+                            QoopoJpaRepository.deleteAll(metaDatos.getAuditorias());
+                            QoopoJpaRepository.deleteAll(metaDatos.getActividades());
+                            QoopoJpaRepository.delete(metaDatos);
                         }
                     }
                 }
-                GenericBusiness.delete(item);
+                QoopoJpaRepository.delete(item);
                 postDelete(item);
                 loadData();
                 FacesUtils.addInfoMessage(languageProvider.getTextValue(22));
@@ -644,23 +643,21 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
                 if (objeto instanceof Auditable) {
                     // solo agrega un metadato en caso que no exista uno
                     if (((Auditable) objeto).getMetadato() != null) {
-                        CoreMetadata metaDatos = (CoreMetadata) GenericBusiness.buscar(CoreMetadata.class,
-                                ((Auditable) objeto).getMetadato().getId());
-
-                        if (metaDatos == null) {
-                            log.severe("[x] Los metadatos no se pudieron obtener para eliminar el objeto, el id es="
-                                    + ((Auditable) objeto).getMetadato().getId());
-                        }
+                        // CoreMetadata metaDatos = (CoreMetadata)
+                        // GenericBusiness.buscar(CoreMetadata.class,((Auditable)
+                        // objeto).getMetadato().getId());
+                        CoreMetadata metaDatos = ((Auditable) objeto).getMetadato();
                         // actualiza el item para que ya no apunte a los metadato
                         ((Auditable) objeto).setMetadato(null);
-                        GenericBusiness.edit(objeto);
+                        QoopoJpaRepository.edit(objeto);
                         if (metaDatos != null) {
-                            GenericBusiness.deleteAll(metaDatos.getAuditorias());
-                            GenericBusiness.delete(metaDatos);
+                            QoopoJpaRepository.deleteAll(metaDatos.getAuditorias());
+                            QoopoJpaRepository.deleteAll(metaDatos.getActividades());
+                            QoopoJpaRepository.delete(metaDatos);
                         }
                     }
                 }
-                GenericBusiness.delete(objeto);
+                QoopoJpaRepository.delete(objeto);
                 postDelete(objeto);
                 loadData();
                 if (nav.getActual() >= getTotal()) {
@@ -729,7 +726,7 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
                 ((Auditable) objeto).setMetadato(sessionBean.agregarCreacion(((Auditable) objeto).getMetadato()));
                 chatter.saveProperties();
             }
-            objeto = (T) GenericBusiness.create(objeto);
+            objeto = (T) QoopoJpaRepository.create(objeto);
             loadData();
             edit(objeto);
         } catch (Exception ex) {
@@ -752,9 +749,9 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
                 chatter.saveProperties(false); // ya no guarda los metadatos pues se guardan en cascada con el edit
                                                // siguiente a esta linea
             }
-            objeto = (T) GenericBusiness.edit(objeto);
+            objeto = (T) QoopoJpaRepository.edit(objeto);
             // loadData();
-            objeto = (T) GenericBusiness.buscar(objeto.getClass(), objeto.getId());
+            objeto = (T) QoopoJpaRepository.find(objeto.getClass(), objeto.getId());
             edit(objeto);
         } catch (Exception ex) {
             FacesUtils.addErrorMessage(ex.getMessage());
@@ -788,7 +785,7 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
                 for (T item : listaSeleccionados) {
                     try {
                         if (validateDelete(item)) {
-                            GenericBusiness.delete(item);
+                            QoopoJpaRepository.delete(item);
                             postDelete(item);
                         }
                     } catch (Exception e) {
@@ -1126,7 +1123,7 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
                     if (item != null) {
                         item.importar(importer);
                         importarItem(item, importer);
-                        GenericBusiness.create(item);
+                        QoopoJpaRepository.create(item);
                         log.log(Level.INFO, "[+] Registro importado:{0}", item.toString());
                     } else {
                         log.severe("[!] El factory devolvio nulo");
@@ -1183,7 +1180,7 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
                 }
                 i++;
             }
-            GenericBusiness.editAll(getData());
+            QoopoJpaRepository.editAll(getData());
         } catch (Exception e) {
             FacesUtils.addErrorMessage(e);
         }

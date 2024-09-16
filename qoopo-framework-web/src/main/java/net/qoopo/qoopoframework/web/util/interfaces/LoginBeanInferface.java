@@ -1,6 +1,6 @@
 package net.qoopo.qoopoframework.web.util.interfaces;
 
-import net.qoopo.qoopoframework.core.db.core.base.interfaces.CoreUser;
+import net.qoopo.qoopoframework.jpa.core.interfaces.CoreUser;
 
 public interface LoginBeanInferface {
 

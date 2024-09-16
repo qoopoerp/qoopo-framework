@@ -11,8 +11,8 @@ import jakarta.faces.model.SelectItem;
 import jakarta.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
-import net.qoopo.qoopoframework.core.lang.LanguageProvider;
-import net.qoopo.qoopoframework.core.util.PeriodoManager;
+import net.qoopo.qoopoframework.lang.LanguageProvider;
+import net.qoopo.qoopoframework.util.PeriodoManager;
 import net.qoopo.qoopoframework.web.AppSessionBeanInterface;
 import net.qoopo.qoopoframework.web.GestorFecha;
 import net.qoopo.qoopoframework.web.vistas.ReporteBean;
@@ -33,9 +33,6 @@ public abstract class InformeBean implements Serializable {
 
     @Inject
     protected AppSessionBeanInterface sessionBean;
-
-    // @Inject
-    // protected QoopoFormater formatter;
 
     @Inject
     protected GestorFecha gestorFecha;

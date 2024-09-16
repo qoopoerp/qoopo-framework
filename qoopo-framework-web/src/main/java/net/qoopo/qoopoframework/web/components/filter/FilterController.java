@@ -14,13 +14,13 @@ import org.primefaces.event.UnselectEvent;
 import jakarta.faces.event.AjaxBehaviorEvent;
 import lombok.Getter;
 import lombok.Setter;
-import net.qoopo.qoopoframework.core.db.core.base.dtos.base.OpcionBase;
-import net.qoopo.qoopoframework.core.db.filtro.Filtro;
-import net.qoopo.qoopoframework.core.db.filtro.condicion.Campo;
-import net.qoopo.qoopoframework.core.db.filtro.condicion.Condicion;
-import net.qoopo.qoopoframework.core.db.filtro.condicion.Funcion;
-import net.qoopo.qoopoframework.core.db.filtro.condicion.Valor;
-import net.qoopo.qoopoframework.core.util.QoopoBuilder;
+import net.qoopo.qoopoframework.jpa.filter.Filter;
+import net.qoopo.qoopoframework.jpa.filter.condicion.Campo;
+import net.qoopo.qoopoframework.jpa.filter.condicion.Condicion;
+import net.qoopo.qoopoframework.jpa.filter.condicion.Funcion;
+import net.qoopo.qoopoframework.jpa.filter.condicion.Valor;
+import net.qoopo.qoopoframework.models.OpcionBase;
+import net.qoopo.qoopoframework.util.QoopoBuilder;
 import net.qoopo.util.Accion;
 
 /**
@@ -45,7 +45,7 @@ public class FilterController implements Serializable {
     private List<Campo> camposDisponibles; // los campos disponibles para la busqueda en la funcion de completar
     private List<OpcionBase> camposGrupo; // los campos por los que se puede agrupar
     private OpcionBase campoGrupo = OpcionBase.SIN_GRUPO;
-    private Filtro filtro;
+    private Filter filtro;
     /**
      * el método que se llamará cuando se procese le filtro, generalmente cargar la
      * lista
@@ -65,7 +65,7 @@ public class FilterController implements Serializable {
         //
     }
 
-    public FilterController(Filtro filtroInicial, List<Campo> camposDisponibles, Accion accion) {
+    public FilterController(Filter filtroInicial, List<Campo> camposDisponibles, Accion accion) {
         // if (filtroInicial == null) {
         // throw new QoopoException("El filtro inicial no puede ser nulo");
         // }
@@ -75,12 +75,12 @@ public class FilterController implements Serializable {
         this.condicionPermanente = filtro.getCondicion();
     }
 
-    public FilterController(Filtro filtroInicial, Condicion condicionPermanente, List<Campo> camposDisponibles,
+    public FilterController(Filter filtroInicial, Condicion condicionPermanente, List<Campo> camposDisponibles,
             Accion accion) {
         this(filtroInicial, condicionPermanente, camposDisponibles, null, accion);
     }
 
-    public FilterController(Filtro filtroInicial, Condicion condicionPermanente, List<Campo> camposDisponibles,
+    public FilterController(Filter filtroInicial, Condicion condicionPermanente, List<Campo> camposDisponibles,
             List<OpcionBase> camposGrupo, Accion accion) {
         this.filtro = filtroInicial;
         this.camposDisponibles = camposDisponibles;
@@ -107,7 +107,7 @@ public class FilterController implements Serializable {
      *
      * @param filtro
      */
-    public void seleccionarFiltro(Filtro filtro) {
+    public void seleccionarFiltro(Filter filtro) {
         seleccionarFiltroOnly(filtro);
         procesar();
     }
@@ -117,7 +117,7 @@ public class FilterController implements Serializable {
      *
      * @param filtro
      */
-    public void seleccionarFiltroOnly(Filtro filtro) {
+    public void seleccionarFiltroOnly(Filter filtro) {
         // log.info("--> Seleccionar filtro only " + filtro);
         if (condiciones == null) {
             condiciones = new ArrayList<>();
@@ -356,7 +356,7 @@ public class FilterController implements Serializable {
             //
         }
 
-        public Builder filtro(Filtro filtro) {
+        public Builder filtro(Filter filtro) {
             gestor.setFiltro(filtro);
             return this;
         }

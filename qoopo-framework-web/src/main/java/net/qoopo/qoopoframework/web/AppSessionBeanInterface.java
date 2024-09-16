@@ -2,8 +2,8 @@ package net.qoopo.qoopoframework.web;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
-import net.qoopo.qoopoframework.core.db.core.base.interfaces.CoreMetadata;
-import net.qoopo.qoopoframework.core.db.core.base.interfaces.CoreUser;
+import net.qoopo.qoopoframework.jpa.core.interfaces.CoreMetadata;
+import net.qoopo.qoopoframework.jpa.core.interfaces.CoreUser;
 
 /**
  * Esta interface debe ser implementada por el bean que da información de la
