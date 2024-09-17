@@ -2,15 +2,28 @@ package net.qoopo.qoopoframework.router;
 
 import java.util.Objects;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- *
- * @author noroot
+ * Representa una ruta de la aplicación
+ * 
+ * TYPE_INVALID - La ruta es invalida
+ * TYPE_PUBLIC - La ruta es publica y no requiere estar autenticado para acceder
+ * TYPE_WEBSITE - La ruta es parte del acceso web, en caso de no estar
+ * autenticado se redirige hacia el home
+ * 
+ * @author Alberto
  */
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class QRoute {
 
     public static final int TYPE_INVALID = -1;
@@ -20,61 +33,41 @@ public class QRoute {
 
     private String route;
     private String page;
+    @Builder.Default
     private boolean requireSession = false;
     // ademas de requerir sesion, puede ser que una pagina no requiera que tenga un
     // permiso en la tabla de permisos, este es el caso de paginas como inicio y
     // paginas de errores,
     // todos tienen permiso por default y no se debe especificar en ningun modulo
+    @Builder.Default
     private boolean requirePermission = false;
     private int type;
+    @Builder.Default
     private boolean exactRoute = false;
 
-    public static final QRoute INVALID_ROUTE = new QRoute("404.jsf", "404.jsf", false, TYPE_INVALID, true);
+    public static final QRoute INVALID_ROUTE = QRoute.build("404.jsf", "404.jsf", false, TYPE_INVALID, true);
+
+    public static QRoute build(String page, boolean requireSession, int type, boolean exactRoute) {
+        // return new QRoute(page, requireSession, type, exactRoute);
+        return QRoute.builder().page(page).route(page).requireSession(requireSession).type(type).exactRoute(exactRoute)
+                .build();
+    }
+
+    public static QRoute build(String page, boolean requireSession, boolean requirePermission, int type,
+            boolean exactRoute) {
+        return QRoute.builder().page(page).route(page).requireSession(requireSession)
+                .requirePermission(requirePermission).type(type).exactRoute(exactRoute).build();
+    }
 
     public static QRoute build(String route, String page, boolean requireSession, int type, boolean exactRoute) {
-        return new QRoute(route, page, requireSession, type, exactRoute);
+        return QRoute.builder().page(page).route(route).requireSession(requireSession).type(type).exactRoute(exactRoute)
+                .build();
     }
 
     public static QRoute build(String route, String page, boolean requireSession, boolean requirePermission, int type,
             boolean exactRoute) {
-        return new QRoute(route, page, requireSession, requirePermission, type, exactRoute);
-    }
-
-    public QRoute() {
-        //
-    }
-
-    public QRoute(String route, String page, boolean requireSession, int type) {
-        this.route = route;
-        this.page = page;
-        this.requireSession = requireSession;
-        this.type = type;
-    }
-
-    public QRoute(String route, String page, boolean requireSession, boolean requirePermission, int type) {
-        this.route = route;
-        this.page = page;
-        this.requireSession = requireSession;
-        this.requirePermission = requirePermission;
-        this.type = type;
-    }
-
-    public QRoute(String route, String page, boolean requireSession, int type, boolean exactRoute) {
-        this.route = route;
-        this.page = page;
-        this.requireSession = requireSession;
-        this.type = type;
-        this.exactRoute = exactRoute;
-    }
-
-    public QRoute(String route, String page, boolean requireSession, boolean requirePermission, int type,
-            boolean exactRoute) {
-        this.route = route;
-        this.page = page;
-        this.requireSession = requireSession;
-        this.requirePermission = requirePermission;
-        this.type = type;
-        this.exactRoute = exactRoute;
+        return QRoute.builder().page(page).route(route).requireSession(requireSession)
+                .requirePermission(requirePermission).type(type).exactRoute(exactRoute).build();
     }
 
     @Override

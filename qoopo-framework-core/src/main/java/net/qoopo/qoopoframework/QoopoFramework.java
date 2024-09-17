@@ -1,7 +1,13 @@
 package net.qoopo.qoopoframework;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import net.qoopo.qoopoframework.controller.QControllerManager;
+import net.qoopo.qoopoframework.services.QoopoService;
+import net.qoopo.qoopoframework.tasks.QoopoTask;
 
 /**
  * QoopoFramework es un conjunto de rutinas y utilitarios que serán utilizados
@@ -18,13 +24,31 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class QoopoFramework {
 
     private static QoopoFramework INSTANCE = null;
 
     private String dataSourceName;
+    @Builder.Default
+    private boolean routerEnabled = false;
+    @Builder.Default
+    private String routerLoginPage = "/login.jsf";
+    @Builder.Default
+    private String routerPublicPage = "/home.jsf";
+    @Builder.Default
+    private String routerInvalidPage = "/login.jsf";
 
     public static final String version = "1.0.0-beta";
+
+    private QoopoFramework() {
+        //
+    }
+
+    public static void config(QoopoFramework qf) {
+        INSTANCE = qf;
+    }
 
     public static QoopoFramework get() {
         if (INSTANCE == null) {
@@ -34,14 +58,14 @@ public class QoopoFramework {
     }
 
     /**
-     * Inicializa el framework con los parámetros necesarios como el nombre del
-     * datasource
-     * 
-     * @param datasourceName
-     * @return
+     * Carga todas las implementaciones que necesita el framework como servicios,
+     * tareas
      */
-    public QoopoFramework datasource(String datasourceName) {
-        this.dataSourceName = datasourceName;
-        return this;
+    public void load() {
+        QoopoTask.load();
+        QoopoTask.start();
+        QoopoService.load();
+        QoopoService.start();
+        QControllerManager.load();        
     }
 }

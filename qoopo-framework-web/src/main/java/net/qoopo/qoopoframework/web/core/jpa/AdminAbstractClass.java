@@ -353,7 +353,7 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
             T temp = (T) objeto.clonar();
             if (objeto instanceof Auditable) {
                 if (((Auditable) temp).getMetadato() == null) {
-                    ((Auditable) temp).setMetadato(sessionBean.agregarEvento(((Auditable) temp).getMetadato(),
+                    ((Auditable) temp).setMetadato(sessionBean.addEvent(((Auditable) temp).getMetadato(),
                             "Clonado de " + objeto.toString()));
                 }
                 chatter.saveProperties();
@@ -683,7 +683,7 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
                 if (objeto instanceof Auditable) {
                     // solo agrega un metadato en caso que no exista uno
                     if (((Auditable) objeto).getMetadato() == null) {
-                        ((Auditable) objeto).setMetadato(sessionBean.agregarEvento(((Auditable) objeto).getMetadato(),
+                        ((Auditable) objeto).setMetadato(sessionBean.addEvent(((Auditable) objeto).getMetadato(),
                                 "Archivado"));
                     }
                     chatter.saveProperties();
@@ -705,7 +705,7 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
             if (objeto instanceof Auditable) {
                 // solo agrega un metadato en caso que no exista uno
                 if (((Auditable) objeto).getMetadato() == null) {
-                    ((Auditable) objeto).setMetadato(sessionBean.agregarEvento(((Auditable) objeto).getMetadato(),
+                    ((Auditable) objeto).setMetadato(sessionBean.addEvent(((Auditable) objeto).getMetadato(),
                             "Desarchivado"));
                 }
                 chatter.saveProperties();
@@ -723,7 +723,7 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
     public void save() {
         try {
             if (objeto instanceof Auditable) {
-                ((Auditable) objeto).setMetadato(sessionBean.agregarCreacion(((Auditable) objeto).getMetadato()));
+                ((Auditable) objeto).setMetadato(sessionBean.addCreatedEvent(((Auditable) objeto).getMetadato()));
                 chatter.saveProperties();
             }
             objeto = (T) QoopoJpaRepository.create(objeto);
@@ -744,7 +744,7 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
             if (objeto instanceof Auditable) {
                 // solo agrega un metadato en caso que no exista uno
                 if (((Auditable) objeto).getMetadato() == null) {
-                    ((Auditable) objeto).setMetadato(sessionBean.agregarEdicion(((Auditable) objeto).getMetadato()));
+                    ((Auditable) objeto).setMetadato(sessionBean.addEditedEvent(((Auditable) objeto).getMetadato()));
                 }
                 chatter.saveProperties(false); // ya no guarda los metadatos pues se guardan en cascada con el edit
                                                // siguiente a esta linea
@@ -828,7 +828,7 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
             if (item instanceof Auditable) {
                 // en caso que este objeto no tenga metadato creamos uno
                 if (((Auditable) item).getMetadato() == null) {
-                    ((Auditable) item).setMetadato(sessionBean.agregarEdicion(((Auditable) item).getMetadato()));
+                    ((Auditable) item).setMetadato(sessionBean.addEditedEvent(((Auditable) item).getMetadato()));
                 }
 
                 // actualizo la url en el metadato

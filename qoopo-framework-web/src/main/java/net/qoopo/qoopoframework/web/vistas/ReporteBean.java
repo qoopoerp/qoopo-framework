@@ -11,7 +11,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.ServletContext;
 import net.qoopo.qoopoframework.lang.LanguageProvider;
-import net.qoopo.qoopoframework.web.AppSessionBeanInterface;
 import net.qoopo.util.reports.Reporte;
 import net.sf.jasperreports.engine.JRException;
 
@@ -28,11 +27,11 @@ public class ReporteBean implements Serializable {
 
     private Reporte reporte;
 
-    @Inject
-    private AppSessionBeanInterface sessionBean;
+    // @Inject
+    // private AppSessionBeanInterface sessionBean;
 
-    @Inject
-    protected LanguageProvider textoBean;
+    // @Inject
+    // protected LanguageProvider languageProvider;
 
     public ReporteBean() {
         //

@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Administrador de los controller registrados en Qoopo
+ * Administrador de los controller registrados en Qoopo-framework
  *
  * @author alberto
  */
@@ -24,28 +24,28 @@ public final class QControllerManager {
             INSTANCES.clear();
             observers.clear();
             ServiceLoader<QController> cargados = ServiceLoader.load(QController.class);
-            cargados.forEach(modulo -> {
-                log.info("[+] Controller cargado: [".concat(modulo.getName()).concat("] ")
-                        .concat(modulo.getClass().getName()));
+            cargados.forEach(controller -> {
+                log.info("[+] Controller cargado: [".concat(controller.getName()).concat("] ")
+                        .concat(controller.getClass().getName()));
                 // suscribmos observers
-                List<String> listObservers = modulo.getListSusbriptions();
+                List<String> listObservers = controller.getListSusbriptions();
                 if (listObservers != null && !listObservers.isEmpty()) {
-                    for (String event : modulo.getListSusbriptions()) {
+                    for (String event : controller.getListSusbriptions()) {
                         if (observers.containsKey(event)) {
                             List<QController> tmp = observers.get(event);
                             if (tmp == null) {
                                 tmp = new ArrayList<>();
                             }
-                            tmp.add(modulo);
+                            tmp.add(controller);
                             observers.put(event, tmp);
                         } else {
                             List<QController> tmp = new ArrayList<>();
-                            tmp.add(modulo);
+                            tmp.add(controller);
                             observers.put(event, tmp);
                         }
                     }
                 }
-                INSTANCES.add(modulo);
+                INSTANCES.add(controller);
             });
         } catch (Exception e) {
             log.log(Level.SEVERE, e.getMessage(), e);

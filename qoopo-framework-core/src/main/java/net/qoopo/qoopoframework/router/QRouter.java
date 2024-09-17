@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  * 0 Publico. 1 Sitio Web 2 Backend Se debe indicar el debe existir sesion o no
  * para cada ruta
  *
- * @author noroot
+ * @author Alberto
  */
 public class QRouter {
 
@@ -21,30 +21,7 @@ public class QRouter {
     public static final List<QRoute> ROUTES = new ArrayList<>();
 
     static {
-        // registramos rutas predeterminadas
-        register(new QRoute("/", "/", false, QRoute.TYPE_PUBLIC, true));
-
-        register(new QRoute("/login.jsf", "login.jsf", false, QRoute.TYPE_PUBLIC, true));
-        register(new QRoute("/inicio.jsf", "inicio.jsf", true, false, QRoute.TYPE_BACKEND, true));
-        register(new QRoute("/configuracion/instalacion.jsf", "inicio.jsf", true, false, QRoute.TYPE_BACKEND, true));
-        register(new QRoute("/tpv.jsf", "tpv.jsf", true, QRoute.TYPE_BACKEND, true));
-
-        register(new QRoute("/403.jsf", "403.jsf", false, QRoute.TYPE_PUBLIC, true));
-        register(new QRoute("/404.jsf", "404.jsf", false, QRoute.TYPE_PUBLIC, true));
-        register(new QRoute("/500.jsf", "500.jsf", false, QRoute.TYPE_PUBLIC, true));
-        register(new QRoute("/expirado.jsf", "expirado.jsf", false, QRoute.TYPE_PUBLIC, true));
-        register(new QRoute("/jakarta.faces.resource/", "/jakarta.faces.resource/", false, QRoute.TYPE_PUBLIC, false));
-        register(new QRoute("/resources/", "/resources/", false, QRoute.TYPE_PUBLIC, false));
-        register(new QRoute("/imagestmp/", "/imagestmp/", false, QRoute.TYPE_PUBLIC, false));
-        register(new QRoute("/api/", "/api/", false, QRoute.TYPE_PUBLIC, false));
-
-        register(new QRoute("templateUse.jsf", "templateUse.jsf", false, QRoute.TYPE_PUBLIC, false));
-        register(new QRoute("politicas.jsf", "politicas.jsf", false, QRoute.TYPE_PUBLIC, false));
-        register(new QRoute("politicas2.jsf", "politicas2.jsf", false, QRoute.TYPE_PUBLIC, false));
-        register(new QRoute("politicas.html", "politicas.html", false, QRoute.TYPE_PUBLIC, false));
-        register(new QRoute("politicas2.html", "politicas2.html", false, QRoute.TYPE_PUBLIC, false));
-        register(new QRoute("terms.jsf", "terms.jsf", false, QRoute.TYPE_PUBLIC, false));
-
+      
         // webservices
         // if (urlStr.contains("/mobil/")) {
         // // System.out.println("contiene parte mobil, no debe proteger");

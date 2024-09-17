@@ -1,7 +1,5 @@
 package net.qoopo.qoopoframework.web;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Named;
 import net.qoopo.qoopoframework.jpa.core.interfaces.CoreMetadata;
 import net.qoopo.qoopoframework.jpa.core.interfaces.CoreUser;
 
@@ -12,19 +10,19 @@ import net.qoopo.qoopoframework.jpa.core.interfaces.CoreUser;
  *
  * @author ALBERTO
  */
-@Named
-@ApplicationScoped
+// @Named
+// @ApplicationScoped
 public interface AppSessionBeanInterface {
 
     public CoreUser getUser();
 
     public String getUserName();
 
-    public CoreMetadata agregarEvento(CoreMetadata datos, String evento);
+    public CoreMetadata addEvent(CoreMetadata datos, String evento);
 
-    public CoreMetadata agregarCreacion(CoreMetadata datos);
+    public CoreMetadata addCreatedEvent(CoreMetadata datos);
 
-    public CoreMetadata agregarEdicion(CoreMetadata datos);
+    public CoreMetadata addEditedEvent(CoreMetadata datos);
 
     public void addUrlParam(String param, String value);
 
@@ -33,4 +31,14 @@ public interface AppSessionBeanInterface {
     public String getZonaHoraria();
 
     public Long getEmpresaId();
+
+    public boolean isLogged();
+
+    public boolean isAllowed(String page);
+
+    public boolean isAllowed(String page, String params);
+
+    public boolean isAllowed(String page, String params, boolean abrir);
+
+    public void reloadPermissions();
 }
