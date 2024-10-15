@@ -23,7 +23,7 @@
                     <p:commandButton icon="pi pi-pencil" styleClass="q-autohide"  title="#{texto.texto(81)}" oncomplete="PF('#{cc.attrs.id}uploadPicture').show();" />
                 </div>
                 <div class="float-right">
-                    <p:commandButton icon="pi pi-trash" styleClass="q-autohide"  title="#{texto.texto(82)}" update=":frmMain"  >
+                    <p:commandButton icon="pi pi-trash" styleClass="q-autohide"  title="#{texto.texto(82)}" update="@form"  >
                         <f:setPropertyActionListener value="#{null}" target="#{cc.attrs.value}" />
                     </p:commandButton>
                 </div>

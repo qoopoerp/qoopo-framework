@@ -22,7 +22,7 @@ import net.qoopo.util.date.FechasUtil;
  *
  * @author alberto
  */
-// net.qoopo.qoopo.core.tasks.QoopoTask
+//net.qoopo.qoopoframework.tasks.QoopoTask
 @Getter
 @Setter
 public abstract class QoopoTask extends TimerTask {

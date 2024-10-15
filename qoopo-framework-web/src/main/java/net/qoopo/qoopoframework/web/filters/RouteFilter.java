@@ -110,6 +110,7 @@ public class RouteFilter implements Filter {
                 default:
                     // if (DEBUG) {
                     log.log(Level.WARNING, "[!!!] Recurso no existe [{0}]", urlStr);
+                    log.log(Level.WARNING,"[!!!] Reenviando a [{0}]",QoopoFramework.get().getRouterInvalidPage());
                     // }
                     // res.sendRedirect(req.getContextPath() + "/404.jsf");
                     res.sendRedirect(req.getContextPath() + QoopoFramework.get().getRouterInvalidPage());

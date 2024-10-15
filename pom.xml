@@ -17,6 +17,20 @@
         </repository>
     </repositories>
 
+
+    <distributionManagement>
+        <repository>
+            <id>repo-qoopo-releases</id>
+            <name>Repositorio local de Qoopo</name>
+            <url>http://127.0.0.1:8081/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>repo-qoopo-snapshots</id>
+            <name>snapshots</name>
+            <url>http://127.0.0.1:8081/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <modules>
         <module>qoopo-framework-web</module>
         <module>qoopo-framework-core</module>

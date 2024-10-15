@@ -7,7 +7,6 @@ import net.qoopo.qoopoframework.jpa.filter.Filter;
 import net.qoopo.qoopoframework.jpa.filter.condicion.Campo;
 import net.qoopo.qoopoframework.jpa.filter.condicion.Condicion;
 import net.qoopo.qoopoframework.models.OpcionBase;
-import net.qoopo.qoopoframework.repository.FilterJpaRepository;
 import net.qoopo.qoopoframework.web.core.jpa.AdminAbstractClass;
 
 /**
@@ -95,7 +94,7 @@ public abstract class AdminNoLazyAbstractClass<T extends EntidadBase> extends Ad
      * implementaciones
      */
     public void loadData() {
-        setLista(FilterJpaRepository.filtrar(filter.getFiltro()));
+        setLista(filterRepository.filtrar(filter.getFiltro()));
         listaSeleccionados.clear();
         // QoopoUtil.launchErrorTrace();
     }

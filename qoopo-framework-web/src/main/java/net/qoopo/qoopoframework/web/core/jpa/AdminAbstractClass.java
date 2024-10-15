@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,7 +65,10 @@ import net.qoopo.qoopoframework.jpa.filter.condicion.Condicion;
 import net.qoopo.qoopoframework.jpa.filter.condicion.Valor;
 import net.qoopo.qoopoframework.lang.LanguageProvider;
 import net.qoopo.qoopoframework.models.OpcionBase;
-import net.qoopo.qoopoframework.repository.QoopoJpaRepository;
+import net.qoopo.qoopoframework.repository.FilterJpaRepository;
+import net.qoopo.qoopoframework.repository.QoopoJpaRepositorySingleton;
+import net.qoopo.qoopoframework.repository.Repository;
+import net.qoopo.qoopoframework.util.QLogger;
 import net.qoopo.qoopoframework.util.QoopoUtil;
 import net.qoopo.qoopoframework.web.AppSessionBeanInterface;
 import net.qoopo.qoopoframework.web.ImagenesBean;
@@ -177,6 +181,10 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
 
     protected boolean masivo = false;
 
+    protected FilterJpaRepository<T> filterRepository;
+
+    protected Repository<T, Long> repository;
+
     protected NavController nav = new NavController(new Accion() {
         @Override
         public Object ejecutar(Object... parametros) {
@@ -231,6 +239,7 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
         this.opcionesGrupos.addAll(opcionesGrupos);
         this.condicionesDisponibles.addAll(condicionesDisponibles);
         this.entityClass = entityClass;
+        
     }
 
     protected final ViewOption viewOption = new ViewOption(accion);
@@ -340,7 +349,9 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
             if (viewOption.getValue() == ViewOption.FORM) {
                 // carga un objeto con el id del parametro
                 if (FacesUtils.getRequestParameter("id") != null) {
-                    edit((T) QoopoJpaRepository.find(entityClass, Long.valueOf(FacesUtils.getRequestParameter("id"))));
+                    Optional<T> tmp = repository.find(Long.valueOf(FacesUtils.getRequestParameter("id")));
+                    if (tmp.isPresent())
+                        edit(tmp.get());
                 }
             }
         } catch (Exception e) {
@@ -407,7 +418,7 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
     protected void loadData(Iterable<T> data) {
         if (listaSeleccionados != null)
             listaSeleccionados.clear();
-        log.info("[+] load data");
+        long tInicio = System.currentTimeMillis();
         setData(data);
         loadEvents(data);
         loadGraph(data);
@@ -415,6 +426,7 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
         loadKanban(data);
         loadTimeLine(data);
         sessionBean.addUrlParam("view", viewOption.getStringValue());
+        log.info("[+] load data [" + QLogger.getTimeFormater(System.currentTimeMillis() - tInicio));
     }
 
     /**
@@ -612,15 +624,15 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
                         CoreMetadata metaDatos = ((Auditable) objeto).getMetadato();
                         // actualiza el item para que ya no apunte a los metadato
                         ((Auditable) item).setMetadato(null);
-                        QoopoJpaRepository.edit(item);
+                        repository.save(item);
                         if (metaDatos != null) {
-                            QoopoJpaRepository.deleteAll(metaDatos.getAuditorias());
-                            QoopoJpaRepository.deleteAll(metaDatos.getActividades());
-                            QoopoJpaRepository.delete(metaDatos);
+                            QoopoJpaRepositorySingleton.deleteAll(metaDatos.getAuditorias());
+                            QoopoJpaRepositorySingleton.deleteAll(metaDatos.getActividades());
+                            QoopoJpaRepositorySingleton.delete(metaDatos);
                         }
                     }
                 }
-                QoopoJpaRepository.delete(item);
+                repository.delete(item);
                 postDelete(item);
                 loadData();
                 FacesUtils.addInfoMessage(languageProvider.getTextValue(22));
@@ -649,15 +661,15 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
                         CoreMetadata metaDatos = ((Auditable) objeto).getMetadato();
                         // actualiza el item para que ya no apunte a los metadato
                         ((Auditable) objeto).setMetadato(null);
-                        QoopoJpaRepository.edit(objeto);
+                        repository.save(objeto);
                         if (metaDatos != null) {
-                            QoopoJpaRepository.deleteAll(metaDatos.getAuditorias());
-                            QoopoJpaRepository.deleteAll(metaDatos.getActividades());
-                            QoopoJpaRepository.delete(metaDatos);
+                            QoopoJpaRepositorySingleton.deleteAll(metaDatos.getAuditorias());
+                            QoopoJpaRepositorySingleton.deleteAll(metaDatos.getActividades());
+                            QoopoJpaRepositorySingleton.delete(metaDatos);
                         }
                     }
                 }
-                QoopoJpaRepository.delete(objeto);
+                repository.delete(objeto);
                 postDelete(objeto);
                 loadData();
                 if (nav.getActual() >= getTotal()) {
@@ -726,7 +738,7 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
                 ((Auditable) objeto).setMetadato(sessionBean.addCreatedEvent(((Auditable) objeto).getMetadato()));
                 chatter.saveProperties();
             }
-            objeto = (T) QoopoJpaRepository.create(objeto);
+            objeto = (T) repository.save(objeto);
             loadData();
             edit(objeto);
         } catch (Exception ex) {
@@ -749,9 +761,14 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
                 chatter.saveProperties(false); // ya no guarda los metadatos pues se guardan en cascada con el edit
                                                // siguiente a esta linea
             }
-            objeto = (T) QoopoJpaRepository.edit(objeto);
+            objeto = (T) repository.save(objeto);
             // loadData();
-            objeto = (T) QoopoJpaRepository.find(objeto.getClass(), objeto.getId());
+            Optional<T> tmp = repository.find(objeto.getId());
+            if (tmp.isPresent())
+                objeto = tmp.get();
+            else
+                log.severe("no se encontro el objeto deespues de actualizar");
+
             edit(objeto);
         } catch (Exception ex) {
             FacesUtils.addErrorMessage(ex.getMessage());
@@ -785,7 +802,7 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
                 for (T item : listaSeleccionados) {
                     try {
                         if (validateDelete(item)) {
-                            QoopoJpaRepository.delete(item);
+                            repository.delete(item);
                             postDelete(item);
                         }
                     } catch (Exception e) {
@@ -814,6 +831,7 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
      * @param item
      */
     public void edit(T item) {
+        long tInicio = System.currentTimeMillis();
         // camba la url para mostrar el id actual
         if (item != null && !masivo) {
             sessionBean.addUrlParam("id", String.valueOf(item.getId()));
@@ -844,6 +862,7 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
         } else {
             log.severe("EL BEAN DEL METADATOS ESTA NULO !!!");
         }
+        log.info("[+] edit [" + QLogger.getTime(tInicio) + "]");
     }
 
     /**
@@ -1123,7 +1142,7 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
                     if (item != null) {
                         item.importar(importer);
                         importarItem(item, importer);
-                        QoopoJpaRepository.create(item);
+                        repository.save(item);
                         log.log(Level.INFO, "[+] Registro importado:{0}", item.toString());
                     } else {
                         log.severe("[!] El factory devolvio nulo");
@@ -1180,7 +1199,7 @@ public abstract class AdminAbstractClass<T extends EntidadBase> implements Admin
                 }
                 i++;
             }
-            QoopoJpaRepository.editAll(getData());
+            repository.saveAll(getData());
         } catch (Exception e) {
             FacesUtils.addErrorMessage(e);
         }

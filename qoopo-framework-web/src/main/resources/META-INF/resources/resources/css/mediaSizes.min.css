@@ -1,0 +1,159 @@
+/**
+    Hojas de estilo para configuracion de mediassize para Qoopo
+    PROPIEDAD DE Qoopo SA.
+
+    Document        : mediasSize.css
+    Created on      : 07/05/2021
+    Author          : Alberto García
+    Description     :
+*/
+
+/******************************************************
+        CONFIGURACION MEDIAS
+*******************************************************/
+
+/*DEL PRIME FACES SEGUN ORDEN DE TAMANIO DE MENOR A MAYOR
+g hasta 640px*/
+/* G */
+@media (max-width: 640px) {
+  .ui-g-hidden {
+    display: none !important;
+  }
+  .ui-g-visible {
+    display: inline-block;
+  }
+}
+
+/*SM*/
+@media screen and (max-width: 40em) {
+  .ui-sm-hidden {
+    display: none !important;
+  }
+  .ui-sm-visible {
+    display: inline-block !important;
+  }
+}
+
+/*MD*/
+@media screen and (min-width: 40.063em) and (max-width: 64.62em) {
+  .ui-md-hidden {
+    display: none !important;
+  }
+  .ui-md-visible {
+    display: inline-block !important;
+  }
+}
+
+/*LG*/
+@media screen and (min-width: 64.623em) and (max-width: 90.063em) {
+  .ui-lg-hidden {
+    display: none !important;
+  }
+  .ui-lg-visible {
+    display: inline-block !important;
+  }
+}
+
+/*XL*/
+@media screen and (min-width: 90.1em) {
+  .ui-xl-hidden {
+    display: none !important;
+  }
+  .ui-xl-visible {
+    display: inline-block !important;
+  }
+}
+
+/*COPIADO DESDE https://forum.primefaces.org/viewtopic.php?t=52857*/
+
+.hidden-xs-up {
+  display: none !important;
+}
+
+@media (max-width: 575px) {
+  .hidden-xs-down {
+    display: none !important;
+  }
+}
+
+@media (min-width: 576px) {
+  .hidden-sm-up {
+    display: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .hidden-sm-down {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .hidden-md-up {
+    display: none !important;
+  }
+}
+
+@media (max-width: 991px) {
+  .hidden-md-down {
+    display: none !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .hidden-lg-up {
+    display: none !important;
+  }
+}
+
+@media (max-width: 1199px) {
+  .hidden-lg-down {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .hidden-xl-up {
+    display: none !important;
+  }
+}
+
+.hidden-xl-down {
+  display: none !important;
+}
+
+.visible-print-block {
+  display: none !important;
+}
+
+@media print {
+  .visible-print-block {
+    display: block !important;
+  }
+}
+
+.visible-print-inline {
+  display: none !important;
+}
+
+@media print {
+  .visible-print-inline {
+    display: inline !important;
+  }
+}
+
+.visible-print-inline-block {
+  display: none !important;
+}
+
+@media print {
+  .visible-print-inline-block {
+    display: inline-block !important;
+  }
+}
+
+@media print {
+  .hidden-print {
+    display: none !important;
+  }
+}

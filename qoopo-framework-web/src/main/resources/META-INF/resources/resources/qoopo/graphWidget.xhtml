@@ -13,14 +13,14 @@
 <!-- IMPLEMENTATION -->
 <cc:implementation>
     <div class="widget">
-        <p:outputPanel rendered="#{cc.attrs.value.graph}" deferred="#{globalBean.cargaDiferida}" deferredMode="visible"
+        <p:outputPanel rendered="#{cc.attrs.value.graph}" deferred="#{sessionBean.cargaDiferida}" deferredMode="visible"
             toggleable="true">
             <div class="text-left noWrap">
                 <h:outputText value="#{cc.attrs.value.chart.titulo}" styleClass="widget-title" />
 
                 <ui:repeat rendered="#{cc.attrs.value.showButtons}" value="#{cc.attrs.value.buttons}" var="button">
                     <p:commandButton value="#{button.name}" title="#{button.description}"
-                        actionListener="#{cc.attrs.value.runAction(button)}" styleClass="pequeno" update=":frmMain"
+                        actionListener="#{cc.attrs.value.runAction(button)}" styleClass="pequeno" update="@form"
                         accesskey="#{button.accessKey}" oncomplete="window.location.href='${button.url}'" />
                 </ui:repeat>
 
@@ -63,13 +63,13 @@
         </p:outputPanel>
 
 
-        <p:outputPanel rendered="#{cc.attrs.value.text}" deferred="#{globalBean.cargaDiferida}" deferredMode="visible"
+        <p:outputPanel rendered="#{cc.attrs.value.text}" deferred="#{sessionBean.cargaDiferida}" deferredMode="visible"
             toggleable="true">
             <div class="text-left">
                 <h:outputText value="#{cc.attrs.value.title}" styleClass="widget-title" />
 
                 <p:commandLink style="margin-left: 1rem;" actionListener="#{cc.attrs.value.cargar()}"
-                    styleClass="widget-update-btn" update=":frmMain">
+                    styleClass="widget-update-btn" update="@form">
                     <p:graphicImage rendered="true" library="imagenes" name="#{temas.temaIconos}/general/actualizar.png"
                         width="12" />
                 </p:commandLink>
@@ -78,13 +78,13 @@
             <div class="widget-body text-right text-big">
                 <p:commandLink rendered="#{cc.attrs.value.renderActionListener and cc.attrs.value.renderUrl}"
                     actionListener="#{cc.attrs.value.actionListener}" styleClass="text-right text-big"
-                    oncomplete="window.location.href='#{cc.attrs.value.url}'" update=":frmMain">
+                    oncomplete="window.location.href='#{cc.attrs.value.url}'" update="@form">
                     <h:outputText value="#{cc.attrs.value.value}" />
                 </p:commandLink>
 
                 <p:commandLink rendered="#{!cc.attrs.value.renderActionListener  and cc.attrs.value.renderUrl}"
                     styleClass="text-right text-big" oncomplete="window.location.href='#{cc.attrs.value.url}'"
-                    update=":frmMain">
+                    update="@form">
                     <h:outputText value="#{cc.attrs.value.value}" />
                 </p:commandLink>
 
@@ -99,7 +99,7 @@
                 <div class="float-left">
                     <ui:repeat rendered="#{cc.attrs.value.showButtons}" value="#{cc.attrs.value.buttons}" var="button">
                         <p:commandButton value="#{button.name}" title="#{button.description}"
-                            actionListener="#{cc.attrs.value.runAction(button)}" styleClass="pequeno" update=":frmMain"
+                            actionListener="#{cc.attrs.value.runAction(button)}" styleClass="pequeno" update="@form"
                             accesskey="#{button.accessKey}" oncomplete="window.location.href='${button.url}'" />
                     </ui:repeat>
                 </div>

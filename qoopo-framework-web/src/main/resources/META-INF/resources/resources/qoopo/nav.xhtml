@@ -14,9 +14,9 @@
     <!-- IMPLEMENTATION -->
     <cc:implementation>
         <h:outputText  rendered="#{cc.attrs.rendered}" value="(#{cc.attrs.value.actual}/#{cc.attrs.value.total})"/>
-        <p:commandButton rendered="#{cc.attrs.rendered}" icon="pi pi-step-backward" accesskey="k"  actionListener="#{cc.attrs.value.primero}" update=":frmMain:contenido " />
-        <p:commandButton rendered="#{cc.attrs.rendered}" icon="pi pi-backward" accesskey="p" actionListener="#{cc.attrs.value.anterior}" update=":frmMain:contenido "/>
-        <p:commandButton rendered="#{cc.attrs.rendered}" icon="pi pi-forward" accesskey="n" actionListener="#{cc.attrs.value.siguiente}" update=":frmMain:contenido "/>
-        <p:commandButton rendered="#{cc.attrs.rendered}" icon="pi pi-step-forward" accesskey="l" actionListener="#{cc.attrs.value.ultimo}" update=":frmMain:contenido "/>
+        <p:commandButton rendered="#{cc.attrs.rendered}" icon="pi pi-step-backward" accesskey="k"  actionListener="#{cc.attrs.value.primero}" update="@form:contenido " />
+        <p:commandButton rendered="#{cc.attrs.rendered}" icon="pi pi-backward" accesskey="p" actionListener="#{cc.attrs.value.anterior}" update="@form:contenido "/>
+        <p:commandButton rendered="#{cc.attrs.rendered}" icon="pi pi-forward" accesskey="n" actionListener="#{cc.attrs.value.siguiente}" update="@form:contenido "/>
+        <p:commandButton rendered="#{cc.attrs.rendered}" icon="pi pi-step-forward" accesskey="l" actionListener="#{cc.attrs.value.ultimo}" update="@form:contenido "/>
     </cc:implementation>
 </html>

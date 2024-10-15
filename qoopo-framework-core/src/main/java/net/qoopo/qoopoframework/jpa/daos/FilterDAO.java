@@ -13,13 +13,13 @@ import net.qoopo.util.db.jpa.Transaccion;
  *
  * @author Alberto
  */
-public class FilterDAO {
+public class FilterDAO<T> {
 
-    private FilterDAO() {
+    public FilterDAO() {
         //
     }
 
-    public static List<Object> filtrar(Transaccion transaccion, Filter filtro) {
+    public List<T> filtrar(Transaccion transaccion, Filter filtro) {
         if (filtro != null)
             return JPA.get()
                     .setEm(transaccion.getEm())
@@ -30,14 +30,14 @@ public class FilterDAO {
         }
     }
 
-    public static Long filtrarCount(Transaccion transaccion, Filter filtro) {
+    public Long filtrarCount(Transaccion transaccion, Filter filtro) {
         return (Long) JPA.get()
                 .setEm(transaccion.getEm())
                 .setParam(filtro.obtenerParametros(Parametro.get()))
                 .ejecutarQuery(filtro.buildQueryCount());
     }
 
-    public static List<Object> filtrar(Transaccion transaccion, Filter filtro, int first, int pageSize) {
+    public List<T> filtrar(Transaccion transaccion, Filter filtro, int first, int pageSize) {
         return JPA.get()
                 .setEm(transaccion.getEm())
                 .setFirstResult(first)
@@ -46,7 +46,7 @@ public class FilterDAO {
                 .ejecutarQueryList(filtro.buildQuery());
     }
 
-    public static Long filtrarCount(Transaccion transaccion, Filter filtro, int first, int pageSize) {
+    public Long filtrarCount(Transaccion transaccion, Filter filtro, int first, int pageSize) {
         return (Long) JPA.get()
                 .setEm(transaccion.getEm())
                 .setFirstResult(first)

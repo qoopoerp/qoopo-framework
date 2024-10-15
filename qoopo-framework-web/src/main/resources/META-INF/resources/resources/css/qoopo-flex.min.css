@@ -1,0 +1,45 @@
+html,body{
+    position:relative;
+    width:100%;
+    height:100%
+}
+html .qoopo{
+    height:100%;
+    display:-webkit-box;
+    display:-webkit-flex;
+    display:flex;
+    -webkit-flex-flow:column nowrap;
+    flex-flow:column nowrap;
+    overflow:hidden
+}
+.q-flex{
+    display:flex;
+    flex-direction:column;
+    height:100%
+}
+.q-flex-row{
+    flex-direction:row
+}
+.q-flex-column{
+    flex-direction:column
+}
+.q-flex .q-flex-header{
+    flex:0 1 auto
+}
+.q-flex .q-flex-content{
+    flex:1 1 auto;
+    height:100%;
+    overflow-y:auto
+}
+.q-flex .q-flex-footer{
+    flex:0 1 40px
+}
+.q-flex-autoscroll{
+    overflow-y:auto
+}
+.q-flex-autoscroll-x{
+    overflow-x:auto
+}
+.q-flex .q-flex-footer-tpv-ean{
+    flex:0 1 1vh
+}

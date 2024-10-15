@@ -39,18 +39,16 @@
                                 <c:set target="#{component}" property="var" value="#{cc.attrs.var}" />
                                 <h:panelGroup id="item-card" class="kanban-card">
                                     <div class="ribbon-icon-item ui-g-3 bg-success #{item.archived?'':'hidden'}">
-                                        #{texto.texto(4024)} 
+                                        #{texto.texto(4024)}
                                     </div>
-                                    <p:commandLink  update=":frmMain"
-                                        actionListener="#{cc.attrs.bean.edit(item)}">
+                                    <p:commandLink update="@form" actionListener="#{cc.attrs.bean.edit(item)}">
                                         <cc:renderFacet name="item-card" />
                                     </p:commandLink>
                                     <cc:renderFacet name="item-card-links" />
                                 </h:panelGroup>
                                 <div>
-                                    <p:draggable rendered="#{columna.permitirDrag}" for="item-card" revert="true" 
-                                        helper="clone"
-                                         />
+                                    <p:draggable rendered="#{columna.permitirDrag}" for="item-card" revert="true"
+                                        helper="clone" />
                                 </div>
                             </ui:repeat>
                         </div>
@@ -58,7 +56,7 @@
                 </h:panelGroup>
                 <p:droppable rendered="#{columna.permitirDrag}" for="columna" tolerance="pointer"
                     hoverStyleClass="bg-black-50">
-                    <p:ajax listener="#{cc.attrs.bean.onItemColumnDrop}" update=":frmMain" />
+                    <p:ajax listener="#{cc.attrs.bean.onItemColumnDrop}" update="@form" />
                 </p:droppable>
             </ui:repeat>
         </div>
@@ -66,15 +64,16 @@
 
     <!--sin columnas, tarjetas flotantes-->
     <h:panelGroup rendered="#{cc.attrs.bean.columnas.size() eq 0}">
-        <div class="ui-g">
+        <div class="ui-g-12">
             <!--<ui:repeat value="# {cc.attrs.bean.lista}" var="item">-->
             <!--<p:dataScroller value="# {cc.attrs.bean.lista}" var="item" chunkSize="30" styleClass="ui-g-12 ui-g-nopad" >-->
             <p:dataScroller value="#{cc.attrs.bean.data}" var="item" chunkSize="30" styleClass="ui-g-12 ui-g-nopad">
                 <c:set target="#{component}" property="var" value="#{cc.attrs.var}" />
                 <div class="ui-lg-3 ui-md-6 ui-g-12 transicion_03">
                     <div class="grid-item ">
-                        <div class="ribbon-icon-item ui-g-3 bg-success #{item.archived?'':'hidden'}">#{texto.texto(4024)} </div>
-                        <p:commandLink actionListener="#{cc.attrs.bean.edit(item)}" update=":frmMain">
+                        <div class="ribbon-icon-item ui-g-3 bg-success #{item.archived?'':'hidden'}">
+                            #{texto.texto(4024)} </div>
+                        <p:commandLink actionListener="#{cc.attrs.bean.edit(item)}" update="@form">
                             <cc:renderFacet name="item-card" />
                         </p:commandLink>
                         <cc:renderFacet name="item-card-links" />

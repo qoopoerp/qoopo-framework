@@ -15,7 +15,6 @@ import net.qoopo.qoopoframework.jpa.filter.Filter;
 import net.qoopo.qoopoframework.jpa.filter.condicion.Campo;
 import net.qoopo.qoopoframework.jpa.filter.condicion.Condicion;
 import net.qoopo.qoopoframework.models.OpcionBase;
-import net.qoopo.qoopoframework.repository.FilterJpaRepository;
 import net.qoopo.qoopoframework.web.components.viewoption.ViewOption;
 import net.qoopo.qoopoframework.web.core.jpa.AdminAbstractClass;
 import net.qoopo.qoopoframework.web.util.FacesUtils;
@@ -86,16 +85,16 @@ public abstract class AdminLazyAbstractClass<T extends EntidadBase> extends Admi
                                 filter.getFiltro().setPosterior(posterior);
                                 if (listaSeleccionados != null)
                                     listaSeleccionados.clear();
-                                return FilterJpaRepository.filtrar(filter.getFiltro(), first, pageSize);
+                                return filterRepository.filtrar(filter.getFiltro(), first, pageSize);
                             }
 
                             @Override
                             public int count(Map<String, FilterMeta> map) {
-                                return FilterJpaRepository.filtrarCount(filter.getFiltro()).intValue();
+                                return filterRepository.filtrarCount(filter.getFiltro()).intValue();
                             }
                         };
                     }
-                    lista.setRowCount(FilterJpaRepository.filtrarCount(filter.getFiltro()).intValue());
+                    lista.setRowCount(filterRepository.filtrarCount(filter.getFiltro()).intValue());
                     setData(lista.getWrappedData());// la data para poder exportar la pagina actual
                     // super.loadData(lista); //carga la data para las otras vistas
                     break;
@@ -104,7 +103,7 @@ public abstract class AdminLazyAbstractClass<T extends EntidadBase> extends Admi
                 case ViewOption.FORM:
                 case ViewOption.CALENDAR:
                 case ViewOption.TIMELINE:
-                    super.loadData(FilterJpaRepository.filtrar(filter.getFiltro()));
+                    super.loadData(filterRepository.filtrar(filter.getFiltro()));
                     break;
             }
         } catch (Exception ex) {

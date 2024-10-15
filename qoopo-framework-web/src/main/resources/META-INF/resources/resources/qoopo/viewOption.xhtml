@@ -20,18 +20,18 @@
             <f:selectItem itemLabel="" itemValue="4" itemDisabled="#{!(cc.attrs.value.enableGraph)}" />
             <f:selectItem itemLabel="" itemValue="5" itemDisabled="#{!(cc.attrs.value.enableCalendar)}" />
             <f:selectItem itemLabel="" itemValue="6" itemDisabled="#{!(cc.attrs.value.enableTimeline)}" />
-            <p:ajax update=":frmMain" process="@this" listener="#{cc.attrs.value.execute()}" />
+            <p:ajax update="@form" process="@this" listener="#{cc.attrs.value.execute()}" />
         </p:selectOneButton>
     </h:panelGroup>
 
     <p:menuButton icon="pi #{cc.attrs.value.currentIcon}" title="Sort" style="display: none;"
         styleClass="ui-sm-visible">
-        <p:menuitem icon="pi pi-bars" rendered="#{cc.attrs.value.enableList}" update=":frmMain" actionListener="#{cc.attrs.value.updateValue(1)}" />
-        <p:menuitem icon="pi pi-th-large" rendered="#{cc.attrs.value.enableGrid}" update=":frmMain" actionListener="#{cc.attrs.value.updateValue(2)}" />
-        <p:menuitem icon="pi pi-tablet" rendered="#{cc.attrs.value.enableForm}" update=":frmMain" actionListener="#{cc.attrs.value.updateValue(3)}" />
-        <p:menuitem icon="pi pi-chart-bar" rendered="#{cc.attrs.value.enableGraph}" update=":frmMain" actionListener="#{cc.attrs.value.updateValue(4)}" />
-        <p:menuitem icon="pi pi-calendar" rendered="#{cc.attrs.value.enableCalendar}" update=":frmMain" actionListener="#{cc.attrs.value.updateValue(5)}" />
-        <p:menuitem icon="pi pi-align-left" rendered="#{cc.attrs.value.enableTimeline}" update=":frmMain" actionListener="#{cc.attrs.value.updateValue(6)}" />
+        <p:menuitem icon="pi pi-bars" rendered="#{cc.attrs.value.enableList}" update="@form" actionListener="#{cc.attrs.value.updateValue(1)}" />
+        <p:menuitem icon="pi pi-th-large" rendered="#{cc.attrs.value.enableGrid}" update="@form" actionListener="#{cc.attrs.value.updateValue(2)}" />
+        <p:menuitem icon="pi pi-tablet" rendered="#{cc.attrs.value.enableForm}" update="@form" actionListener="#{cc.attrs.value.updateValue(3)}" />
+        <p:menuitem icon="pi pi-chart-bar" rendered="#{cc.attrs.value.enableGraph}" update="@form" actionListener="#{cc.attrs.value.updateValue(4)}" />
+        <p:menuitem icon="pi pi-calendar" rendered="#{cc.attrs.value.enableCalendar}" update="@form" actionListener="#{cc.attrs.value.updateValue(5)}" />
+        <p:menuitem icon="pi pi-align-left" rendered="#{cc.attrs.value.enableTimeline}" update="@form" actionListener="#{cc.attrs.value.updateValue(6)}" />
     </p:menuButton>
 </cc:implementation>
 

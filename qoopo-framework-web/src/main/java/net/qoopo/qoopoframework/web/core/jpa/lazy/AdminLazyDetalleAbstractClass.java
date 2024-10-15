@@ -9,6 +9,7 @@ import net.qoopo.qoopoframework.jpa.filter.condicion.Campo;
 import net.qoopo.qoopoframework.jpa.filter.condicion.Condicion;
 import net.qoopo.qoopoframework.models.OpcionBase;
 import net.qoopo.qoopoframework.repository.QoopoJpaRepository;
+import net.qoopo.qoopoframework.repository.Repository;
 import net.qoopo.qoopoframework.web.util.FacesUtils;
 
 /**
@@ -26,6 +27,7 @@ public abstract class AdminLazyDetalleAbstractClass<S extends EntidadBase, T> ex
         super(entityClassName, entityClass, inicial, condicionesDisponibles, campos, opcionesGrupos);
     }
 
+    protected Repository<T, Long> repositoryDetalle;
     protected T itemDetalle;
     protected boolean editandoDetalle;
     protected List<T> listaEliminar = new ArrayList<>();
@@ -40,7 +42,7 @@ public abstract class AdminLazyDetalleAbstractClass<S extends EntidadBase, T> ex
     public void update() {
         try {
             for (T det : listaEliminar) {
-                QoopoJpaRepository.delete(det);
+                repositoryDetalle.delete(det);
             }
         } catch (Exception e) {
             FacesUtils.addErrorMessage(languageProvider.getTextValue(20) + e.getMessage());
