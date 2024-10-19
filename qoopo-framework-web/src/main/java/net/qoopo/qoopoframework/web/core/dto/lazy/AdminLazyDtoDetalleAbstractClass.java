@@ -9,18 +9,18 @@ import net.qoopo.qoopoframework.jpa.filter.Filter;
 import net.qoopo.qoopoframework.jpa.filter.condicion.Campo;
 import net.qoopo.qoopoframework.jpa.filter.condicion.Condicion;
 import net.qoopo.qoopoframework.models.OpcionBase;
-import net.qoopo.qoopoframework.repository.Repository;
 import net.qoopo.qoopoframework.web.util.FacesUtils;
+import net.qoopo.util.db.repository.CrudRepository;
 
 /**
  * Clase de esqueleto de los beans de administración
  *
  * @author alberto
- * @param <S>
+ * @param <DTO>
  * @param <T>
  */
-public abstract class AdminLazyDtoDetalleAbstractClass<R extends EntidadBase, S extends DtoBase, T>
-        extends AdminLazyDtoAbstractClass<R, S> {
+public abstract class AdminLazyDtoDetalleAbstractClass<R extends EntidadBase, DTO extends DtoBase, T>
+        extends AdminLazyDtoAbstractClass<R, DTO> {
 
     public AdminLazyDtoDetalleAbstractClass(String entityClassName, Class<R> entityClass, Filter inicial,
             List<Condicion> condicionesDisponibles,
@@ -28,7 +28,7 @@ public abstract class AdminLazyDtoDetalleAbstractClass<R extends EntidadBase, S 
         super(entityClassName, entityClass, inicial, condicionesDisponibles, campos, opcionesGrupos);
     }
 
-    protected Repository<T, Long> repositoryDetalle;
+    protected CrudRepository<T, Long> repositoryDetalle;
 
     protected T itemDetalle;
     protected boolean editandoDetalle;
@@ -53,7 +53,7 @@ public abstract class AdminLazyDtoDetalleAbstractClass<R extends EntidadBase, S 
     }
 
     @Override
-    public void edit(S item) {
+    public void edit(DTO item) {
         super.edit(item); // To change body of generated methods, choose Tools | Templates.
         listaEliminar.clear();
     }

@@ -68,7 +68,6 @@ import net.qoopo.qoopoframework.lang.LanguageProvider;
 import net.qoopo.qoopoframework.models.OpcionBase;
 import net.qoopo.qoopoframework.repository.FilterJpaRepository;
 import net.qoopo.qoopoframework.repository.QoopoJpaRepositorySingleton;
-import net.qoopo.qoopoframework.repository.Repository;
 import net.qoopo.qoopoframework.util.QLogger;
 import net.qoopo.qoopoframework.util.QoopoUtil;
 import net.qoopo.qoopoframework.web.AppSessionBeanInterface;
@@ -85,6 +84,7 @@ import net.qoopo.qoopoframework.web.util.FacesUtils;
 import net.qoopo.qoopoframework.web.vistas.ChatterInterface;
 import net.qoopo.qoopoframework.web.vistas.ReporteBean;
 import net.qoopo.util.Accion;
+import net.qoopo.util.db.repository.CrudRepository;
 import net.qoopo.util.reports.Reporte;
 
 /**
@@ -186,7 +186,7 @@ public abstract class AdminDtoAbstractClass<S extends EntidadBase, T extends Dto
 
     protected FilterJpaRepository<T> filterRepository;
 
-    protected Repository<S, Long> repository;
+    protected CrudRepository<S, Long> repository;
 
     /**
      * Transforma el campo del dto al campo de la entidad para agregar en el sortby

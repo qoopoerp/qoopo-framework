@@ -8,9 +8,8 @@ import net.qoopo.qoopoframework.jpa.filter.Filter;
 import net.qoopo.qoopoframework.jpa.filter.condicion.Campo;
 import net.qoopo.qoopoframework.jpa.filter.condicion.Condicion;
 import net.qoopo.qoopoframework.models.OpcionBase;
-import net.qoopo.qoopoframework.repository.QoopoJpaRepository;
-import net.qoopo.qoopoframework.repository.Repository;
 import net.qoopo.qoopoframework.web.util.FacesUtils;
+import net.qoopo.util.db.repository.CrudRepository;
 
 /**
  * Clase de esqueleto de los beans de administración
@@ -27,7 +26,7 @@ public abstract class AdminLazyDetalleAbstractClass<S extends EntidadBase, T> ex
         super(entityClassName, entityClass, inicial, condicionesDisponibles, campos, opcionesGrupos);
     }
 
-    protected Repository<T, Long> repositoryDetalle;
+    protected CrudRepository<T, Long> repositoryDetalle;
     protected T itemDetalle;
     protected boolean editandoDetalle;
     protected List<T> listaEliminar = new ArrayList<>();

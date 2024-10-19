@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 import net.qoopo.qoopoframework.QoopoFramework;
 import net.qoopo.qoopoframework.util.exceptions.QoopoException;
 import net.qoopo.util.db.dao.GenericDAOSingleton;
-import net.qoopo.util.db.jpa.Transaccion;
+import net.qoopo.util.db.jpa.JpaTransaction;
 import net.qoopo.util.db.jpa.exceptions.IllegalOrphanException;
 import net.qoopo.util.db.jpa.exceptions.NonexistentEntityException;
 import net.qoopo.util.db.jpa.exceptions.RollbackFailureException;
@@ -14,7 +14,7 @@ import net.qoopo.util.db.jpa.exceptions.RollbackFailureException;
  * Utilitario que permite acceder a las funciones básicas de acceso a a base de
  * datos.
  * Hace uso de transacciones forzadas con los utilitarios
- * net.qoopo.util.db.jpa.Transaccion y
+ * net.qoopo.util.db.jpa.JpaTransaction y
  * net.qoopo.util.db.daos.GenericDAOSingleton
  * 
  * 
@@ -43,7 +43,7 @@ public class QoopoJpaRepositorySingleton {
         if (item == null) {
             return;
         }
-        Transaccion trx = Transaccion.get(QoopoFramework.get().getDataSourceName());
+        JpaTransaction trx = JpaTransaction.get(QoopoFramework.get().getDataSourceName());
         trx.begin();
         try {
             for (Object t : item) {
@@ -70,7 +70,7 @@ public class QoopoJpaRepositorySingleton {
         if (item == null) {
             return null;
         }
-        Transaccion trx = Transaccion.get(QoopoFramework.get().getDataSourceName());
+        JpaTransaction trx = JpaTransaction.get(QoopoFramework.get().getDataSourceName());
         trx.begin();
         try {
             GenericDAOSingleton.create(trx, item);
@@ -101,7 +101,7 @@ public class QoopoJpaRepositorySingleton {
             if (item == null) {
                 return null;
             }
-            Transaccion trx = Transaccion.get(QoopoFramework.get().getDataSourceName());
+            JpaTransaction trx = JpaTransaction.get(QoopoFramework.get().getDataSourceName());
             trx.begin();
             try {
                 GenericDAOSingleton.create(trx, item);
@@ -123,8 +123,8 @@ public class QoopoJpaRepositorySingleton {
      * @return
      */
     public static Object find(Class entityClass, Long id) {
-        Transaccion trx = Transaccion.get(QoopoFramework.get().getDataSourceName());
-        trx.abrir();
+        JpaTransaction trx = JpaTransaction.get(QoopoFramework.get().getDataSourceName());
+        trx.open();
         Object item = null;
         try {
             item = GenericDAOSingleton.find(trx, entityClass, id);
@@ -149,7 +149,7 @@ public class QoopoJpaRepositorySingleton {
         if (item == null) {
             return;
         }
-        Transaccion trx = Transaccion.get(QoopoFramework.get().getDataSourceName());
+        JpaTransaction trx = JpaTransaction.get(QoopoFramework.get().getDataSourceName());
         trx.begin();
         try {
             for (Object t : item) {
@@ -177,7 +177,7 @@ public class QoopoJpaRepositorySingleton {
         if (item == null) {
             return null;
         }
-        Transaccion trx = Transaccion.get(QoopoFramework.get().getDataSourceName());
+        JpaTransaction trx = JpaTransaction.get(QoopoFramework.get().getDataSourceName());
         trx.begin();
         try {
             item = GenericDAOSingleton.edit(trx, item);
@@ -203,7 +203,7 @@ public class QoopoJpaRepositorySingleton {
         if (item == null) {
             return;
         }
-        Transaccion trx = Transaccion.get(QoopoFramework.get().getDataSourceName());
+        JpaTransaction trx = JpaTransaction.get(QoopoFramework.get().getDataSourceName());
         trx.begin();
         try {
             for (Object t : item) {
@@ -230,7 +230,7 @@ public class QoopoJpaRepositorySingleton {
         if (item == null) {
             return;
         }
-        Transaccion trx = Transaccion.get(QoopoFramework.get().getDataSourceName());
+        JpaTransaction trx = JpaTransaction.get(QoopoFramework.get().getDataSourceName());
         trx.begin();
         try {
             GenericDAOSingleton.delete(trx, item);
@@ -249,7 +249,7 @@ public class QoopoJpaRepositorySingleton {
      */
     public static void deleteSilent(Object item) {
         try {
-            Transaccion trx = Transaccion.get(QoopoFramework.get().getDataSourceName());
+            JpaTransaction trx = JpaTransaction.get(QoopoFramework.get().getDataSourceName());
             trx.begin();
             try {
                 GenericDAOSingleton.delete(trx, item);

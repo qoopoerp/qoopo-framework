@@ -2,16 +2,14 @@ package net.qoopo.qoopoframework.web.core.jpa.nolazy;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.LongAdder;
 
 import net.qoopo.qoopoframework.jpa.core.EntidadBase;
 import net.qoopo.qoopoframework.jpa.filter.Filter;
 import net.qoopo.qoopoframework.jpa.filter.condicion.Campo;
 import net.qoopo.qoopoframework.jpa.filter.condicion.Condicion;
 import net.qoopo.qoopoframework.models.OpcionBase;
-import net.qoopo.qoopoframework.repository.QoopoJpaRepository;
-import net.qoopo.qoopoframework.repository.Repository;
 import net.qoopo.qoopoframework.web.util.FacesUtils;
+import net.qoopo.util.db.repository.CrudRepository;
 
 /**
  * Clase de esqueleto de los beans de administración
@@ -27,7 +25,7 @@ public abstract class AdminNoLazyDetalleAbstractClass<S extends EntidadBase, T> 
         super(entityClassName, entityClass, inicial, condicionesDisponibles, campos, opcionesGrupos);
     }
 
-    protected Repository<T, Long> repositoryDetalle;
+    protected CrudRepository<T, Long> repositoryDetalle;
     protected T itemDetalle;
     protected boolean editandoDetalle;
     protected List<T> listaEliminar = new ArrayList<>();

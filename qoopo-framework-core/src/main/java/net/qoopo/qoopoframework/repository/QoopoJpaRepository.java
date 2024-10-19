@@ -7,7 +7,7 @@ import net.qoopo.util.db.repository.JpaRepository;
  * Utilitario que permite acceder a las funciones básicas de acceso a a base de
  * datos.
  * Hace uso de transacciones forzadas con los utilitarios
- * net.qoopo.util.db.jpa.Transaccion y net.qoopo.util.db.daos.GenericDAO
+ * net.qoopo.util.db.jpa.JpaTransaction y net.qoopo.util.db.daos.GenericDAO
  * 
  * 
  * - create
@@ -20,7 +20,7 @@ import net.qoopo.util.db.repository.JpaRepository;
  * 
  * @author Alberto García
  */
-public class QoopoJpaRepository<T, S> extends JpaRepository<T, S> {
+public class QoopoJpaRepository<T, ID> extends JpaRepository<T, ID> {
 
     public QoopoJpaRepository() {
         super(QoopoFramework.get().getDataSourceName());

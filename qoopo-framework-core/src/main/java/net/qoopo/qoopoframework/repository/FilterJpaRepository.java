@@ -8,8 +8,11 @@ import net.qoopo.qoopoframework.QoopoFramework;
 import net.qoopo.qoopoframework.jpa.daos.FilterDAO;
 import net.qoopo.qoopoframework.jpa.filter.Filter;
 import net.qoopo.qoopoframework.util.QLogger;
-import net.qoopo.util.db.jpa.Transaccion;
+import net.qoopo.util.db.jpa.JpaTransaction;
 
+/**
+ * Repositorio para los filtros que se implementen con el framework
+ */
 public class FilterJpaRepository<T> {
 
     public static final Logger log = Logger.getLogger("Qoopo");
@@ -17,13 +20,20 @@ public class FilterJpaRepository<T> {
     private FilterDAO<T> dao;
 
     public FilterJpaRepository() {
-        dao=new FilterDAO<T>();
+        dao = new FilterDAO<T>();
     }
 
+    /**
+     * Realiza el proceso del filtro indicado y devuelve un listado de las entidades
+     * que cumplieron las condiciones del filtro
+     * 
+     * @param filtro
+     * @return
+     */
     public List<T> filtrar(Filter filtro) {
         long inicial = System.currentTimeMillis();
-        Transaccion trx = Transaccion.get(QoopoFramework.get().getDataSourceName());
-        trx.abrir();
+        JpaTransaction trx = JpaTransaction.get(QoopoFramework.get().getDataSourceName());
+        trx.open();
         List<T> valor = null;
         try {
             valor = (List<T>) dao.filtrar(trx, filtro);
@@ -38,10 +48,17 @@ public class FilterJpaRepository<T> {
         return valor;
     }
 
+    /**
+     * Realiza el proceso del filtro indicado y devuelte el número de registros que
+     * cumplieron las condiciones del filtro
+     * 
+     * @param filtro
+     * @return
+     */
     public Long filtrarCount(Filter filtro) {
         long inicial = System.currentTimeMillis();
-        Transaccion trx = Transaccion.get(QoopoFramework.get().getDataSourceName());
-        trx.abrir();
+        JpaTransaction trx = JpaTransaction.get(QoopoFramework.get().getDataSourceName());
+        trx.open();
         Long valor = null;
         try {
             valor = dao.filtrarCount(trx, filtro);
@@ -55,10 +72,19 @@ public class FilterJpaRepository<T> {
         return valor;
     }
 
+    /**
+     * Realiza el proceso del filtro indicado y devuelve un listado de las entidades
+     * que cumplieron las condiciones del filtro con parámetros de paginacion
+     * 
+     * @param filtro
+     * @param first
+     * @param pageSize
+     * @return
+     */
     public List<T> filtrar(Filter filtro, int first, int pageSize) {
         long inicial = System.currentTimeMillis();
-        Transaccion trx = Transaccion.get(QoopoFramework.get().getDataSourceName());
-        trx.abrir();
+        JpaTransaction trx = JpaTransaction.get(QoopoFramework.get().getDataSourceName());
+        trx.open();
         List<T> valor = null;
         try {
             valor = (List<T>) dao.filtrar(trx, filtro, first, pageSize);
@@ -73,10 +99,19 @@ public class FilterJpaRepository<T> {
         return valor;
     }
 
+    /**
+     * Realiza el proceso del filtro indicado y devuelte el número de registros que
+     * cumplieron las condiciones del filtro
+     * 
+     * @param filtro
+     * @param first
+     * @param pageSize
+     * @return
+     */
     public Long filtrarCount(Filter filtro, int first, int pageSize) {
         long inicial = System.currentTimeMillis();
-        Transaccion trx = Transaccion.get(QoopoFramework.get().getDataSourceName());
-        trx.abrir();
+        JpaTransaction trx = JpaTransaction.get(QoopoFramework.get().getDataSourceName());
+        trx.open();
         Long valor = null;
         try {
             valor = dao.filtrarCount(trx, filtro, first, pageSize);

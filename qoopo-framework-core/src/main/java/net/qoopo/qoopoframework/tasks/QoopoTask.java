@@ -60,7 +60,6 @@ public abstract class QoopoTask extends TimerTask {
             c.set(Calendar.SECOND, 59);
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             for (QoopoTask task : QoopoTask.get()) {
-
                 if (task.getStartDate() == null) {
                     log.log(Level.INFO,
                             "QOOPO_TIMER--> Configurando la tarea {0} para ejecutarse a partir de {1} cada {2} ",
