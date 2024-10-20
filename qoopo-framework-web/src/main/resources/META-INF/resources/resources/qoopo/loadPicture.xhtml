@@ -20,10 +20,10 @@
         <div class="q-form-photo-container float-right">
             <div class="q-form-image-controls">
                 <div class="float-left">
-                    <p:commandButton icon="pi pi-pencil" styleClass="q-autohide"  title="#{texto.texto(81)}" oncomplete="PF('#{cc.attrs.id}uploadPicture').show();" />
+                    <p:commandButton icon="pi pi-pencil" styleClass="q-autohide"  title="#{texto.text('common.photo')}" oncomplete="PF('#{cc.attrs.id}uploadPicture').show();" />
                 </div>
                 <div class="float-right">
-                    <p:commandButton icon="pi pi-trash" styleClass="q-autohide"  title="#{texto.texto(82)}" update="@form"  >
+                    <p:commandButton icon="pi pi-trash" styleClass="q-autohide"  title="#{texto.text('common.photo.remove')}" update="@form"  >
                         <f:setPropertyActionListener value="#{null}" target="#{cc.attrs.value}" />
                     </p:commandButton>
                 </div>
@@ -44,7 +44,7 @@
                   style="width: 1000px;">
 
             <div style="text-align: center;" class="q-block">
-                <p:commandButton value="#{texto.texto(9)}"
+                <p:commandButton value="#{texto.text('common.ok')}"
                                  styleClass="ml12"
                                  oncomplete="PF('#{cc.attrs.id}uploadPicture').hide();"
                                  update="#{cc.attrs.id} @form"
@@ -52,7 +52,7 @@
                     <f:setPropertyActionListener value="#{imagenesBean.imagen}" target="#{cc.attrs.value}" />
                 </p:commandButton>
 
-                <p:commandButton value="#{texto.texto(1013)}"
+                <p:commandButton value="#{texto.text('common.back')}"
                                  styleClass="ml12"
                                  type="button"
                                  oncomplete="PF('#{cc.attrs.id}uploadPicture').hide();"/>
