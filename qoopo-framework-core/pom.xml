@@ -1,4 +1,5 @@
 <project xmlns:pom="http://maven.apache.org/POM/4.0.0">
+    <name>qoopo-framework-core</name>
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.qoopo</groupId>
     <artifactId>qoopo-framework-core</artifactId>
@@ -20,17 +21,17 @@
         </dependency>
         <dependency>
             <groupId>net.qoopo</groupId>
-            <artifactId>qoopo-util-commons</artifactId>
+            <artifactId>qoopo-framework-commons</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>net.qoopo</groupId>
-            <artifactId>qoopo-util-exporter</artifactId>
+            <artifactId>qoopo-framework-exporter</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>net.qoopo</groupId>
-            <artifactId>qoopo-util-db</artifactId>
+            <artifactId>qoopo-framework-data</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>
@@ -114,5 +115,5 @@
         <maven.compiler.target>11</maven.compiler.target>
         <jakartaee>10.0.0</jakartaee>
     </properties>
-    <name>qoopo-framework-core</name>
+
 </project>

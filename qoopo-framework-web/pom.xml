@@ -28,6 +28,11 @@
             <version>1.0.0</version>
         </dependency>
         <dependency>
+            <groupId>net.qoopo</groupId>
+            <artifactId>qoopo-framework-reports</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
             <version>13.0.0</version>
@@ -48,11 +53,6 @@
             <groupId>org.apache.xmlgraphics</groupId>
             <artifactId>batik-bridge</artifactId>
             <version>1.13</version>
-        </dependency>
-        <dependency>
-            <groupId>net.qoopo</groupId>
-            <artifactId>qoopo-util-reports</artifactId>
-            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>jakarta.platform</groupId>

@@ -1,0 +1,504 @@
+package net.qoopo.framework.graph;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.primefaces.model.chart.Axis;
+import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.BarChartModel;
+import org.primefaces.model.chart.BarChartSeries;
+import org.primefaces.model.chart.BubbleChartModel;
+import org.primefaces.model.chart.BubbleChartSeries;
+import org.primefaces.model.chart.CategoryAxis;
+import org.primefaces.model.chart.ChartSeries;
+import org.primefaces.model.chart.HorizontalBarChartModel;
+import org.primefaces.model.chart.LineChartModel;
+import org.primefaces.model.chart.LineChartSeries;
+import org.primefaces.model.chart.PieChartModel;
+
+/**
+ * Deprecated. Use QChartJS instead
+ * 
+ * @author alberto
+ */
+@Deprecated
+public class QChart implements Serializable {
+
+    // indica si los valores se acumulan de una clave a otra (por ejemplo para ver
+    // el saldo de una cuenta bancaria en el tiempo)
+    private boolean acumulativa = false;
+    private Map<String, QCharSerie> mapa;
+    private LineChartModel modeloLinea;
+    private LineChartModel modeloArea;
+    private BarChartModel modeloBarra;
+    private PieChartModel modeloPie;
+    private HorizontalBarChartModel modeloBarraHorizontal;
+    private BubbleChartModel modeloBurbuja;
+    private String titulo = "";
+    private String leyendaX = "";
+    private String leyendaY = "";
+    private int contador = 0;// se us en caso de que no se pase el parametro
+    private int contadorSerie = 0;// se us en caso de que no se pase el parametro
+    private int anguloRotacionY = 0;
+    private int anguloRotacionX = 0;
+
+    public QChart() {
+        mapa = new HashMap<>();
+    }
+
+    public QChart(String titulo) {
+        this.titulo = titulo;
+        mapa = new HashMap<>();
+    }
+
+    public QChart(String titulo, String leyendaX, String leyendaY) {
+        this.titulo = titulo;
+        this.leyendaX = leyendaX;
+        this.leyendaY = leyendaY;
+        mapa = new HashMap<>();
+    }
+
+    public void agregarSerie(String nombre) {
+        if (mapa == null) {
+            mapa = new HashMap<>();
+        }
+        if (!mapa.containsKey(nombre)) {
+            mapa.put(nombre, new QCharSerie(contadorSerie++, nombre, new ArrayList<>()));
+        }
+    }
+
+    public void agregarSerie(String nombre, int indice) {
+        if (mapa == null) {
+            mapa = new HashMap<>();
+        }
+        if (!mapa.containsKey(nombre)) {
+            mapa.put(nombre, new QCharSerie(indice, nombre, new ArrayList<>()));
+        }
+    }
+
+    /**
+     *
+     * @param nombre
+     * @param lineal si es falso es tipo barra
+     */
+    public void agregarSerie(String nombre, boolean lineal) {
+        if (mapa == null) {
+            mapa = new HashMap<>();
+        }
+        if (!mapa.containsKey(nombre)) {
+            mapa.put(nombre, new QCharSerie(contadorSerie++, nombre, new ArrayList<>()));
+        }
+    }
+
+    public void agregarSerie(String nombre, int indice, boolean lineal) {
+        if (mapa == null) {
+            mapa = new HashMap<>();
+        }
+        if (!mapa.containsKey(nombre)) {
+            mapa.put(nombre, new QCharSerie(indice, nombre, new ArrayList<>()));
+        }
+    }
+
+    public void agregarElemento(String texto, BigDecimal valor) {
+        agregarElemento(titulo, contador++, texto, valor.doubleValue());
+    }
+
+    public void agregarElemento(Integer indice, String texto, BigDecimal valor) {
+        agregarElemento(titulo, indice, texto, valor.doubleValue());
+    }
+
+    public void agregarElemento(String serie, String clave, BigDecimal valor) {
+        agregarElemento(serie, contador++, clave, valor.doubleValue());
+    }
+
+    public void agregarElemento(String serie, Integer indice, String clave, BigDecimal valor) {
+        agregarElemento(serie, indice, clave, valor.doubleValue());
+    }
+
+    public void agregarElemento(String clave, double valor) {
+        agregarElemento(titulo, contador++, clave, valor);
+    }
+
+    public void agregarElemento(Integer indice, String clave, double valor) {
+        agregarElemento(titulo, indice, clave, valor);
+    }
+
+    public void agregarElementoXY(String clave, BigDecimal valorX, BigDecimal valorY, BigDecimal valorRadio) {
+        agregarElementoXY(titulo, contador++, clave, valorX.doubleValue(), valorY.doubleValue(),
+                valorRadio.doubleValue());
+    }
+
+    public void agregarElementoXY(Integer indice, String clave, BigDecimal valorX, BigDecimal valorY,
+            BigDecimal valorRadio) {
+        agregarElementoXY(titulo, indice, clave, valorX.doubleValue(), valorY.doubleValue(), valorRadio.doubleValue());
+    }
+
+    public void agregarElementoXY(String clave, double valorX, double valorY, double valorRadio) {
+        agregarElementoXY(titulo, contador++, clave, valorX, valorY, valorRadio);
+    }
+
+    public void agregarElementoXY(Integer indice, String clave, double valorX, double valorY, double valorRadio) {
+        agregarElementoXY(titulo, indice, clave, valorX, valorY, valorRadio);
+    }
+
+    public void agregarElemento(String serie, Integer indice, String clave, double valor) {
+        if (mapa == null) {
+            mapa = new HashMap<>();
+        }
+        if (!mapa.containsKey(serie)) {
+            mapa.put(serie, new QCharSerie(contadorSerie++, serie, new ArrayList<>()));
+        }
+        mapa.get(serie).getDatos().add(new QChartElement(indice, clave, valor));
+    }
+
+    public void agregarElementoXY(String serie, Integer indice, String clave, double valorX, double valorY,
+            double valorRadio) {
+        if (mapa == null) {
+            mapa = new HashMap<>();
+        }
+        if (!mapa.containsKey(serie)) {
+            mapa.put(serie, new QCharSerie(contadorSerie++, serie, new ArrayList<>()));
+        }
+        mapa.get(serie).getDatos().add(new QChartElement(indice, clave, valorX, valorY, valorRadio));
+    }
+
+    /**
+     * Agrupa las series y suma los valores
+     */
+    public void agruparYsumar() {
+        if (mapa != null) {
+            for (Map.Entry<String, QCharSerie> serie : mapa.entrySet()) {
+                Map<String, QChartElement> ocupados = new HashMap<>();
+                for (QChartElement e : serie.getValue().getDatos()) {
+                    if (ocupados.containsKey(e.getClave())) {
+                        QChartElement elemento = ocupados.get(e.getClave());
+                        elemento.setValor(elemento.getValor() + e.getValor());
+                        ocupados.put(e.getClave(), elemento);
+                    } else {
+                        ocupados.put(e.getClave(), e);
+                    }
+                }
+                serie.getValue().getDatos().clear();
+                List<QChartElement> tmp = new ArrayList<>();
+                tmp.addAll(ocupados.values());
+                // ordeno por el indice
+                Collections.sort(tmp, (t, t1) -> {
+                    QChartElement cr = (QChartElement) t;
+                    QChartElement cr1 = (QChartElement) t1;
+                    return Integer.valueOf(cr.getIndice()).compareTo(cr1.getIndice());
+                });
+
+                if (acumulativa) {
+                    double suma = 0d;
+                    for (QChartElement item : tmp) {
+                        suma += item.getValor();
+                        item.setValor(suma);
+
+                    }
+                }
+                serie.getValue().getDatos().addAll(tmp);
+            }
+        }
+    }
+
+    /**
+     * Agrupa las series y promedia los valores
+     */
+    public void agruparYpromediar() {
+        if (mapa != null) {
+            for (Map.Entry<String, QCharSerie> entry : mapa.entrySet()) {
+
+                Map<String, QChartElement> ocupados = new HashMap<>();
+                for (QChartElement e : entry.getValue().getDatos()) {
+                    if (ocupados.containsKey(e.getClave())) {
+                        ocupados.get(e.getClave())
+                                .setValor((ocupados.get(e.getClave()).getValor() + e.getValor()) / 2.0f);
+                    } else {
+                        ocupados.put(e.getClave(), e);
+                    }
+                }
+                entry.getValue().getDatos().clear();
+                List<QChartElement> tmp = new ArrayList<>();
+                tmp.addAll(ocupados.values());
+                // ordeno por el indice
+                Collections.sort(tmp, new Comparator() {
+                    @Override
+                    public int compare(Object t, Object t1) {
+                        QChartElement cr = (QChartElement) t;
+                        QChartElement cr1 = (QChartElement) t1;
+                        return Integer.valueOf(cr.getIndice()).compareTo(cr1.getIndice());
+                    }
+                });
+                entry.getValue().getDatos().addAll(tmp);
+            }
+        }
+    }
+
+    // crear modelo barra
+    public void crearModeloBarra() {
+        modeloBarra = new BarChartModel();
+        modeloBarra.setLegendPosition("ne");
+        modeloBarra.setTitle(titulo);
+        modeloBarraHorizontal = new HorizontalBarChartModel();
+        modeloBarraHorizontal.setTitle(titulo);
+        modeloBarraHorizontal.setStacked(false);
+        modeloBarraHorizontal.setLegendPosition("ne");
+
+        List<QCharSerie> series = new ArrayList<>(mapa.values());
+        Collections.sort(series);
+        for (QCharSerie serie : series) {
+            ChartSeries datos = new ChartSeries();
+            datos.setLabel(serie.getNombre()); // titulo
+            for (QChartElement eg : serie.getDatos()) {
+                datos.set(eg.getClave(), eg.getValor());
+            }
+            modeloBarra.addSeries(datos);
+            modeloBarraHorizontal.addSeries(datos);
+        }
+        Axis xAxis = new CategoryAxis(leyendaX);
+        xAxis.setTickAngle(anguloRotacionX);
+        modeloBarra.getAxes().put(AxisType.X, xAxis);
+        Axis yAxis = modeloBarra.getAxis(AxisType.Y);
+        yAxis.setTickAngle(anguloRotacionY);
+        yAxis.setLabel(leyendaY);
+        Axis xAxis2 = new CategoryAxis(leyendaX);
+        xAxis2.setTickAngle(anguloRotacionX);
+        modeloBarraHorizontal.getAxes().put(AxisType.X, xAxis2);
+        Axis yAxis2 = modeloBarraHorizontal.getAxis(AxisType.Y);
+        yAxis2.setTickAngle(anguloRotacionY);
+        yAxis2.setLabel(leyendaY);
+    }
+
+    public void crearModeloLinea() {
+        modeloLinea = new LineChartModel();
+        modeloLinea.setLegendPosition("ne");
+        modeloLinea.setShowPointLabels(true);
+        modeloLinea.setTitle(titulo);
+        List<QCharSerie> series = new ArrayList<>(mapa.values());
+        Collections.sort(series);
+        for (QCharSerie serie : series) {
+            LineChartSeries datos = new LineChartSeries();
+            datos.setLabel(serie.getNombre()); // titulo
+            for (QChartElement eg : serie.getDatos()) {
+                datos.set(eg.getClave(), eg.getValor());
+            }
+            modeloLinea.addSeries(datos);
+        }
+        Axis xAxis = new CategoryAxis(leyendaX);
+        xAxis.setTickAngle(anguloRotacionX);
+        modeloLinea.getAxes().put(AxisType.X, xAxis);
+        Axis yAxis = modeloLinea.getAxis(AxisType.Y);
+        yAxis.setTickAngle(anguloRotacionY);
+        yAxis.setLabel(leyendaY);
+    }
+
+    /**
+     * Intercala entre barra y linea. Empieza en barra y va alternando
+     */
+    public void crearModeloMixto() {
+        boolean linea = false;
+        modeloLinea = new LineChartModel();
+        modeloLinea.setLegendPosition("ne");
+        modeloLinea.setShowPointLabels(true);
+        modeloLinea.setTitle(titulo);
+        List<QCharSerie> series = new ArrayList<>(mapa.values());
+        Collections.sort(series);
+        for (QCharSerie serie : series) {
+            if (linea) {
+                LineChartSeries datos = new LineChartSeries();
+                datos.setLabel(serie.getNombre()); // titulo
+                for (QChartElement eg : serie.getDatos()) {
+                    datos.set(eg.getClave(), eg.getValor());
+                }
+                datos.setYaxis(AxisType.Y);
+                modeloLinea.addSeries(datos);
+            } else {
+                BarChartSeries datos = new BarChartSeries();
+                datos.setLabel(serie.getNombre()); // titulo
+                for (QChartElement eg : serie.getDatos()) {
+                    datos.set(eg.getClave(), eg.getValor());
+                }
+                datos.setYaxis(AxisType.Y2);
+                modeloLinea.addSeries(datos);
+            }
+            linea = !linea;
+        }
+        Axis xAxis = new CategoryAxis(leyendaX);
+        xAxis.setTickAngle(anguloRotacionX);
+        modeloLinea.getAxes().put(AxisType.X, xAxis);
+        Axis yAxis = modeloLinea.getAxis(AxisType.Y);
+        yAxis.setTickAngle(anguloRotacionY);
+        yAxis.setLabel(leyendaY);
+
+    }
+
+    public void crearModeloArea() {
+        modeloArea = new LineChartModel();
+        modeloArea.setTitle(titulo);
+        modeloArea.setLegendPosition("ne");
+        modeloArea.setStacked(true);
+        modeloArea.setShowPointLabels(true);
+        List<QCharSerie> series = new ArrayList<>(mapa.values());
+        Collections.sort(series);
+        for (QCharSerie serie : series) {
+            LineChartSeries datos = new LineChartSeries();
+            datos.setLabel(serie.getNombre()); // titulo
+            datos.setFill(true);
+            for (QChartElement eg : serie.getDatos()) {
+                datos.set(eg.getClave(), eg.getValor());
+            }
+            modeloArea.addSeries(datos);
+        }
+        Axis xAxis = new CategoryAxis(leyendaX);
+        xAxis.setTickAngle(anguloRotacionX);
+        modeloArea.getAxes().put(AxisType.X, xAxis);
+        Axis yAxis = modeloArea.getAxis(AxisType.Y);
+        yAxis.setTickAngle(anguloRotacionY);
+        yAxis.setLabel(leyendaY);
+    }
+
+    public void crearModeloPie() {
+        modeloPie = new PieChartModel();
+        modeloPie.setTitle(titulo);
+        modeloPie.setShowDataLabels(true);
+        modeloPie.setLegendPosition("ne");
+        List<QCharSerie> series = new ArrayList<>(mapa.values());
+        Collections.sort(series);
+        for (QCharSerie serie : series) {
+            for (QChartElement eg : serie.getDatos()) {
+                modeloPie.set(eg.getClave(), eg.getValor());
+            }
+        }
+    }
+
+    public void crearModeloBurbuja() {
+        modeloBurbuja = new BubbleChartModel();
+        modeloBurbuja.setLegendPosition("ne");
+        modeloBurbuja.setShowPointLabels(true);
+        modeloBurbuja.setTitle(titulo);
+        List<QCharSerie> series = new ArrayList<>(mapa.values());
+        Collections.sort(series);
+        for (QCharSerie serie : series) {
+            for (QChartElement eg : serie.getDatos()) {
+                BubbleChartSeries datos = new BubbleChartSeries();
+                datos.setLabel(eg.getClave()); // titulo
+                datos.setX(eg.getValorX());
+                datos.setY(eg.getValorY());
+                datos.setRadius(eg.getValor());
+                modeloBurbuja.add(datos);
+            }
+
+        }
+    }
+
+    public Map<String, QCharSerie> getMapa() {
+        return mapa;
+    }
+
+    public void setMapa(Map<String, QCharSerie> mapa) {
+        this.mapa = mapa;
+    }
+
+    public BarChartModel getModeloBarra() {
+        return modeloBarra;
+    }
+
+    public void setModeloBarra(BarChartModel modeloBarra) {
+        this.modeloBarra = modeloBarra;
+    }
+
+    public PieChartModel getModeloPie() {
+        return modeloPie;
+    }
+
+    public void setModeloPie(PieChartModel modeloPie) {
+        this.modeloPie = modeloPie;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public HorizontalBarChartModel getModeloBarraHorizontal() {
+        return modeloBarraHorizontal;
+    }
+
+    public void setModeloBarraHorizontal(HorizontalBarChartModel modeloBarraHorizontal) {
+        this.modeloBarraHorizontal = modeloBarraHorizontal;
+    }
+
+    public LineChartModel getModeloLinea() {
+        return modeloLinea;
+    }
+
+    public void setModeloLinea(LineChartModel modeloLinea) {
+        this.modeloLinea = modeloLinea;
+    }
+
+    public LineChartModel getModeloArea() {
+        return modeloArea;
+    }
+
+    public void setModeloArea(LineChartModel modeloArea) {
+        this.modeloArea = modeloArea;
+    }
+
+    public String getLeyendaX() {
+        return leyendaX;
+    }
+
+    public void setLeyendaX(String leyendaX) {
+        this.leyendaX = leyendaX;
+    }
+
+    public String getLeyendaY() {
+        return leyendaY;
+    }
+
+    public void setLeyendaY(String leyendaY) {
+        this.leyendaY = leyendaY;
+    }
+
+    public BubbleChartModel getModeloBurbuja() {
+        return modeloBurbuja;
+    }
+
+    public void setModeloBurbuja(BubbleChartModel modeloBurbuja) {
+        this.modeloBurbuja = modeloBurbuja;
+    }
+
+    public int getAnguloRotacionY() {
+        return anguloRotacionY;
+    }
+
+    public void setAnguloRotacionY(int anguloRotacionY) {
+        this.anguloRotacionY = anguloRotacionY;
+    }
+
+    public int getAnguloRotacionX() {
+        return anguloRotacionX;
+    }
+
+    public void setAnguloRotacionX(int anguloRotacionX) {
+        this.anguloRotacionX = anguloRotacionX;
+    }
+
+    public boolean isAcumulativa() {
+        return acumulativa;
+    }
+
+    public void setAcumulativa(boolean acumulativa) {
+        this.acumulativa = acumulativa;
+    }
+
+}
