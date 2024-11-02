@@ -37,7 +37,7 @@
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            <version>13.0.0</version>
+            <version>14.0.0</version>
             <classifier>jakarta</classifier>
         </dependency>
         <dependency>
@@ -45,6 +45,14 @@
             <artifactId>jakarta.json-api</artifactId>
             <version>2.1.2</version>
         </dependency>
+
+
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.10.2</version>
+        </dependency>
+
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>itextpdf</artifactId>

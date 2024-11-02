@@ -10,8 +10,7 @@ import net.qoopo.framework.jpa.core.interfaces.CoreUser;
  *
  * @author ALBERTO
  */
-// @Named
-// @ApplicationScoped
+
 public interface AppSessionBeanInterface {
 
     public CoreUser getUser();
@@ -33,12 +32,6 @@ public interface AppSessionBeanInterface {
     public Long getEmpresaId();
 
     public boolean isLogged();
-
-    public boolean isAllowed(String page);
-
-    public boolean isAllowed(String page, String params);
-
-    public boolean isAllowed(String page, String params, boolean abrir);
 
     public void reloadPermissions();
 }

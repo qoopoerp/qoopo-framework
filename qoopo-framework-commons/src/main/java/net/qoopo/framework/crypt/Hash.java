@@ -64,8 +64,10 @@ public class Hash implements Serializable {
             dm.update(cadena.getBytes());
             byte messageDigest[] = dm.digest();
             StringBuilder hexString = new StringBuilder();
-            for (int i = 0; i < messageDigest.length; i++) {
-                hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
+            for (byte b : messageDigest) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
             }
             resultado = hexString.toString();
         } catch (NoSuchAlgorithmException ex) {
@@ -73,6 +75,26 @@ public class Hash implements Serializable {
         }
         return resultado.toUpperCase();
     }
+
+    public static String SHA1(String cadena) {
+        String resultado = "";
+        try {
+            MessageDigest dm = MessageDigest.getInstance("SHA-1");
+            dm.update(cadena.getBytes());
+            byte messageDigest[] = dm.digest();
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : messageDigest) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }          
+            resultado = hexString.toString();
+        } catch (NoSuchAlgorithmException ex) {
+            //Logger.getLogger(General.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return resultado.toUpperCase();
+    }
+
 
     /**
      * Crea una hast SHA256
@@ -87,8 +109,10 @@ public class Hash implements Serializable {
             dm.update(cadena.getBytes());
             byte messageDigest[] = dm.digest();
             StringBuilder hexString = new StringBuilder();
-            for (int i = 0; i < messageDigest.length; i++) {
-                hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
+            for (byte b : messageDigest) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
             }
             resultado = hexString.toString();
         } catch (NoSuchAlgorithmException ex) {
@@ -103,7 +127,7 @@ public class Hash implements Serializable {
      * @param cadena
      * @return
      */
-    public String SHA512(String cadena) {
+    public static String SHA512(String cadena) {
         String resultado = "";
         try {
             MessageDigest dm = MessageDigest.getInstance("SHA-512");
@@ -111,8 +135,10 @@ public class Hash implements Serializable {
             byte messageDigest[] = dm.digest();
 
             StringBuilder hexString = new StringBuilder();
-            for (int i = 0; i < messageDigest.length; i++) {
-                hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
+            for (byte b : messageDigest) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
             }
             resultado = hexString.toString();
         } catch (NoSuchAlgorithmException ex) {

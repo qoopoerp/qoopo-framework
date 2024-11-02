@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.primefaces.model.charts.ChartData;
 import org.primefaces.model.charts.ChartDataSet;
 import org.primefaces.model.charts.ChartOptions;
@@ -546,7 +547,7 @@ public class QChartJS implements Serializable {
     for (QChartSerie serie : series) {
       BarChartDataSet datosSerie = new BarChartDataSet();
       datosSerie.setLabel(serie.getNombre());
-      List<Number> values = new ArrayList<>();
+      List<Object> values = new ArrayList<>();
       List<QChartElement> ordenada = serie.getDatos();
       for (QChartElement label : labels) {
         for (QChartElement eg : ordenada) {
@@ -637,7 +638,7 @@ public class QChartJS implements Serializable {
       } else {
         BarChartDataSet datosSerie = new BarChartDataSet();
         datosSerie.setLabel(serie.getNombre());
-        List<Number> values = new ArrayList<>();
+        List<Object> values = new ArrayList<>();
         List<QChartElement> ordenada = serie.getDatos();
         for (QChartElement label : labels) {
           for (QChartElement eg : ordenada) {

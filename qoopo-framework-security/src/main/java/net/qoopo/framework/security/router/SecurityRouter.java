@@ -1,4 +1,4 @@
-package net.qoopo.framework.router;
+package net.qoopo.framework.security.router;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,13 +15,13 @@ import java.util.logging.Logger;
  *
  * @author Alberto
  */
-public class QRouter {
+public class SecurityRouter {
 
     public static final Logger log = Logger.getLogger("Qoopo");
-    public static final List<QRoute> ROUTES = new ArrayList<>();
+    public static final List<SecurityRoute> ROUTES = new ArrayList<>();
 
     static {
-      
+
         // webservices
         // if (urlStr.contains("/mobil/")) {
         // // System.out.println("contiene parte mobil, no debe proteger");
@@ -29,7 +29,7 @@ public class QRouter {
         // }
     }
 
-    public static void register(QRoute route) {
+    public static void register(SecurityRoute route) {
         try {
             if (!ROUTES.contains(route)) {
                 ROUTES.add(route);
@@ -40,7 +40,7 @@ public class QRouter {
         }
     }
 
-    public static void unRegister(QRoute route) {
+    public static void unRegister(SecurityRoute route) {
         try {
             if (ROUTES.contains(route)) {
                 ROUTES.remove(route);
@@ -56,21 +56,28 @@ public class QRouter {
      * @param route
      * @return Type of @QRoute.TYPES
      */
-    public static QRoute validateRoute(String route) {
+    public static SecurityRoute validateRoute(String route) {
+        return validateRoute(route, ROUTES);
+    }
+
+    public static SecurityRoute validateRoute(String route, List<SecurityRoute> routes) {
         route = route.toLowerCase();
-        for (QRoute _route : ROUTES) {
-            if (_route.isExactRoute()) {
-                if (route.equalsIgnoreCase(_route.getRoute().toLowerCase()) || (_route.getPage() != null
-                        && !_route.getPage().isBlank() && route.equalsIgnoreCase(_route.getPage().toLowerCase()))) {
-                    return _route;
+        for (SecurityRoute registeredRoute : routes) {
+            if (registeredRoute.isExactRoute()) {
+                if (route.equalsIgnoreCase(registeredRoute.getRoute().toLowerCase())
+                        || (registeredRoute.getPage() != null
+                                && !registeredRoute.getPage().isBlank()
+                                && route.equalsIgnoreCase(registeredRoute.getPage().toLowerCase()))) {
+                    return registeredRoute;
                 }
             } else {
-                if (route.contains(_route.getRoute().toLowerCase()) || (_route.getPage() != null
-                        && !_route.getPage().isBlank() && route.contains(_route.getPage().toLowerCase()))) {
-                    return _route;
+                if (route.contains(registeredRoute.getRoute().toLowerCase()) || (registeredRoute.getPage() != null
+                        && !registeredRoute.getPage().isBlank()
+                        && route.contains(registeredRoute.getPage().toLowerCase()))) {
+                    return registeredRoute;
                 }
             }
         }
-        return QRoute.INVALID_ROUTE;
+        return SecurityRoute.INVALID_ROUTE;
     }
 }

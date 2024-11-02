@@ -31,14 +31,6 @@ public class QoopoFramework {
     private static QoopoFramework INSTANCE = null;
 
     private String dataSourceName;
-    @Builder.Default
-    private boolean routerEnabled = false;
-    @Builder.Default
-    private String routerLoginPage = "/login.jsf";
-    @Builder.Default
-    private String routerPublicPage = "/home.jsf";
-    @Builder.Default
-    private String routerInvalidPage = "/login.jsf";
 
     public static final String version = "1.0.0-beta";
 
@@ -63,9 +55,9 @@ public class QoopoFramework {
      */
     public void load() {
         QoopoTask.load();
-        QoopoTask.start();
+        // QoopoTask.start();
         QoopoService.load();
         QoopoService.start();
-        QControllerManager.load();        
+        QControllerManager.load();
     }
 }

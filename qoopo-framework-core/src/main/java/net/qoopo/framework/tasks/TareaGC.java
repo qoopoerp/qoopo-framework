@@ -8,6 +8,8 @@ import java.util.logging.Logger;
  *
  * @author alberto
  */
+@Task(name = "Task GC", description = "Tarea que se encarga de realizar la recolección de basura", interval = 1000L
+        * 60L * 5L, runStart = true)
 public class TareaGC extends TimerTask {
 
     public static final Logger log = Logger.getLogger("Qoopo");

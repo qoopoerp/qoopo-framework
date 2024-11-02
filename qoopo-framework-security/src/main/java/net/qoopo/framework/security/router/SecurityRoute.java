@@ -1,4 +1,4 @@
-package net.qoopo.framework.router;
+package net.qoopo.framework.security.router;
 
 import java.util.Objects;
 
@@ -15,7 +15,9 @@ import lombok.Setter;
  * TYPE_INVALID - La ruta es invalida
  * TYPE_PUBLIC - La ruta es publica y no requiere estar autenticado para acceder
  * TYPE_WEBSITE - La ruta es parte del acceso web, en caso de no estar
- * autenticado se redirige hacia el home
+ * autenticado se redirige hacia el getRouterPublicPage
+ * TYPE_BACKEND - La ruta es parte del backed, en caso de no estar autenticado
+ * se redirige al routerLoginPage
  * 
  * @author Alberto
  */
@@ -24,7 +26,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
-public class QRoute {
+public class SecurityRoute {
 
     public static final int TYPE_INVALID = -1;
     public static final int TYPE_PUBLIC = 0;
@@ -45,29 +47,48 @@ public class QRoute {
     @Builder.Default
     private boolean exactRoute = false;
 
-    public static final QRoute INVALID_ROUTE = QRoute.build("404.jsf", "404.jsf", false, TYPE_INVALID, true);
+    public static final SecurityRoute INVALID_ROUTE = SecurityRoute.build("404.jsf", "404.jsf", false, TYPE_INVALID, true);
 
-    public static QRoute build(String page, boolean requireSession, int type, boolean exactRoute) {
+    public static SecurityRoute build(String page, boolean requireSession, int type, boolean exactRoute) {
         // return new QRoute(page, requireSession, type, exactRoute);
-        return QRoute.builder().page(page).route(page).requireSession(requireSession).type(type).exactRoute(exactRoute)
+        return SecurityRoute.builder().page(page).route(page).requireSession(requireSession).type(type).exactRoute(exactRoute)
                 .build();
     }
 
-    public static QRoute build(String page, boolean requireSession, boolean requirePermission, int type,
+    public static SecurityRoute build(String page, boolean requireSession, boolean requirePermission, int type,
             boolean exactRoute) {
-        return QRoute.builder().page(page).route(page).requireSession(requireSession)
+        return SecurityRoute.builder().page(page).route(page).requireSession(requireSession)
                 .requirePermission(requirePermission).type(type).exactRoute(exactRoute).build();
     }
 
-    public static QRoute build(String route, String page, boolean requireSession, int type, boolean exactRoute) {
-        return QRoute.builder().page(page).route(route).requireSession(requireSession).type(type).exactRoute(exactRoute)
+    public static SecurityRoute build(String route, String page, boolean requireSession, int type, boolean exactRoute) {
+        return SecurityRoute.builder().page(page).route(route).requireSession(requireSession).type(type).exactRoute(exactRoute)
                 .build();
     }
 
-    public static QRoute build(String route, String page, boolean requireSession, boolean requirePermission, int type,
+    public static SecurityRoute build(String route, String page, boolean requireSession, boolean requirePermission, int type,
             boolean exactRoute) {
-        return QRoute.builder().page(page).route(route).requireSession(requireSession)
+        return SecurityRoute.builder().page(page).route(route).requireSession(requireSession)
                 .requirePermission(requirePermission).type(type).exactRoute(exactRoute).build();
+    }
+
+    public SecurityRoute exactRoute() {
+        this.setExactRoute(true);
+        return this;
+    }
+
+    public SecurityRoute permitAll() {
+        this.setRequireSession(false);
+        this.setRequirePermission(false);
+        this.setType(TYPE_PUBLIC);
+        return this;
+    }
+
+    public SecurityRoute requireAuthenticated() {
+        this.setRequireSession(true);
+        this.setRequirePermission(true);
+        this.setType(TYPE_BACKEND);
+        return this;
     }
 
     @Override
@@ -92,7 +113,7 @@ public class QRoute {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final QRoute other = (QRoute) obj;
+        final SecurityRoute other = (SecurityRoute) obj;
         if (this.requireSession != other.requireSession) {
             return false;
         }
@@ -110,7 +131,7 @@ public class QRoute {
 
     @Override
     public String toString() {
-        return "QRoute{" + "route=" + route + ", page=" + page + ", requireSession=" + requireSession + ", type=" + type
+        return "SecurityRoute {" + "route=" + route + ", page=" + page + ", requireSession=" + requireSession + ", type=" + type
                 + ", exactRoute=" + exactRoute + '}';
     }
 
