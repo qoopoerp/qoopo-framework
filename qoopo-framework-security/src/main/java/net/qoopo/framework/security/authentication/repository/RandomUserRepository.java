@@ -2,11 +2,11 @@ package net.qoopo.framework.security.authentication.repository;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
-import net.qoopo.framework.random.RandomStringsGenerator;
-import net.qoopo.framework.security.authentication.password.encoder.DefaulPasswordEncoder;
+import net.qoopo.framework.security.authentication.password.encoder.BCryptPasswordEncoder;
 import net.qoopo.framework.security.authentication.password.encoder.PasswordEncoder;
 import net.qoopo.framework.security.authentication.service.UserNotFoundException;
 import net.qoopo.framework.security.authentication.user.DefaultUserData;
@@ -24,31 +24,37 @@ public class RandomUserRepository implements UserRepository {
     private PasswordEncoder passwordEncoder;
 
     public RandomUserRepository() {
-        this.passwordEncoder = new DefaulPasswordEncoder();
-        generate();
+        this.passwordEncoder = new BCryptPasswordEncoder();
+        generate(1);
+    }
+
+    public RandomUserRepository(int counter) {
+        this.passwordEncoder = new BCryptPasswordEncoder();
+        generate(counter);
     }
 
     public RandomUserRepository(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
-        generate();
+        generate(1);
     }
 
-    private void generate() {
+    public RandomUserRepository(int counter, PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+        generate(counter);
+    }
+
+    private void generate(int counter) {
         // genera usuarios aleatorios
         users = new HashMap<>();
-
-        String password = RandomStringsGenerator.generateAlphanumeric(12);
-        log.info("user-> admin:" + password);
-        users.put("admin", DefaultUserData.builder().user("admin")
-                .encodedPassword(passwordEncoder.encode(password)).build());
-
-        IntStream.range(0, 5).forEach(c -> {
-            String user = "admin" + c;
-            String password2 = RandomStringsGenerator.generateAlphanumeric(12);
-
-            log.info("user-> " + user + ":" + password2);
-            users.put(user, DefaultUserData.builder().user(user)
-                    .encodedPassword(passwordEncoder.encode(password2)).build());
+        log.info("User generated for development only");
+        IntStream.range(1, counter+1).forEach(c -> {
+            String user = "user" + c;
+            String password = UUID.randomUUID().toString();
+            log.info("user-> [" + user + " : " + password + "]");
+            users.put(user, DefaultUserData.builder()
+                    .user(user)
+                    .encodedPassword(passwordEncoder.encode(password))
+                    .build());
         });
     }
 

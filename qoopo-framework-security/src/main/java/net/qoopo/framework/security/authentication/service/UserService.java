@@ -4,7 +4,7 @@ import net.qoopo.framework.security.authentication.password.encoder.PasswordEnco
 import net.qoopo.framework.security.authentication.user.UserData;
 
 /**
- * Servicio que se encarga de buscar un usuario para su posterior valiadación de
+ * Servicio que se encarga de buscar un usuario para su posterior validación de
  * credenciales
  */
 public interface UserService {

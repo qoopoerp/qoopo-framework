@@ -9,6 +9,7 @@ import net.qoopo.framework.security.authentication.AuthenticationException;
  * Su función es manejar al provedor de Autenticación <<AuthenticationProvider>>
  */
 public interface AuthenticationManager {
+    
     public Authentication authenticate(Authentication authentication) throws AuthenticationException;
 
 }

@@ -1,7 +1,8 @@
 package net.qoopo.framework.security.authentication;
 
-import java.security.Permission;
 import java.util.Collection;
+
+import net.qoopo.framework.security.permission.GrantedPermission;
 
 /**
  * Represneta una Autenticación.
@@ -19,5 +20,5 @@ public interface Authentication {
 
     public void setAuthenticated(boolean isAuthenticated);
 
-    public Collection<Permission> getPermissions();
+    public Collection<GrantedPermission> getPermissions();
 }

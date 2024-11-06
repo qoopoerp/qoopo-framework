@@ -1,17 +1,7 @@
 package net.qoopo.framework.security.authentication;
 
-import net.qoopo.framework.security.exception.SecurityException;
-
-/**
- * Abstract superclass for all exceptions related to an {@link Authentication}
- * object
- * being invalid for whatever reason.
- *
- * @author Alberto Garcia
- */
-public abstract class AuthenticationException extends SecurityException {
-
-    public AuthenticationException() {
+public class AuthenticationNotFoundException extends AuthenticationException {
+    public AuthenticationNotFoundException() {
         super();
     }
 
@@ -23,7 +13,7 @@ public abstract class AuthenticationException extends SecurityException {
      * @param msg   the detail message
      * @param cause the root cause
      */
-    public AuthenticationException(String msg, Throwable cause) {
+    public AuthenticationNotFoundException(String msg, Throwable cause) {
         super(msg, cause);
     }
 
@@ -34,8 +24,7 @@ public abstract class AuthenticationException extends SecurityException {
      * 
      * @param msg the detail message
      */
-    public AuthenticationException(String msg) {
+    public AuthenticationNotFoundException(String msg) {
         super(msg);
     }
-
 }

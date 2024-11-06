@@ -1,26 +1,26 @@
-package net.qoopo.framework.security.authentication.password;
+package net.qoopo.framework.security.authentication.user;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.qoopo.framework.security.authentication.AccessDeniedException;
 import net.qoopo.framework.security.authentication.Authentication;
 import net.qoopo.framework.security.authentication.AuthenticationException;
+import net.qoopo.framework.security.authentication.password.BadCredentialsException;
+import net.qoopo.framework.security.authentication.password.CredentialsExpiredException;
 import net.qoopo.framework.security.authentication.provider.AuthenticationProvider;
 import net.qoopo.framework.security.authentication.service.UserService;
-import net.qoopo.framework.security.authentication.user.UserData;
 
 /**
  * Controlador default que implementa la autenticación
  */
 @Getter
 @Setter
-public class DefaultUserPasswordAutenticationProvider implements AuthenticationProvider {
+public class UserPasswordAutenticationProvider implements AuthenticationProvider {
 
     private UserService userService;
 
     private UserData userData;
 
-    public DefaultUserPasswordAutenticationProvider(UserService userService) {
+    public UserPasswordAutenticationProvider(UserService userService) {
         this.userService = userService;
     }
 
@@ -32,6 +32,18 @@ public class DefaultUserPasswordAutenticationProvider implements AuthenticationP
             UserPasswordAutenticacion userPasswordAutenticacion = (UserPasswordAutenticacion) authentication;
             userData = userService.findUserDataByUserName(userPasswordAutenticacion.getUser());
             if (userData != null) {
+                if (userData.isAccountLocked())
+                    throw new UserLockedException("User locked");
+
+                if (userData.isAccountExpired())
+                    throw new UserExpiredException("User expired");
+
+                if (userData.isCredentialsExpired())
+                    throw new CredentialsExpiredException("Credentials expired");
+
+                if (!userData.isEnabled())
+                    throw new UserDisabledException("User disabled");
+
                 if (userService.getPasswordEncoder().validate(userPasswordAutenticacion.getPassword(),
                         userData.getEncodedPassword())) {
                     authentication.setAuthenticated(true);
@@ -40,7 +52,8 @@ public class DefaultUserPasswordAutenticationProvider implements AuthenticationP
                     throw new BadCredentialsException("Bad Credentials");
                 }
             } else {
-                throw new AccessDeniedException("Access Denied");
+                // throw new AccessDeniedException("Access Denied");
+                throw new BadCredentialsException("Bad Credentials");
             }
         } else {
             return null;

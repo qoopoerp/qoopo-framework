@@ -1,4 +1,4 @@
-package net.qoopo.framework.security.authentication.failure;
+package net.qoopo.framework.security.filter.strategy.failure;
 
 import java.io.IOException;
 
@@ -10,8 +10,9 @@ import jakarta.servlet.http.HttpServletResponse;
 /**
  * Estrategia a implementar cuando hay un error de autenticacion
  */
-public interface AuthenticationFailureStrategy {
+public interface FailureStrategy {
 
-    public void onFailureAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+    public void onFailure(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+            net.qoopo.framework.security.exception.SecurityException exception)
             throws ServletException, IOException;
 }

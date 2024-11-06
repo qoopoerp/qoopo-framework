@@ -7,7 +7,7 @@ package net.qoopo.framework.security.authentication;
 public interface CredentialsContainer {
 
     /**
-     * Elimin las credenciales almacenadas
+     * Elimina las credenciales almacenadas
      */
     public void eraseCredentials();
 }

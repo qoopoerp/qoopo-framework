@@ -14,11 +14,4 @@ public class DefaulPasswordEncoder implements PasswordEncoder {
         return Hash.HASH(clearPassword).equalsIgnoreCase(encodedPassword);
     }
 
-    // @Override
-    // public String getPasswordEncoded() {
-    // // TODO Auto-generated method stub
-    // throw new UnsupportedOperationException("Unimplemented method
-    // 'getPasswordEncoded'");
-    // }
-
 }

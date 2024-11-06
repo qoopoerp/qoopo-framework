@@ -1,21 +1,19 @@
-package net.qoopo.framework.security.authentication.password;
+package net.qoopo.framework.security.authentication.user;
 
-import java.security.Permission;
 import java.util.Collection;
 
 import lombok.Getter;
 import lombok.Setter;
 import net.qoopo.framework.security.authentication.Authentication;
 import net.qoopo.framework.security.authentication.CredentialsContainer;
+import net.qoopo.framework.security.permission.GrantedPermission;
 
 @Getter
 @Setter
 public class UserPasswordAutenticacion implements Authentication, CredentialsContainer {
 
-    private Collection<Permission> permissions;
-
+    private Collection<GrantedPermission> permissions;
     private boolean authenticated;
-
     private String user;
     private String password;
 
@@ -35,7 +33,7 @@ public class UserPasswordAutenticacion implements Authentication, CredentialsCon
     }
 
     @Override
-    public Collection<Permission> getPermissions() {
+    public Collection<GrantedPermission> getPermissions() {
         return permissions;
     }
 

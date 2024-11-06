@@ -1,4 +1,4 @@
-package net.qoopo.framework.security.authentication.success;
+package net.qoopo.framework.security.filter.strategy.success;
 
 import java.io.IOException;
 
@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import net.qoopo.framework.security.authentication.Authentication;
 
-public class RedirectToPageSuccessStrategy implements AuthenticationSuccessStrategy {
+public class RedirectToPageSuccessStrategy implements SuccessStrategy {
 
     private String pageToRedirect;
 
@@ -17,11 +17,10 @@ public class RedirectToPageSuccessStrategy implements AuthenticationSuccessStrat
     }
 
     @Override
-    public void onSucessAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+    public void onSucess(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
             Authentication authResult) throws IOException, ServletException {
         // response.sendRedirect(request.getContextPath() +pageToRedirect);
         response.sendRedirect(pageToRedirect);
-
     }
 
 }

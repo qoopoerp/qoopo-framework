@@ -1,5 +1,6 @@
-package net.qoopo.framework.security.authentication;
+package net.qoopo.framework.security.authorization;
 
+import net.qoopo.framework.security.authentication.Authentication;
 import net.qoopo.framework.security.exception.SecurityException;
 
 /**
@@ -9,11 +10,12 @@ import net.qoopo.framework.security.exception.SecurityException;
  *
  * @author Alberto Garcia
  */
-public abstract class AuthenticationException extends SecurityException {
+public abstract class AuthorizationException extends SecurityException {
 
-    public AuthenticationException() {
+    public AuthorizationException() {
         super();
     }
+
 
     /**
      * Constructs an {@code AuthenticationException} with the specified message and
@@ -23,7 +25,7 @@ public abstract class AuthenticationException extends SecurityException {
      * @param msg   the detail message
      * @param cause the root cause
      */
-    public AuthenticationException(String msg, Throwable cause) {
+    public AuthorizationException(String msg, Throwable cause) {
         super(msg, cause);
     }
 
@@ -34,8 +36,10 @@ public abstract class AuthenticationException extends SecurityException {
      * 
      * @param msg the detail message
      */
-    public AuthenticationException(String msg) {
+    public AuthorizationException(String msg) {
         super(msg);
     }
+
+
 
 }

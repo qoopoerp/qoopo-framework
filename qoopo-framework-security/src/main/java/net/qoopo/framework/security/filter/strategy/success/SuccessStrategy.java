@@ -1,4 +1,4 @@
-package net.qoopo.framework.security.authentication.success;
+package net.qoopo.framework.security.filter.strategy.success;
 
 import java.io.IOException;
 
@@ -11,7 +11,7 @@ import net.qoopo.framework.security.authentication.Authentication;
 /**
  * Estrategia a implementar cuadno hay una authenticacion satisfactoria
  */
-public interface AuthenticationSuccessStrategy {
+public interface SuccessStrategy {
 
     /**
      * 
@@ -22,7 +22,7 @@ public interface AuthenticationSuccessStrategy {
      * @throws IOException
      * @throws ServletException
      */
-    public void onSucessAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+    public void onSucess(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
             Authentication authResult) throws IOException, ServletException;
 
 }

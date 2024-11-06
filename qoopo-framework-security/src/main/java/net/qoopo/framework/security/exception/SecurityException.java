@@ -1,6 +1,4 @@
-package net.qoopo.framework.security.authentication;
-
-import net.qoopo.framework.security.exception.SecurityException;
+package net.qoopo.framework.security.exception;
 
 /**
  * Abstract superclass for all exceptions related to an {@link Authentication}
@@ -9,11 +7,12 @@ import net.qoopo.framework.security.exception.SecurityException;
  *
  * @author Alberto Garcia
  */
-public abstract class AuthenticationException extends SecurityException {
+public abstract class SecurityException extends RuntimeException {
 
-    public AuthenticationException() {
+    public SecurityException() {
         super();
     }
+
 
     /**
      * Constructs an {@code AuthenticationException} with the specified message and
@@ -23,7 +22,7 @@ public abstract class AuthenticationException extends SecurityException {
      * @param msg   the detail message
      * @param cause the root cause
      */
-    public AuthenticationException(String msg, Throwable cause) {
+    public SecurityException(String msg, Throwable cause) {
         super(msg, cause);
     }
 
@@ -34,8 +33,10 @@ public abstract class AuthenticationException extends SecurityException {
      * 
      * @param msg the detail message
      */
-    public AuthenticationException(String msg) {
+    public SecurityException(String msg) {
         super(msg);
     }
+
+
 
 }
