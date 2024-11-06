@@ -32,6 +32,7 @@
     </distributionManagement>
 
     <modules>
+        <module>qoopo-framework-reflection</module>
         <module>qoopo-framework-commons</module>
         <module>qoopo-framework-data</module>
         <module>qoopo-framework-core</module>

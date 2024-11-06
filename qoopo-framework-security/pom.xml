@@ -51,6 +51,11 @@
         </dependency>
         <dependency>
             <groupId>net.qoopo</groupId>
+            <artifactId>qoopo-framework-reflection</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.qoopo</groupId>
             <artifactId>qoopo-framework-core</artifactId>
             <version>1.0.0</version>
         </dependency>
@@ -60,13 +65,13 @@
             <version>1.18.24</version>
             <scope>provided</scope>
         </dependency>
-<!-- BCRypt -->
+        <!-- BCRypt -->
         <dependency>
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
             <version>0.4</version>
         </dependency>
-<!-- ARgon2 -->
+        <!-- ARgon2 -->
         <dependency>
             <groupId>de.mkammerer</groupId>
             <artifactId>argon2-jvm</artifactId>

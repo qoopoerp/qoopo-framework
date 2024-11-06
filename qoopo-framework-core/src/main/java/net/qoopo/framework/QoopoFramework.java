@@ -2,7 +2,6 @@ package net.qoopo.framework;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import net.qoopo.framework.controller.QControllerManager;
@@ -24,7 +23,7 @@ import net.qoopo.framework.tasks.QoopoTask;
  */
 @Getter
 @Setter
-@Builder
+// @Builder
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class QoopoFramework {
 
@@ -36,10 +35,6 @@ public class QoopoFramework {
 
     private QoopoFramework() {
         //
-    }
-
-    public static void config(QoopoFramework qf) {
-        INSTANCE = qf;
     }
 
     public static QoopoFramework get() {
