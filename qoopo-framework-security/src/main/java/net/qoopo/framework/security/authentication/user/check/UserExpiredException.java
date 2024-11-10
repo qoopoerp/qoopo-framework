@@ -1,9 +1,9 @@
-package net.qoopo.framework.security.authentication.user;
+package net.qoopo.framework.security.authentication.user.check;
 
 import net.qoopo.framework.security.authentication.AuthenticationException;
 
-public class UserLockedException extends AuthenticationException {
-    public UserLockedException() {
+public class UserExpiredException extends AuthenticationException {
+    public UserExpiredException() {
         super();
     }
 
@@ -15,7 +15,7 @@ public class UserLockedException extends AuthenticationException {
      * @param msg   the detail message
      * @param cause the root cause
      */
-    public UserLockedException(String msg, Throwable cause) {
+    public UserExpiredException(String msg, Throwable cause) {
         super(msg, cause);
     }
 
@@ -26,7 +26,7 @@ public class UserLockedException extends AuthenticationException {
      * 
      * @param msg the detail message
      */
-    public UserLockedException(String msg) {
+    public UserExpiredException(String msg) {
         super(msg);
     }
 }

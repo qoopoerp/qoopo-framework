@@ -1,7 +1,7 @@
 package net.qoopo.framework.security.authentication.service;
 
+import net.qoopo.framework.security.authentication.password.PasswordData;
 import net.qoopo.framework.security.authentication.password.encoder.PasswordEncoder;
-import net.qoopo.framework.security.authentication.user.PasswordData;
 
 /**
  * Servicio que se encarga de obtener el password almacenado

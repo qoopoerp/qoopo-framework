@@ -1,7 +1,5 @@
 package net.qoopo.framework.security.authorization.manager;
 
-import java.util.function.Supplier;
-
 import net.qoopo.framework.security.authentication.Authentication;
 import net.qoopo.framework.security.authorization.AuthorizationResponse;
 import net.qoopo.framework.security.authorization.AuthorizationResult;
@@ -13,9 +11,9 @@ import net.qoopo.framework.security.authorization.AuthorizationResult;
 public class AuthenticatedAuthorizationManager<T> implements AuthorizationManager<T> {
 
     @Override
-    public AuthorizationResult authorize(Supplier<Authentication> authentication, T object) {
+    public AuthorizationResult authorize(Authentication authentication, T object) {
 
-        boolean granted = isAuthenticated(authentication.get());
+        boolean granted = isAuthenticated(authentication);
         return new AuthorizationResponse(granted);
     }
 

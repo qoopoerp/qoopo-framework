@@ -29,6 +29,11 @@
         </dependency>
         <dependency>
             <groupId>net.qoopo</groupId>
+            <artifactId>qoopo-framework-security</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.qoopo</groupId>
             <artifactId>qoopo-framework-reports</artifactId>
             <version>1.0.0</version>
         </dependency>

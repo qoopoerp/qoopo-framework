@@ -1,4 +1,7 @@
-package net.qoopo.framework.security.context;
+package net.qoopo.framework.security.context.strategy;
+
+import net.qoopo.framework.security.context.SecurityContext;
+import net.qoopo.framework.security.context.SecurityContextImpl;
 
 /**
  * Almacena un solo SecurityContext para toda la aplicación
@@ -22,13 +25,12 @@ public class GlobalSecurityContextHolderStrategy implements SecurityContextHolde
 
     @Override
     public void setContext(SecurityContext context) {
-        GlobalSecurityContextHolderStrategy.context=context;
+        GlobalSecurityContextHolderStrategy.context = context;
     }
 
     @Override
     public SecurityContext createEmptyContext() {
-        context= new SecurityContextImpl();
-        return context;
+        return new SecurityContextImpl();
     }
 
 }

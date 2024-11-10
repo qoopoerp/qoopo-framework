@@ -6,7 +6,6 @@ import net.qoopo.framework.security.authentication.Authentication;
 import net.qoopo.framework.security.authentication.AuthenticationException;
 import net.qoopo.framework.security.authentication.provider.AuthenticationProvider;
 import net.qoopo.framework.security.authentication.service.PasswordService;
-import net.qoopo.framework.security.authentication.user.PasswordData;
 
 /**
  * Controlador default que implementa la autenticación
@@ -28,7 +27,7 @@ public class DefaultPasswordAutenticationProvider implements AuthenticationProvi
         if (authentication instanceof PasswordAutenticacion) {
             PasswordAutenticacion PasswordAutenticacion = (PasswordAutenticacion) authentication;
             PasswordData passwordData = passwordService.findPassword();
-            if (passwordService.getPasswordEncoder().validate(PasswordAutenticacion.getPassword(),
+            if (passwordService.getPasswordEncoder().validate((String) PasswordAutenticacion.getCredentials(),
                     passwordData.getEncodedPassword())) {
                 authentication.setAuthenticated(true);
                 return authentication;

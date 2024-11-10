@@ -2,18 +2,14 @@ package net.qoopo.framework.security.matcher;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.regex.Pattern;
-
-import org.eclipse.persistence.jpa.jpql.Assert;
 
 import jakarta.servlet.http.HttpServletRequest;
+import net.qoopo.framework.security.matcher.util.IPValidator;
 
 /**
  * Valida si la solicitud corresponde a una ip específica
  */
 public class IpAddressMatcher extends AbstractRequestMatcher {
-
-    private static Pattern IPV4 = Pattern.compile("\\d{0,3}.\\d{0,3}.\\d{0,3}.\\d{0,3}(/\\d{0,3})?");
 
     private final int nMaskBits;
 
@@ -50,6 +46,8 @@ public class IpAddressMatcher extends AbstractRequestMatcher {
     }
 
     public boolean matches(String address) {
+        if (address == null)
+            return false;
         assertNotHostName(address);
         InetAddress remoteAddress = parseAddress(address);
         if (!this.requiredAddress.getClass().equals(remoteAddress.getClass())) {
@@ -74,13 +72,14 @@ public class IpAddressMatcher extends AbstractRequestMatcher {
     }
 
     private void assertNotHostName(String ipAddress) {
-        boolean isIpv4 = IPV4.matcher(ipAddress).matches();
+        boolean isIpv4 = IPValidator.isValidIPv4(ipAddress);
         if (isIpv4) {
             return;
         }
         String error = "ipAddress " + ipAddress + " doesn't look like an IP Address. Is it a host name?";
-        Assert.isTrue(ipAddress.charAt(0) == '[' || ipAddress.charAt(0) == ':'
-                || (Character.digit(ipAddress.charAt(0), 16) != -1 && ipAddress.contains(":")), error);
+        // Assert.isTrue(ipAddress.charAt(0) == '[' || ipAddress.charAt(0) == ':'
+        // || (Character.digit(ipAddress.charAt(0), 16) != -1 &&
+        // ipAddress.contains(":")), error);
     }
 
     private InetAddress parseAddress(String address) {

@@ -1,9 +1,9 @@
-package net.qoopo.framework.security.authentication.user;
+package net.qoopo.framework.security.authentication.user.check;
 
 import net.qoopo.framework.security.authentication.AuthenticationException;
 
-public class UserDisabledException extends AuthenticationException {
-    public UserDisabledException() {
+public class UserLockedException extends AuthenticationException {
+    public UserLockedException() {
         super();
     }
 
@@ -15,7 +15,7 @@ public class UserDisabledException extends AuthenticationException {
      * @param msg   the detail message
      * @param cause the root cause
      */
-    public UserDisabledException(String msg, Throwable cause) {
+    public UserLockedException(String msg, Throwable cause) {
         super(msg, cause);
     }
 
@@ -26,7 +26,7 @@ public class UserDisabledException extends AuthenticationException {
      * 
      * @param msg the detail message
      */
-    public UserDisabledException(String msg) {
+    public UserLockedException(String msg) {
         super(msg);
     }
 }

@@ -15,15 +15,6 @@ import net.qoopo.framework.security.authentication.manager.AuthenticationManager
 import net.qoopo.framework.security.authentication.password.encoder.BCryptPasswordEncoder;
 import net.qoopo.framework.security.authentication.password.encoder.PasswordEncoder;
 import net.qoopo.framework.security.authentication.provider.AuthenticationProvider;
-import net.qoopo.framework.security.filter.strategy.failure.FailureStrategy;
-import net.qoopo.framework.security.filter.strategy.failure.RedirectToLoginFailureStrategy;
-import net.qoopo.framework.security.filter.strategy.failure.RedirectToPageFailureStrategy;
-import net.qoopo.framework.security.filter.strategy.failure.SendErrorForbiddenStrategy;
-import net.qoopo.framework.security.filter.strategy.success.InvalidateSessionStrategy;
-import net.qoopo.framework.security.filter.strategy.success.MixSuccessStrategy;
-import net.qoopo.framework.security.filter.strategy.success.RedirectToLoginSuccessStrategy;
-import net.qoopo.framework.security.filter.strategy.success.RedirectToPageSuccessStrategy;
-import net.qoopo.framework.security.filter.strategy.success.SuccessStrategy;
 
 @Getter
 @Setter
@@ -33,35 +24,23 @@ public class SecurityConfig {
     private static SecurityConfig INSTANCE = null;
 
     private boolean enabled = true;
-
-    private String loginPage = "/login.html";
-    private String logoutPage = "/logout";
-
-    private SuccessStrategy succesAuthenticationStrategy = null;
-    private FailureStrategy failureAuthenticationStrategy = new RedirectToLoginFailureStrategy();
-
-    private SuccessStrategy succesLogoutStrategy = new MixSuccessStrategy(new RedirectToLoginSuccessStrategy(),
-            new InvalidateSessionStrategy());
-    private FailureStrategy failureLogoutStrategy = null;
-
-    private FailureStrategy failureAuthorizationStrategy = new RedirectToLoginFailureStrategy();
-
-    private List<AuthenticationProvider> authenticationProviders = new ArrayList<>();
     private AuthenticationManager authenticationManager = null;
-    private RequestMatcherConfigurer requestMatcherConfigurer = new RequestMatcherConfigurer();
-
+    private List<AuthenticationProvider> authenticationProviders = new ArrayList<>();
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private RequestMatcherConfigurer requestMatcherConfigurer = new RequestMatcherConfigurer();
+    private LoginConfigurer loginConfigurer = new LoginConfigurer();
+    private AuthorizationConfigurer auhtorizationConfigurer = new AuthorizationConfigurer();
 
     public static final String version = "1.0.0-beta";
 
     private SecurityConfig() {
-        loginPage(loginPage);
-        logoutPage(logoutPage);
+
     }
 
     public static SecurityConfig get() {
         if (INSTANCE == null) {
             INSTANCE = new SecurityConfig();
+            INSTANCE.login(login -> login.defaults());
         }
         return INSTANCE;
     }
@@ -73,22 +52,6 @@ public class SecurityConfig {
 
     public SecurityConfig disable() {
         this.enabled = false;
-        return this;
-    }
-
-    public SecurityConfig loginPage(String loginPage) {
-        if (loginPage == null)
-            throw new NullArgumentException();
-        this.loginPage = loginPage;
-        requestMatcher(config -> config.acceptRequest(loginPage));
-        return this;
-    }
-
-    public SecurityConfig logoutPage(String logoutPage) {
-        if (logoutPage == null)
-            throw new NullArgumentException();
-        this.logoutPage = logoutPage;
-        requestMatcher(config -> config.acceptRequest(logoutPage));
         return this;
     }
 
@@ -106,107 +69,53 @@ public class SecurityConfig {
         return this;
     }
 
-    public SecurityConfig successLoginUrl(String url) {
-        if (url == null)
+    public SecurityConfig passwordEncoder(PasswordEncoder encoder) {
+        if (encoder == null)
             throw new NullArgumentException();
-        this.setSuccesAuthenticationStrategy(new RedirectToPageSuccessStrategy(url));
+        passwordEncoder = encoder;
         return this;
     }
 
-    public SecurityConfig failureLoginUrl(String url) {
-        if (url == null)
-            throw new NullArgumentException();
-        this.setFailureAuthenticationStrategy(new RedirectToPageFailureStrategy(url));
-        return this;
-    }
-
-    public SecurityConfig onSuccessAuthenticationStrategy(SuccessStrategy strategy) {
-        if (strategy == null)
-            throw new NullArgumentException();
-        this.setSuccesAuthenticationStrategy(strategy);
-        return this;
-    }
-
-    public SecurityConfig onFailureAuthenticationStrategy(FailureStrategy strategy) {
-        if (strategy == null)
-            throw new NullArgumentException();
-        this.setFailureAuthenticationStrategy(strategy);
-        return this;
-    }
-
-    public SecurityConfig onFailureAuthenticationRedirectToLogin() {
-        this.setFailureAuthenticationStrategy(new RedirectToLoginFailureStrategy());
-        return this;
-    }
-
-    public SecurityConfig onFailureAuthenticationRedirect(String url) {
-        if (url == null)
-            throw new NullArgumentException();
-        this.setFailureAuthenticationStrategy(new RedirectToPageFailureStrategy(url));
-        return this;
-    }
-
-    public SecurityConfig onFailureAuthenticationError() {
-        this.setFailureAuthenticationStrategy(new SendErrorForbiddenStrategy());
-        return this;
-    }
-
-    public SecurityConfig onFailureAuthenticationError(String message) {
-        if (message == null)
-            throw new NullArgumentException();
-        this.setFailureAuthenticationStrategy(new SendErrorForbiddenStrategy(message));
-        return this;
-    }
-
-    public SecurityConfig onFailureAuthorizationStrategy(FailureStrategy strategy) {
-        if (strategy == null)
-            throw new NullArgumentException();
-        this.setFailureAuthorizationStrategy(strategy);
-        return this;
-    }
-
-    public SecurityConfig onFailureAuthorizationRedirectToLogin() {
-        this.setFailureAuthorizationStrategy(new RedirectToLoginFailureStrategy());
-        return this;
-    }
-
-    public SecurityConfig onFailureAuthorizationRedirect(String url) {
-        if (url == null)
-            throw new NullArgumentException();
-        this.setFailureAuthorizationStrategy(new RedirectToPageFailureStrategy(url));
-        return this;
-    }
-
-    public SecurityConfig onFailureAuthorizationError() {
-        this.setFailureAuthorizationStrategy(new SendErrorForbiddenStrategy());
-        return this;
-    }
-
-    public SecurityConfig onFailureAuthorizationError(String message) {
-        if (message == null)
-            throw new NullArgumentException();
-        this.setFailureAuthorizationStrategy(new SendErrorForbiddenStrategy(message));
-        return this;
-    }
-
-    public SecurityConfig requestMatcher(Supplier<RequestMatcherConfigurer> requestMatcher) {
+    public SecurityConfig authorizeRequests(Supplier<RequestMatcherConfigurer> requestMatcher) {
         if (requestMatcher == null)
             throw new NullArgumentException();
         this.requestMatcherConfigurer = requestMatcher.get();
         return this;
     }
 
-    public SecurityConfig requestMatcher(Function<RequestMatcherConfigurer, RequestMatcherConfigurer> requestMatcher) {
+    public SecurityConfig authorizeRequests(
+            Function<RequestMatcherConfigurer, RequestMatcherConfigurer> requestMatcher) {
         if (requestMatcher == null)
             throw new NullArgumentException();
         this.requestMatcherConfigurer = requestMatcher.apply(requestMatcherConfigurer);
         return this;
     }
 
-    public SecurityConfig passwordEncoder(PasswordEncoder encoder) {
-        if (encoder == null)
+    public SecurityConfig login(Supplier<LoginConfigurer> login) {
+        if (login == null)
             throw new NullArgumentException();
-        passwordEncoder = encoder;
+        this.loginConfigurer = login.get();
+        return this;
+    }
+
+    public SecurityConfig login(Function<LoginConfigurer, LoginConfigurer> login) {
+        if (login == null)
+            throw new NullArgumentException();
+        this.loginConfigurer = login.apply(loginConfigurer);
+        return this;
+    }
+
+    public SecurityConfig authorization(Supplier<AuthorizationConfigurer> login) {
+        if (login == null)
+            throw new NullArgumentException();
+        this.auhtorizationConfigurer = login.get();
+        return this;
+    }
+
+    public SecurityConfig authorization(Function<AuthorizationConfigurer, AuthorizationConfigurer> login) {
+        if (login == null)
+            throw new NullArgumentException();
+        this.auhtorizationConfigurer = login.apply(auhtorizationConfigurer);
         return this;
     }
 

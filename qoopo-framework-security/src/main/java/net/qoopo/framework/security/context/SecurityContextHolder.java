@@ -1,20 +1,31 @@
 package net.qoopo.framework.security.context;
 
+import java.util.logging.Logger;
+
+import net.qoopo.framework.security.context.strategy.GlobalSecurityContextHolderStrategy;
+import net.qoopo.framework.security.context.strategy.InheritableThreadLocalSecurityContextHolderStrategy;
+import net.qoopo.framework.security.context.strategy.SecurityContextHolderStrategy;
+import net.qoopo.framework.security.context.strategy.ThreadLocalSecurityContextHolderStrategy;
+
 /**
  * Almacena y administra el SecurityContext según la estrategia definida
  */
 public class SecurityContextHolder {
 
+    private static Logger log = Logger.getLogger("SecurityContextHolder");
     public static final String MODE_GLOBAL = "GLOBAL";
+    public static final String THREAD_LOCAL = "THREAD_LOCAL";
+    public static final String INHERITABLE_THREAD_LOCAL = "INHERITABLE_THREAD_LOCAL";
     public static final String MODE_USER_DEFINED = "USER_DEFINED";
 
-    private static final String ENV_VARIABLE = "qoopo.framework.security.strategy";
+    private static final String ENV_VARIABLE = "qoopo_framework_security_strategy";
 
     private static SecurityContextHolderStrategy strategy;
 
     private static String strategyName;
 
     private static int initializeCount = 0;
+    
     static {
         init();
     }
@@ -25,24 +36,29 @@ public class SecurityContextHolder {
     }
 
     private static void initStrategy() {
-
         try {
-
             if (strategyName != null && strategyName.equals(MODE_USER_DEFINED)) {
                 return;
             }
 
             strategyName = System.getenv(ENV_VARIABLE);
             if (strategyName == null) {
-                strategyName = MODE_GLOBAL;
+                strategyName = INHERITABLE_THREAD_LOCAL;
             }
+            log.info("[+] SecurityContextHolderStrategy -> " + strategyName);
 
             switch (strategyName) {
                 case MODE_GLOBAL:
                     strategy = new GlobalSecurityContextHolderStrategy();
                     break;
+                case THREAD_LOCAL:
+                    strategy = new ThreadLocalSecurityContextHolderStrategy();
+                    break;
+                case INHERITABLE_THREAD_LOCAL:
+                    strategy = new InheritableThreadLocalSecurityContextHolderStrategy();
+                    break;
                 default:
-                    strategy = new GlobalSecurityContextHolderStrategy();
+                    strategy = new InheritableThreadLocalSecurityContextHolderStrategy();
                     break;
             }
         } catch (Exception e) {
@@ -51,6 +67,7 @@ public class SecurityContextHolder {
     }
 
     public static void setContext(SecurityContext context) {
+        log.info("[+] Seteando securityContext, instancias:" + initializeCount);
         strategy.setContext(context);
     }
 

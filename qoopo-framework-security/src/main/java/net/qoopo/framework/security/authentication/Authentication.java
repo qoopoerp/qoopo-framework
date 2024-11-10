@@ -1,7 +1,7 @@
 package net.qoopo.framework.security.authentication;
 
 import java.util.Collection;
-
+import java.io.Serializable;
 import net.qoopo.framework.security.permission.GrantedPermission;
 
 /**
@@ -12,9 +12,13 @@ import net.qoopo.framework.security.permission.GrantedPermission;
  * realiza una autenticación devuelve un Autenticación que contiene el token de
  * la autenticación realizada
  */
-public interface Authentication {
+public interface Authentication extends Serializable{
 
     public Object getPrincipal();
+
+    public Object getCredentials();
+
+    public Object getDetails();
 
     public boolean isAuthenticated();
 

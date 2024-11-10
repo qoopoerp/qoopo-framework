@@ -4,17 +4,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
-import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import net.qoopo.framework.security.authentication.Authentication;
 import net.qoopo.framework.security.authentication.AuthenticationException;
 import net.qoopo.framework.security.authentication.manager.AuthenticationManager;
 import net.qoopo.framework.security.authentication.manager.ProviderManager;
+import net.qoopo.framework.security.authentication.session.SessionAuthenticationStrategy;
+import net.qoopo.framework.security.authentication.session.SimpleAuthenticationSessionStrategy;
 import net.qoopo.framework.security.config.SecurityConfig;
 import net.qoopo.framework.security.context.SecurityContext;
 import net.qoopo.framework.security.context.SecurityContextHolder;
@@ -26,7 +25,7 @@ import net.qoopo.framework.security.matcher.RequestMatcher;
  * Filtro abstracto que debe ser implementado (heredado) en un filtros
  * específicos para realizar intentos de Autenticacion
  */
-public abstract class AbstractAuthenticationProcessingFilter implements Filter {
+public abstract class AbstractAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     public static final Logger log = Logger.getLogger("Authentication filter");
 
@@ -36,26 +35,17 @@ public abstract class AbstractAuthenticationProcessingFilter implements Filter {
 
     protected SuccessStrategy authenticationSuccessStrategy;
 
+    protected SessionAuthenticationStrategy sessionStrategy = new SimpleAuthenticationSessionStrategy();
+
     protected AuthenticationManager authenticationManager = null;
 
     public abstract Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response);
 
-    /**
-     *
-     * @param request  The servlet request we are processing
-     * @param response The servlet response we are creating
-     * @param chain    The filter chain we are processing
-     *
-     * @exception IOException      if an input/output error occurs
-     * @exception ServletException if a servlet error occurs
-     */
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
-        doFilter((HttpServletRequest) request, (HttpServletResponse) response, chain);
+    public AbstractAuthenticationProcessingFilter(String name) {
+        super(name);
     }
 
-    private void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+    protected void doInternalFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
         if (!SecurityConfig.get().isEnabled()) {
@@ -74,14 +64,14 @@ public abstract class AbstractAuthenticationProcessingFilter implements Filter {
         try {
             // si llega aqui necesita realizar una autenticacion
             Authentication authentication = attemptAuthentication(request, response);
-
-            if (authentication != null && authentication.isAuthenticated())
+            if (authentication != null && authentication.isAuthenticated()) {
+                sessionStrategy.onAuthentication(authentication, request, response);
                 successfulAuthentication(request, response, chain, authentication);
-            else
+            } else {
                 unSuccessfulAuthentication(request, response, chain, null);
+            }
         } catch (AuthenticationException e) {
             unSuccessfulAuthentication(request, response, chain, e);
-            // manejar error como Credenciales incorrectas
         }
 
     }
@@ -130,11 +120,12 @@ public abstract class AbstractAuthenticationProcessingFilter implements Filter {
         }
 
         if (authenticationFailureStrategy == null) {
-            authenticationFailureStrategy = SecurityConfig.get().getFailureAuthenticationStrategy();
+            authenticationFailureStrategy = SecurityConfig.get().getLoginConfigurer()
+                    .getFailureAuthenticationStrategy();
         }
 
         if (authenticationSuccessStrategy == null) {
-            authenticationSuccessStrategy = SecurityConfig.get().getSuccesAuthenticationStrategy();
+            authenticationSuccessStrategy = SecurityConfig.get().getLoginConfigurer().getSuccesAuthenticationStrategy();
         }
     }
 

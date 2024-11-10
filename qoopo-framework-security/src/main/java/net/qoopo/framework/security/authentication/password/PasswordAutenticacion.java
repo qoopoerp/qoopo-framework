@@ -16,10 +16,10 @@ public class PasswordAutenticacion implements Authentication, CredentialsContain
 
     private boolean authenticated;
 
-    private String password;
+    private Object credentials;
 
     public PasswordAutenticacion(String password) {
-        this.password = password;
+        this.credentials = password;
     }
 
     @Override
@@ -39,12 +39,17 @@ public class PasswordAutenticacion implements Authentication, CredentialsContain
 
     @Override
     public void eraseCredentials() {
-        password = null;
+        credentials = null;
     }
 
     @Override
     public Object getPrincipal() {
-        return password;
+        return credentials;
+    }
+
+    @Override
+    public Object getDetails() {
+        return null;
     }
 
 }

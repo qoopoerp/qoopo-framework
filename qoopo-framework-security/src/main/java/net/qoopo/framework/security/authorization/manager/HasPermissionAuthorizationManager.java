@@ -27,8 +27,8 @@ public class HasPermissionAuthorizationManager<T> implements AuthorizationManage
     }
 
     @Override
-    public AuthorizationResult authorize(Supplier<Authentication> authentication, T object) {
-        boolean granted = matcher.matches(authentication.get());
+    public AuthorizationResult authorize(Authentication authentication, T object) {
+        boolean granted = matcher.matches(authentication);
         return new AuthorizationResponse(granted);
     }
 

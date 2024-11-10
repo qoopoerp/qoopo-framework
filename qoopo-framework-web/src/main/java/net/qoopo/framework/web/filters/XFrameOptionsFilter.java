@@ -11,7 +11,15 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebFilter(filterName = "XFrameOptionsFilter", urlPatterns = { "/*" })
+/**
+ * This servlet filter protects the {@code x-frame-options/protected.jsp} page
+ * against clickjacking by adding the {@code X-Frame-Options} header to the
+ * response. The {@code urlPatterns} should be far more wildcard in a real web
+ * application than in this demo project.
+ *
+ * @author Dominik Schadow
+ */
+@WebFilter(filterName = "filter_1_XFrameOptionsFilter", urlPatterns = { "/*" })
 public class XFrameOptionsFilter
         implements Filter {
 
@@ -19,7 +27,7 @@ public class XFrameOptionsFilter
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-        response.addHeader("X-Frame-Options", "SAMEORIGIN");
+        response.addHeader("X-Frame-Options", "SAMEORIGIN"); //Otras opcione DENY,  ALLOW-FROM http://localhost:8080
         filterChain.doFilter(servletRequest, response);
     }
 

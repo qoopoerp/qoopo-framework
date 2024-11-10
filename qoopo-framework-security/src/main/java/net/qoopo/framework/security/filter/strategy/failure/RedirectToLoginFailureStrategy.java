@@ -6,7 +6,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import net.qoopo.framework.security.authentication.AuthenticationException;
 import net.qoopo.framework.security.config.SecurityConfig;
 
 /**
@@ -31,11 +30,11 @@ public class RedirectToLoginFailureStrategy implements FailureStrategy {
         // + pagina + "&" + params);
         if (exception != null)
             response.sendRedirect(
-                    request.getContextPath() + SecurityConfig.get().getLoginPage() + "?error="
+                    request.getContextPath() + SecurityConfig.get().getLoginConfigurer().getLoginPage() + "?error="
                             + exception.getMessage());
         else
             response.sendRedirect(
-                    request.getContextPath() + SecurityConfig.get().getLoginPage() + "?noerror");
+                    request.getContextPath() + SecurityConfig.get().getLoginConfigurer().getLoginPage() + "?noerror");
 
     }
 

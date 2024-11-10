@@ -1,4 +1,4 @@
-package net.qoopo.framework.security.authentication.user;
+package net.qoopo.framework.security.authentication.password;
 
 public interface PasswordData {
 

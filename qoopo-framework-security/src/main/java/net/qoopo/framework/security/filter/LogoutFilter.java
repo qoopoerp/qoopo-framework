@@ -3,11 +3,8 @@ package net.qoopo.framework.security.filter;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import net.qoopo.framework.security.authentication.Authentication;
@@ -22,7 +19,9 @@ import net.qoopo.framework.security.matcher.UrlRequestMatcher;
 /**
  * Filtro que se encarga de realizar el proceso de logout
  */
-public class LogoutFilter implements Filter {
+
+// @WebFilter(filterName = "filter_3_logoutFilter", urlPatterns = { "/*" })
+public class LogoutFilter extends OncePerRequestFilter {
 
     public static final Logger log = Logger.getLogger("Logout filter");
 
@@ -32,24 +31,11 @@ public class LogoutFilter implements Filter {
 
     protected SuccessStrategy successStrategy;
 
-    // protected AuthenticationManager authenticationManager = null;
-
-    /**
-     *
-     * @param request  The servlet request we are processing
-     * @param response The servlet response we are creating
-     * @param chain    The filter chain we are processing
-     *
-     * @exception IOException      if an input/output error occurs
-     * @exception ServletException if a servlet error occurs
-     */
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
-        doFilter((HttpServletRequest) request, (HttpServletResponse) response, chain);
+    public LogoutFilter() {
+        super("logoutFilter");
     }
 
-    private void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+    protected void doInternalFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
         if (!SecurityConfig.get().isEnabled()) {
@@ -66,10 +52,9 @@ public class LogoutFilter implements Filter {
             } catch (SecurityException e) {
                 unSuccessfulLogout(request, response, chain, e);
             }
+        } else {
+            chain.doFilter(request, response);
         }
-
-        chain.doFilter(request, response);
-        return;
 
     }
 
@@ -87,7 +72,8 @@ public class LogoutFilter implements Filter {
     private boolean requiresLogout(HttpServletRequest request, HttpServletResponse response) {
         boolean requires = requiresLogoutRequestMatcher.matches(request);
         if (requires) {
-            // valida que exita un authenticacion
+            log.info("[+] se requiere un logout");
+            // valida que exista un authenticacion
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication == null || !authentication.isAuthenticated())
                 requires = false;
@@ -100,14 +86,14 @@ public class LogoutFilter implements Filter {
      */
     protected void loadConfig() {
         if (failureStrategy == null) {
-            failureStrategy = SecurityConfig.get().getFailureLogoutStrategy();
+            failureStrategy = SecurityConfig.get().getLoginConfigurer().getFailureLogoutStrategy();
         }
-
         if (successStrategy == null) {
-            successStrategy = SecurityConfig.get().getSuccesLogoutStrategy();
+            successStrategy = SecurityConfig.get().getLoginConfigurer().getSuccesLogoutStrategy();
         }
         if (requiresLogoutRequestMatcher == null) {
-            requiresLogoutRequestMatcher = new UrlRequestMatcher(SecurityConfig.get().getLogoutPage());
+            requiresLogoutRequestMatcher = new UrlRequestMatcher(
+                    SecurityConfig.get().getLoginConfigurer().getLogoutPage());
         }
     }
 

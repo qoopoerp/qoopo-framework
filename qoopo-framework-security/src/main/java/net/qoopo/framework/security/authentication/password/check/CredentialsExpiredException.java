@@ -1,9 +1,9 @@
-package net.qoopo.framework.security.authentication.user;
+package net.qoopo.framework.security.authentication.password.check;
 
 import net.qoopo.framework.security.authentication.AuthenticationException;
 
-public class UserExpiredException extends AuthenticationException {
-    public UserExpiredException() {
+public class CredentialsExpiredException extends AuthenticationException {
+    public CredentialsExpiredException() {
         super();
     }
 
@@ -15,7 +15,7 @@ public class UserExpiredException extends AuthenticationException {
      * @param msg   the detail message
      * @param cause the root cause
      */
-    public UserExpiredException(String msg, Throwable cause) {
+    public CredentialsExpiredException(String msg, Throwable cause) {
         super(msg, cause);
     }
 
@@ -26,7 +26,7 @@ public class UserExpiredException extends AuthenticationException {
      * 
      * @param msg the detail message
      */
-    public UserExpiredException(String msg) {
+    public CredentialsExpiredException(String msg) {
         super(msg);
     }
 }

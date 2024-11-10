@@ -1,4 +1,6 @@
-package net.qoopo.framework.security.context;
+package net.qoopo.framework.security.context.strategy;
+
+import net.qoopo.framework.security.context.SecurityContext;
 
 /**
  * Una estategía define como se almacena un SecurityContext

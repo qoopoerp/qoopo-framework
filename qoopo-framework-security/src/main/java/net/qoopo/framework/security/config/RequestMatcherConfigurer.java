@@ -1,99 +1,208 @@
 package net.qoopo.framework.security.config;
 
+import java.beans.DefaultPersistenceDelegate;
 import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
 import net.qoopo.framework.security.authentication.matcher.AuthenticacionRequiredMatcher;
+import net.qoopo.framework.security.authentication.matcher.AuthenticationMatcher;
+import net.qoopo.framework.security.authentication.matcher.DenyAllMatcher;
+import net.qoopo.framework.security.authentication.matcher.HasAnyRoleMatcher;
+import net.qoopo.framework.security.authentication.matcher.HasRoleMatcher;
 import net.qoopo.framework.security.authentication.matcher.PermitAllMatcher;
+import net.qoopo.framework.security.matcher.IpAddressMatcher;
 import net.qoopo.framework.security.matcher.RequestMatcher;
 import net.qoopo.framework.security.matcher.UrlRequestMatcher;
+import net.qoopo.framework.security.permission.DefaultGrantedPermission;
 
 /**
  * Realiza la configuración de los requestMatcher que serán aplicados
  */
 public class RequestMatcherConfigurer {
 
+    private static AuthenticationMatcher permitAllMatcher = new PermitAllMatcher();
+    private static AuthenticationMatcher denyAllMatcher = new DenyAllMatcher();
+    private static AuthenticationMatcher requireAuthenticationMatcher = new AuthenticacionRequiredMatcher();
+
     @Getter
     private List<RequestMatcher> requestMatchers = new ArrayList<>();
 
-    public RequestMatcherConfigurer acceptRequestMatcher(RequestMatcher requestMatcher) {
-        requestMatcher.setAuthenticationMatcher(new PermitAllMatcher());
+    public RequestMatcherConfigurer hasRole(RequestMatcher requestMatcher, String... roles) {
+        requestMatcher.setAuthenticationMatcher(new HasRoleMatcher(roles));
         requestMatchers.add(requestMatcher);
         return this;
     }
 
-    public RequestMatcherConfigurer denyRequestMatcher(RequestMatcher requestMatcher) {
-        requestMatcher.setAuthenticationMatcher(null);
+    public RequestMatcherConfigurer hasAnyRole(RequestMatcher requestMatcher, String... roles) {
+        requestMatcher.setAuthenticationMatcher(new HasAnyRoleMatcher(roles));
         requestMatchers.add(requestMatcher);
         return this;
     }
 
-    public RequestMatcherConfigurer requireAuthenticatedRequestMatcher(RequestMatcher requestMatcher) {
-        requestMatcher.setAuthenticationMatcher(new AuthenticacionRequiredMatcher());
+    public RequestMatcherConfigurer hasAnyRole(RequestMatcher requestMatcher, List<String> roles) {
+        requestMatcher.setAuthenticationMatcher(new HasAnyRoleMatcher(DefaultGrantedPermission.of(roles)));
         requestMatchers.add(requestMatcher);
         return this;
     }
 
-    public RequestMatcherConfigurer acceptRequest(String... patterns) {
+    public RequestMatcherConfigurer permitMatcher(RequestMatcher requestMatcher) {
+        requestMatcher.setAuthenticationMatcher(permitAllMatcher);
+        requestMatchers.add(requestMatcher);
+        return this;
+    }
+
+    public RequestMatcherConfigurer denyMatcher(RequestMatcher requestMatcher) {
+        requestMatcher.setAuthenticationMatcher(denyAllMatcher);
+        requestMatchers.add(requestMatcher);
+        return this;
+    }
+
+    public RequestMatcherConfigurer authenticatedMatcher(RequestMatcher requestMatcher) {
+        requestMatcher.setAuthenticationMatcher(requireAuthenticationMatcher);
+        requestMatchers.add(requestMatcher);
+        return this;
+    }
+
+    public RequestMatcherConfigurer permit(String... patterns) {
         for (String pattern : patterns) {
-            acceptRequestMatcher(new UrlRequestMatcher(pattern, null));
+            permitMatcher(new UrlRequestMatcher(pattern));
         }
         return this;
     }
 
-    public RequestMatcherConfigurer acceptRequestPostOnly(String... patterns) {
+    public RequestMatcherConfigurer permitPostOnly(String... patterns) {
         for (String pattern : patterns) {
-            acceptRequestMatcher(new UrlRequestMatcher(pattern, "POST"));
+            permitMatcher(new UrlRequestMatcher(pattern, "POST"));
         }
         return this;
     }
 
-    public RequestMatcherConfigurer acceptRequestGetOnly(String... patterns) {
+    public RequestMatcherConfigurer permitGetOnly(String... patterns) {
         for (String pattern : patterns) {
-            acceptRequestMatcher(new UrlRequestMatcher(pattern, "GET"));
+            permitMatcher(new UrlRequestMatcher(pattern, "GET"));
         }
         return this;
     }
 
     public RequestMatcherConfigurer denyRequest(String... patterns) {
         for (String pattern : patterns) {
-            denyRequestMatcher(new UrlRequestMatcher(pattern, null));
+            denyMatcher(new UrlRequestMatcher(pattern));
         }
         return this;
     }
 
-    public RequestMatcherConfigurer denyRequestPostOnly(String... patterns) {
+    public RequestMatcherConfigurer denyPostOnly(String... patterns) {
         for (String pattern : patterns) {
-            denyRequestMatcher(new UrlRequestMatcher(pattern, "POST"));
+            denyMatcher(new UrlRequestMatcher(pattern, "POST"));
         }
         return this;
     }
 
-    public RequestMatcherConfigurer denyRequestGetOnly(String... patterns) {
+    public RequestMatcherConfigurer denyGetOnly(String... patterns) {
         for (String pattern : patterns) {
-            denyRequestMatcher(new UrlRequestMatcher(pattern, "GET"));
+            denyMatcher(new UrlRequestMatcher(pattern, "GET"));
         }
         return this;
     }
 
-    public RequestMatcherConfigurer requireAuthenticatedRequest(String... patterns) {
+    public RequestMatcherConfigurer authenticated(String... patterns) {
         for (String pattern : patterns) {
-            requireAuthenticatedRequestMatcher(new UrlRequestMatcher(pattern, null));
+            authenticatedMatcher(new UrlRequestMatcher(pattern));
         }
         return this;
     }
 
-    public RequestMatcherConfigurer requireAuthenticatedRequestPostOnly(String... patterns) {
+    public RequestMatcherConfigurer authenticatedPostOnly(String... patterns) {
         for (String pattern : patterns) {
-            requireAuthenticatedRequestMatcher(new UrlRequestMatcher(pattern, "POST"));
+            authenticatedMatcher(new UrlRequestMatcher(pattern, "POST"));
         }
         return this;
     }
 
-    public RequestMatcherConfigurer requireAuthenticatedRequestGetOnly(String... patterns) {
+    public RequestMatcherConfigurer authenticatedGetOnly(String... patterns) {
         for (String pattern : patterns) {
-            requireAuthenticatedRequestMatcher(new UrlRequestMatcher(pattern, "GET"));
+            authenticatedMatcher(new UrlRequestMatcher(pattern, "GET"));
+        }
+        return this;
+    }
+
+    // configuraciones por ip
+
+    public RequestMatcherConfigurer permitIp(String... patterns) {
+        for (String pattern : patterns) {
+            permitMatcher(new IpAddressMatcher(pattern));
+        }
+        return this;
+    }
+
+    public RequestMatcherConfigurer denyIp(String... patterns) {
+        for (String pattern : patterns) {
+            denyMatcher(new IpAddressMatcher(pattern));
+        }
+        return this;
+    }
+
+    public RequestMatcherConfigurer authenticatedIp(String... patterns) {
+        for (String pattern : patterns) {
+            authenticatedMatcher(new IpAddressMatcher(pattern));
+        }
+        return this;
+    }
+
+    // roles
+    public RequestMatcherConfigurer hasRole(String pattern, String... roles) {
+        hasRole(new UrlRequestMatcher(pattern), roles);
+        return this;
+    }
+
+    public RequestMatcherConfigurer hasRole(List<String> patterns, String... roles) {
+        for (String pattern : patterns) {
+            hasRole(new UrlRequestMatcher(pattern), roles);
+        }
+        return this;
+    }
+
+    public RequestMatcherConfigurer hasRolePostOnly(List<String> patterns, String... roles) {
+        for (String pattern : patterns) {
+            hasRole(new UrlRequestMatcher(pattern, "POST"), roles);
+        }
+        return this;
+    }
+
+    public RequestMatcherConfigurer hasRoleGetOnly(List<String> patterns, String... roles) {
+        for (String pattern : patterns) {
+            hasRole(new UrlRequestMatcher(pattern, "GET"), roles);
+        }
+        return this;
+    }
+
+    // --- HasAnyRol
+
+    public RequestMatcherConfigurer hasAnyRole(List<String> patterns, String... roles) {
+        for (String pattern : patterns) {
+            hasAnyRole(new UrlRequestMatcher(pattern), roles);
+        }
+        return this;
+    }
+
+    public RequestMatcherConfigurer hasAnyRole(List<String> patterns, List<String> roles) {
+        for (String pattern : patterns) {
+            hasAnyRole(new UrlRequestMatcher(pattern), roles);
+        }
+        return this;
+    }
+
+    public RequestMatcherConfigurer hasAnyRolePostOnly(List<String> patterns, String... roles) {
+        for (String pattern : patterns) {
+            hasAnyRole(new UrlRequestMatcher(pattern, "POST"), roles);
+        }
+        return this;
+    }
+
+    public RequestMatcherConfigurer hasAnyRoleGetOnly(List<String> patterns, String... roles) {
+        for (String pattern : patterns) {
+            hasAnyRole(new UrlRequestMatcher(pattern, "GET"), roles);
         }
         return this;
     }

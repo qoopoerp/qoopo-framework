@@ -2,6 +2,7 @@ package net.qoopo.framework.security.authentication.user;
 
 import java.util.Collection;
 
+import net.qoopo.framework.security.authentication.password.PasswordData;
 import net.qoopo.framework.security.permission.GrantedPermission;
 
 public interface UserData extends PasswordData {

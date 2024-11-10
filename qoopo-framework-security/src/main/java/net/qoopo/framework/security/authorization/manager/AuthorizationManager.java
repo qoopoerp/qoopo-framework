@@ -1,7 +1,5 @@
 package net.qoopo.framework.security.authorization.manager;
 
-import java.util.function.Supplier;
-
 import net.qoopo.framework.security.authentication.Authentication;
 import net.qoopo.framework.security.authorization.AuthorizationDeniedException;
 import net.qoopo.framework.security.authorization.AuthorizationResult;
@@ -14,13 +12,13 @@ import net.qoopo.framework.security.authorization.AuthorizationResult;
  */
 public interface AuthorizationManager<T> {
 
-    default public void verify(Supplier<Authentication> authentication, T object) {
+    default public void verify(Authentication authentication, T object) {
         AuthorizationResult decision = authorize(authentication, object);
         if (decision != null && !decision.isGranted()) {
             throw new AuthorizationDeniedException("Access Denied");
         }
     }
 
-    public AuthorizationResult authorize(Supplier<Authentication> authentication, T object);
+    public AuthorizationResult authorize(Authentication authentication, T object);
 
 }

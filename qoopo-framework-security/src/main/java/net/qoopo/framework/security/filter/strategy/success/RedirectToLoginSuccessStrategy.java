@@ -14,7 +14,7 @@ public class RedirectToLoginSuccessStrategy implements SuccessStrategy {
     @Override
     public void onSucess(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
             Authentication authResult) throws IOException, ServletException {
-        response.sendRedirect(request.getContextPath() + SecurityConfig.get().getLoginPage());
+        response.sendRedirect(request.getContextPath() + SecurityConfig.get().getLoginConfigurer().getLoginPage());
     }
 
 }

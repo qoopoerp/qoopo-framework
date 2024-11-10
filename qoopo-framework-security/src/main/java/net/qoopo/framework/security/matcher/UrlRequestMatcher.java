@@ -37,7 +37,6 @@ public class UrlRequestMatcher extends AbstractRequestMatcher {
 
         String url = getRequestPath(request);
         return urlMatcher.matches(url);
-
     }
 
     /**

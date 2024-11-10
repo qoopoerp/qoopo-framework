@@ -16,7 +16,7 @@ import net.qoopo.framework.security.authentication.repository.UserRepository;
 import net.qoopo.framework.security.authentication.service.DefaultUserService;
 import net.qoopo.framework.security.authentication.service.UserService;
 import net.qoopo.framework.security.authentication.user.UserPasswordAutenticacion;
-import net.qoopo.framework.security.authentication.user.UserPasswordAutenticationProvider;
+import net.qoopo.framework.security.authentication.user.provider.UserPasswordAutenticationProvider;
 import net.qoopo.framework.security.config.SecurityConfig;
 import net.qoopo.framework.security.filter.AbstractAuthenticationProcessingFilter;
 import net.qoopo.framework.security.matcher.UrlRequestMatcher;
@@ -26,7 +26,7 @@ import net.qoopo.framework.security.matcher.UrlRequestMatcher;
  *
  * @author alberto
  */
-@WebFilter(filterName = "userPasswordFilter", urlPatterns = { "/*" })
+// @WebFilter(filterName = "filter_4_userPasswordFilter", urlPatterns = { "/*" })
 public class UserPasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     private static Logger log = Logger.getLogger("userpassword filter");
@@ -34,10 +34,11 @@ public class UserPasswordAuthenticationFilter extends AbstractAuthenticationProc
     private boolean onlyPost = true;
 
     public UserPasswordAuthenticationFilter() {
-        // Login constructor
+        super("userPasswordFilter");
     }
 
     public UserPasswordAuthenticationFilter(boolean onlyPost) {
+        super("userPasswordFilter");
         this.onlyPost = onlyPost;
     }
 
@@ -57,7 +58,7 @@ public class UserPasswordAuthenticationFilter extends AbstractAuthenticationProc
         password = (password != null) ? password : "";
         if (username != null && password != null && !username.isEmpty() && !password.isEmpty()) {
             log.info("[**] intentando con  " + username + " / " + password);
-            UserPasswordAutenticacion authRequest = new UserPasswordAutenticacion(username, password);
+            UserPasswordAutenticacion authRequest = UserPasswordAutenticacion.unauthenticated(username, password);
             return super.authenticationManager.authenticate(authRequest);
         } else
             return null;
@@ -87,7 +88,8 @@ public class UserPasswordAuthenticationFilter extends AbstractAuthenticationProc
         if (requiresAuthenticationRequestMatcher == null) {
             // solo realiza la authenticación cuando la solicitud tenga la url de
             // authenticacion
-            requiresAuthenticationRequestMatcher = new UrlRequestMatcher(SecurityConfig.get().getLoginPage(),
+            requiresAuthenticationRequestMatcher = new UrlRequestMatcher(
+                    SecurityConfig.get().getLoginConfigurer().getLoginPage(),
                     onlyPost ? "POST" : null);
         }
 
