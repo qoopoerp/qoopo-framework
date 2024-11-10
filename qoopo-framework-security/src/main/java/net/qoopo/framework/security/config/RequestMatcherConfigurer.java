@@ -64,6 +64,18 @@ public class RequestMatcherConfigurer {
         return this;
     }
 
+    public RequestMatcherConfigurer removeMatcher(RequestMatcher requestMatcher) {
+        requestMatchers.remove(requestMatcher);
+        return this;
+    }
+
+    public RequestMatcherConfigurer remove(String... patterns) {
+        for (String pattern : patterns) {
+            removeMatcher(new UrlRequestMatcher(pattern));
+        }
+        return this;
+    }
+
     public RequestMatcherConfigurer permit(String... patterns) {
         for (String pattern : patterns) {
             permitMatcher(new UrlRequestMatcher(pattern));

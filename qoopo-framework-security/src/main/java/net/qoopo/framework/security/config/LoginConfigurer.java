@@ -34,20 +34,29 @@ public class LoginConfigurer {
     public LoginConfigurer defaults() {
         loginPage("/login.html");
         logoutPage("/logout");
-        succesAuthenticationStrategy = null;
-        failureAuthenticationStrategy = new RedirectToLoginFailureStrategy();
-        succesLogoutStrategy = new MixSuccessStrategy(new RedirectToLoginSuccessStrategy(),
-                new InvalidateSessionStrategy());
-        failureLogoutStrategy = null;
+
+        SecurityConfig.get().authorizeRequests(config -> config.permit("/css/*", "/js/*", "*.js", "*.css"));
+
+        // succesAuthenticationStrategy = null;
+        // failureAuthenticationStrategy = new RedirectToLoginFailureStrategy();
+        // succesLogoutStrategy = new MixSuccessStrategy(new
+        // RedirectToLoginSuccessStrategy(),
+        // new InvalidateSessionStrategy());
+        // failureLogoutStrategy = null;
         return this;
     }
 
     public LoginConfigurer loginPage(String loginPage) {
         if (loginPage == null)
             throw new NullArgumentException();
+
+        // si previamente fue configurado un loginPage lo borramos
+        if (this.loginPage != null) {
+            SecurityConfig.get().authorizeRequests(config -> config.remove(this.loginPage));
+        }
+
         this.loginPage = loginPage;
-        SecurityConfig.get().authorizeRequests(config -> config.permit(loginPage)
-                .permit("/css/*", "/js/*", "*.js", "*.css"));
+        SecurityConfig.get().authorizeRequests(config -> config.permit(loginPage));
         return this;
     }
 

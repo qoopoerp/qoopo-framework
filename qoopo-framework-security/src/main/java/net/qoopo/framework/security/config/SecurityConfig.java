@@ -39,8 +39,7 @@ public class SecurityConfig {
 
     public static SecurityConfig get() {
         if (INSTANCE == null) {
-            INSTANCE = new SecurityConfig();
-            INSTANCE.login(login -> login.defaults());
+            INSTANCE = new SecurityConfig();            
         }
         return INSTANCE;
     }

@@ -26,7 +26,8 @@ import net.qoopo.framework.security.matcher.UrlRequestMatcher;
  *
  * @author alberto
  */
-// @WebFilter(filterName = "filter_4_userPasswordFilter", urlPatterns = { "/*" })
+// @WebFilter(filterName = "filter_4_userPasswordFilter", urlPatterns = { "/*"
+// })
 public class UserPasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     private static Logger log = Logger.getLogger("userpassword filter");
@@ -86,6 +87,10 @@ public class UserPasswordAuthenticationFilter extends AbstractAuthenticationProc
     public void loadConfig() {
         super.loadConfig();
         if (requiresAuthenticationRequestMatcher == null) {
+            // si no encuentra una LoginPage usa la default del framework
+            if (SecurityConfig.get().getLoginConfigurer().getLoginPage() == null) {
+                SecurityConfig.get().login(login -> login.defaults());
+            }
             // solo realiza la authenticación cuando la solicitud tenga la url de
             // authenticacion
             requiresAuthenticationRequestMatcher = new UrlRequestMatcher(

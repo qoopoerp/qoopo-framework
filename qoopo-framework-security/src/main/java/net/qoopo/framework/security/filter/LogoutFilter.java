@@ -92,6 +92,12 @@ public class LogoutFilter extends OncePerRequestFilter {
             successStrategy = SecurityConfig.get().getLoginConfigurer().getSuccesLogoutStrategy();
         }
         if (requiresLogoutRequestMatcher == null) {
+
+            // si no encuentra una LoginPage usa la default del framework
+            if (SecurityConfig.get().getLoginConfigurer().getLogoutPage() == null) {
+                SecurityConfig.get().login(login -> login.logoutPage("/logout"));
+            }
+
             requiresLogoutRequestMatcher = new UrlRequestMatcher(
                     SecurityConfig.get().getLoginConfigurer().getLogoutPage());
         }
