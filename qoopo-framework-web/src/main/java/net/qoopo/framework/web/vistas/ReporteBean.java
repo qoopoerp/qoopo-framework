@@ -7,10 +7,8 @@ import java.util.logging.Logger;
 
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.context.FacesContext;
-import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.ServletContext;
-import net.qoopo.framework.lang.LanguageProvider;
 import net.qoopo.framework.reports.Reporte;
 import net.sf.jasperreports.engine.JRException;
 
@@ -26,12 +24,6 @@ public class ReporteBean implements Serializable {
     public static final Logger log = Logger.getLogger("Qoopo");
 
     private Reporte reporte;
-
-    // @Inject
-    // private AppSessionBeanInterface sessionBean;
-
-    // @Inject
-    // protected LanguageProvider languageProvider;
 
     public ReporteBean() {
         //

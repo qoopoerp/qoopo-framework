@@ -11,12 +11,6 @@ import net.qoopo.framework.jpa.filter.condicion.Valor;
 public class GeneralFilter {
 
     public static final Campo ARCHIVADO = new Campo(Campo.BOLEANO, "Archivado", "o.archived");
-    public static final Campo EMPRESA = new Campo(Campo.LONG, "Empresa", "o.empresa.id");
-
-    public static Condicion condicionEmpresa(Long idEmpresa) {
-        return Condicion.getBuilder().campo(GeneralFilter.EMPRESA).funcion(Funcion.IGUAL)
-                .valor(new Valor("idEmpresa", idEmpresa)).build();
-    }
 
     public static Condicion condicionActivo() {
         return Condicion.open().concat(

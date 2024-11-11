@@ -3,20 +3,13 @@ package net.qoopo.framework.web.providers;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import org.apache.poi.ss.formula.functions.T;
-
-import jakarta.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
 import net.qoopo.framework.jpa.core.EntidadBase;
-import net.qoopo.framework.web.AppSessionBeanInterface;
 
 @Getter
 @Setter
 public abstract class DataProvider<T extends EntidadBase> implements Serializable {
-
-    @Inject
-    protected AppSessionBeanInterface sessionBean;
 
     protected boolean cacheable = false;
 

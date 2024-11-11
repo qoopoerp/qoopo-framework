@@ -18,9 +18,9 @@ import net.qoopo.framework.web.util.FacesUtils;
  * @param <S>
  * @param <T>
  */
-public abstract class AdminNoLazyDetalleAbstractClass<S extends EntidadBase, T> extends AdminNoLazyAbstractClass<S> {
+public abstract class AbstractNoLazyAdminDetailController<S extends EntidadBase, T> extends AbstractNoLazyAdminController<S> {
 
-    public AdminNoLazyDetalleAbstractClass(String entityClassName, Class<S> entityClass, Filter inicial,
+    public AbstractNoLazyAdminDetailController(String entityClassName, Class<S> entityClass, Filter inicial,
             List<Condicion> condicionesDisponibles, List<Campo> campos, List<OpcionBase> opcionesGrupos) {
         super(entityClassName, entityClass, inicial, condicionesDisponibles, campos, opcionesGrupos);
     }

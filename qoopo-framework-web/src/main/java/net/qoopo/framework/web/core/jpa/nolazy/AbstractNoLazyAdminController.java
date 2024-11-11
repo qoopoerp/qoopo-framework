@@ -7,7 +7,7 @@ import net.qoopo.framework.jpa.filter.Filter;
 import net.qoopo.framework.jpa.filter.condicion.Campo;
 import net.qoopo.framework.jpa.filter.condicion.Condicion;
 import net.qoopo.framework.models.OpcionBase;
-import net.qoopo.framework.web.core.jpa.AdminAbstractClass;
+import net.qoopo.framework.web.core.jpa.AbstractAdminController;
 
 /**
  * Clase de esqueleto de los beans de administración que no manejan los datos
@@ -16,9 +16,9 @@ import net.qoopo.framework.web.core.jpa.AdminAbstractClass;
  * @author alberto
  * @param <T>
  */
-public abstract class AdminNoLazyAbstractClass<T extends EntidadBase> extends AdminAbstractClass<T> {
+public abstract class AbstractNoLazyAdminController<T extends EntidadBase> extends AbstractAdminController<T> {
 
-    public AdminNoLazyAbstractClass(String entityClassName, Class<T> entityClass, Filter inicial,
+    public AbstractNoLazyAdminController(String entityClassName, Class<T> entityClass, Filter inicial,
             List<Condicion> condicionesDisponibles,
             List<Campo> campos, List<OpcionBase> opcionesGrupos) {
         super(entityClassName, entityClass, inicial, condicionesDisponibles, campos, opcionesGrupos);

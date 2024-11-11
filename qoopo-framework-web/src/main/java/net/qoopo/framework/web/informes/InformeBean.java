@@ -14,8 +14,6 @@ import lombok.Setter;
 import net.qoopo.framework.date.FechasUtil;
 import net.qoopo.framework.lang.LanguageProvider;
 import net.qoopo.framework.util.PeriodoManager;
-import net.qoopo.framework.web.AppSessionBeanInterface;
-import net.qoopo.framework.web.GestorFecha;
 import net.qoopo.framework.web.vistas.ReporteBean;
 
 /**
@@ -30,12 +28,6 @@ public abstract class InformeBean implements Serializable {
     protected PeriodoManager periodoManager;
 
     protected int tipoCarga = 1;
-
-    @Inject
-    protected AppSessionBeanInterface sessionBean;
-
-    @Inject
-    protected GestorFecha gestorFecha;
 
     @Inject
     protected ReporteBean reporteBean;

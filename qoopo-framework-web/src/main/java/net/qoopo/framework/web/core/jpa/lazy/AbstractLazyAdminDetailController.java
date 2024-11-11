@@ -1,11 +1,10 @@
-package net.qoopo.framework.web.core.dto.lazy;
+package net.qoopo.framework.web.core.jpa.lazy;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import net.qoopo.framework.db.repository.CrudRepository;
 import net.qoopo.framework.jpa.core.EntidadBase;
-import net.qoopo.framework.jpa.core.dtos.DtoBase;
 import net.qoopo.framework.jpa.filter.Filter;
 import net.qoopo.framework.jpa.filter.condicion.Campo;
 import net.qoopo.framework.jpa.filter.condicion.Condicion;
@@ -16,20 +15,18 @@ import net.qoopo.framework.web.util.FacesUtils;
  * Clase de esqueleto de los beans de administración
  *
  * @author alberto
- * @param <DTO>
+ * @param <S>
  * @param <T>
  */
-public abstract class AdminLazyDtoDetalleAbstractClass<R extends EntidadBase, DTO extends DtoBase, T>
-        extends AdminLazyDtoAbstractClass<R, DTO> {
+public abstract class AbstractLazyAdminDetailController<S extends EntidadBase, T> extends AbstractLazyAdminController<S> {
 
-    public AdminLazyDtoDetalleAbstractClass(String entityClassName, Class<R> entityClass, Filter inicial,
+    public AbstractLazyAdminDetailController(String entityClassName, Class<S> entityClass, Filter inicial,
             List<Condicion> condicionesDisponibles,
             List<Campo> campos, List<OpcionBase> opcionesGrupos) {
         super(entityClassName, entityClass, inicial, condicionesDisponibles, campos, opcionesGrupos);
     }
 
     protected CrudRepository<T, Long> repositoryDetalle;
-
     protected T itemDetalle;
     protected boolean editandoDetalle;
     protected List<T> listaEliminar = new ArrayList<>();
@@ -53,7 +50,7 @@ public abstract class AdminLazyDtoDetalleAbstractClass<R extends EntidadBase, DT
     }
 
     @Override
-    public void edit(DTO item) {
+    public void edit(S item) {
         super.edit(item); // To change body of generated methods, choose Tools | Templates.
         listaEliminar.clear();
     }

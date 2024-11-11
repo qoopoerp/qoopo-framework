@@ -1,7 +1,6 @@
 package net.qoopo.framework.web;
 
 import net.qoopo.framework.jpa.core.interfaces.CoreMetadata;
-import net.qoopo.framework.jpa.core.interfaces.CoreUser;
 
 /**
  * Esta interface debe ser implementada por el bean que da información de la
@@ -13,10 +12,6 @@ import net.qoopo.framework.jpa.core.interfaces.CoreUser;
 
 public interface AppSessionBeanInterface {
 
-    public CoreUser getUser();
-
-    public String getUserName();
-
     public CoreMetadata addEvent(CoreMetadata datos, String evento);
 
     public CoreMetadata addCreatedEvent(CoreMetadata datos);
@@ -27,11 +22,4 @@ public interface AppSessionBeanInterface {
 
     public void removeUrlParam(String param);
 
-    public String getZonaHoraria();
-
-    public Long getEmpresaId();
-
-    public boolean isLogged();
-
-    public void reloadPermissions();
 }

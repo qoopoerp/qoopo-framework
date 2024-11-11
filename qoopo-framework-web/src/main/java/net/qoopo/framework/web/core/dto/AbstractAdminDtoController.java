@@ -41,6 +41,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
 import net.qoopo.framework.Accion;
+import net.qoopo.framework.QoopoFramework;
 import net.qoopo.framework.db.repository.CrudRepository;
 import net.qoopo.framework.exporter.Exportable;
 import net.qoopo.framework.exporter.Exporter;
@@ -68,6 +69,8 @@ import net.qoopo.framework.jpa.filter.condicion.Condicion;
 import net.qoopo.framework.jpa.filter.condicion.Valor;
 import net.qoopo.framework.lang.LanguageProvider;
 import net.qoopo.framework.models.OpcionBase;
+import net.qoopo.framework.multitenant.MultitenantFilter;
+import net.qoopo.framework.multitenant.TenantProvider;
 import net.qoopo.framework.reports.Reporte;
 import net.qoopo.framework.repository.FilterJpaRepository;
 import net.qoopo.framework.repository.QoopoJpaRepositorySingleton;
@@ -75,6 +78,7 @@ import net.qoopo.framework.util.QLogger;
 import net.qoopo.framework.util.QoopoUtil;
 import net.qoopo.framework.web.AppSessionBeanInterface;
 import net.qoopo.framework.web.ImagenesBean;
+import net.qoopo.framework.web.SecurityContextBean;
 import net.qoopo.framework.web.components.filter.FilterController;
 import net.qoopo.framework.web.components.graph.GraphController;
 import net.qoopo.framework.web.components.kanban.ColumnDragDrop;
@@ -96,7 +100,7 @@ import net.qoopo.framework.web.vistas.ReporteBean;
 
 @Getter
 @Setter
-public abstract class AdminDtoAbstractClass<S extends EntidadBase, T extends DtoBase>
+public abstract class AbstractAdminDtoController<S extends EntidadBase, T extends DtoBase>
         implements AdminBeanProgressable, Serializable {
 
     public static final Logger log = Logger.getLogger("Qoopo");
@@ -104,8 +108,11 @@ public abstract class AdminDtoAbstractClass<S extends EntidadBase, T extends Dto
     @Inject
     protected AppSessionBeanInterface sessionBean;
 
-    // @Inject
-    // protected QoopoFormater formatter;
+    @Inject
+    protected SecurityContextBean securityBean;
+
+    @Inject
+    protected TenantProvider tenantProvider;
 
     @Inject
     protected LanguageProvider languageProvider;
@@ -243,7 +250,7 @@ public abstract class AdminDtoAbstractClass<S extends EntidadBase, T extends Dto
         }
     };
 
-    public AdminDtoAbstractClass(String entityClassName, Class<S> entityClass, Filter inicial,
+    public AbstractAdminDtoController(String entityClassName, Class<S> entityClass, Filter inicial,
             List<Condicion> condicionesDisponibles,
             List<Campo> campos,
             List<OpcionBase> opcionesGrupos) {
@@ -378,14 +385,17 @@ public abstract class AdminDtoAbstractClass<S extends EntidadBase, T extends Dto
             else
                 _inicial = inicial;
 
-            Condicion _condicionFija = null;
+            Condicion alwaysCondition = null;
 
             if (this.condicionFija != null)
-                _condicionFija = this.condicionFija;
-            else
-                _condicionFija = GeneralFilter.condicionEmpresa(sessionBean.getEmpresaId());
+                alwaysCondition = this.condicionFija;
+            else {
+                if (QoopoFramework.get().getMultitenantConfigurer().isEnabled())
+                    alwaysCondition = MultitenantFilter.tenantCondition(
+                            tenantProvider.getTenantId());
+            }
 
-            filter = new FilterController(_inicial, _condicionFija, campos,
+            filter = new FilterController(_inicial, alwaysCondition, campos,
                     this.opcionesGrupos,
                     accion);
 

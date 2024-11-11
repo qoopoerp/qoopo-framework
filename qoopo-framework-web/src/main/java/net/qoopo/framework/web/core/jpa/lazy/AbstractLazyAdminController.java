@@ -1,4 +1,4 @@
-package net.qoopo.framework.web.core.dto.lazy;
+package net.qoopo.framework.web.core.jpa.lazy;
 
 import java.util.List;
 import java.util.Map;
@@ -11,14 +11,12 @@ import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
 
 import net.qoopo.framework.jpa.core.EntidadBase;
-import net.qoopo.framework.jpa.core.dtos.DtoBase;
 import net.qoopo.framework.jpa.filter.Filter;
 import net.qoopo.framework.jpa.filter.condicion.Campo;
 import net.qoopo.framework.jpa.filter.condicion.Condicion;
 import net.qoopo.framework.models.OpcionBase;
-import net.qoopo.framework.repository.FilterJpaRepository;
 import net.qoopo.framework.web.components.viewoption.ViewOption;
-import net.qoopo.framework.web.core.dto.AdminDtoAbstractClass;
+import net.qoopo.framework.web.core.jpa.AbstractAdminController;
 import net.qoopo.framework.web.util.FacesUtils;
 
 /**
@@ -28,10 +26,9 @@ import net.qoopo.framework.web.util.FacesUtils;
  * @author alberto
  * @param <T>
  */
-public abstract class AdminLazyDtoAbstractClass<S extends EntidadBase, T extends DtoBase>
-        extends AdminDtoAbstractClass<S, T> {
+public abstract class AbstractLazyAdminController<T extends EntidadBase> extends AbstractAdminController<T> {
 
-    public AdminLazyDtoAbstractClass(String entityClassName, Class<S> entityClass, Filter inicial,
+    public AbstractLazyAdminController(String entityClassName, Class<T> entityClass, Filter inicial,
             List<Condicion> condicionesDisponibles,
             List<Campo> campos, List<OpcionBase> opcionesGrupos) {
         super(entityClassName, entityClass, inicial, condicionesDisponibles, campos, opcionesGrupos);
@@ -64,10 +61,11 @@ public abstract class AdminLazyDtoAbstractClass<S extends EntidadBase, T extends
                             public List<T> load(int first, int pageSize, Map<String, SortMeta> sortBy,
                                     Map<String, FilterMeta> filterBy) {
                                 String posterior = filter.getFiltro().getPosterior();
+                                // Ordenamiento
                                 if (sortBy != null && !sortBy.isEmpty()) {
                                     posterior = " order by ";
                                     for (SortMeta meta : sortBy.values()) {
-                                        posterior += " o." + getSortField(meta.getField()) + " "
+                                        posterior += " o." + meta.getField() + " "
                                                 + (SortOrder.ASCENDING.equals(meta.getOrder()) ? " asc " : " desc ");
                                     }
                                     // como cambio el orden enfuncion de las columnas y es un order by completo,
@@ -98,6 +96,7 @@ public abstract class AdminLazyDtoAbstractClass<S extends EntidadBase, T extends
                     }
                     lista.setRowCount(filterRepository.filtrarCount(filter.getFiltro()).intValue());
                     setData(lista.getWrappedData());// la data para poder exportar la pagina actual
+                    // super.loadData(lista); //carga la data para las otras vistas
                     break;
                 case ViewOption.GRID:
                 case ViewOption.GRAPH:
@@ -109,8 +108,7 @@ public abstract class AdminLazyDtoAbstractClass<S extends EntidadBase, T extends
             }
         } catch (Exception ex) {
             FacesUtils.addErrorMessage(ex);
-            ex.printStackTrace();
-            Logger.getLogger(AdminLazyDtoAbstractClass.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AbstractLazyAdminController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
