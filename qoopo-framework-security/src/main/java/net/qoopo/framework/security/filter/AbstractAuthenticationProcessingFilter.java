@@ -48,12 +48,6 @@ public abstract class AbstractAuthenticationProcessingFilter extends OncePerRequ
     protected void doInternalFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
-        if (!SecurityConfig.get().isEnabled()) {
-            chain.doFilter(request, response);
-            // log.warning("SecurityConfig is disabled");
-            return;
-        }
-
         loadConfig();
 
         if (!requiresAuthentication(request, response)) {
@@ -62,6 +56,9 @@ public abstract class AbstractAuthenticationProcessingFilter extends OncePerRequ
         }
 
         try {
+            if (SecurityConfig.get().isDebug())
+                log.info("[*] Authentication is required [" + name + "]");
+
             // si llega aqui necesita realizar una autenticacion
             Authentication authentication = attemptAuthentication(request, response);
             if (authentication != null && authentication.isAuthenticated()) {
@@ -87,8 +84,9 @@ public abstract class AbstractAuthenticationProcessingFilter extends OncePerRequ
      * @param response
      * @return
      */
-    private boolean requiresAuthentication(HttpServletRequest request, HttpServletResponse response) {
-        boolean requires = requiresAuthenticationRequestMatcher.matches(request);
+    protected boolean requiresAuthentication(HttpServletRequest request, HttpServletResponse response) {
+        boolean requires = requiresAuthenticationRequestMatcher != null
+                && requiresAuthenticationRequestMatcher.matches(request);
         if (requires) {
             // valida si ya no está autenticado
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -102,30 +100,32 @@ public abstract class AbstractAuthenticationProcessingFilter extends OncePerRequ
      * se encarga de cargar los recursos necesarios para la configuracion
      */
     protected void loadConfig() {
-
-        // tomamos el authentication manager configurado
-        if (authenticationManager == null) {
-            authenticationManager = SecurityConfig.get().getAuthenticationManager();
-        }
-        // si no está configurado un authentication manager creamos el predeterminado
-        if (authenticationManager == null) {
-            if (SecurityConfig.get().getAuthenticationProviders() != null
-                    && !SecurityConfig.get().getAuthenticationProviders().isEmpty()) {
-                authenticationManager = new ProviderManager(SecurityConfig.get().getAuthenticationProviders());
-            } else {
-                // inicia un manager in providers registrados, cada filtro deberá agregar un
-                // provider que encuentre
-                authenticationManager = new ProviderManager(new ArrayList<>());
+        if (enabled) {
+            // tomamos el authentication manager configurado
+            if (authenticationManager == null) {
+                authenticationManager = SecurityConfig.get().getAuthenticationManager();
             }
-        }
+            // si no está configurado un authentication manager creamos el predeterminado
+            if (authenticationManager == null) {
+                if (SecurityConfig.get().getAuthenticationProviders() != null
+                        && !SecurityConfig.get().getAuthenticationProviders().isEmpty()) {
+                    authenticationManager = new ProviderManager(SecurityConfig.get().getAuthenticationProviders());
+                } else {
+                    // inicia un manager in providers registrados, cada filtro deberá agregar un
+                    // provider que encuentre
+                    authenticationManager = new ProviderManager(new ArrayList<>());
+                }
+            }
 
-        if (authenticationFailureStrategy == null) {
-            authenticationFailureStrategy = SecurityConfig.get().getLoginConfigurer()
-                    .getFailureAuthenticationStrategy();
-        }
+            if (authenticationFailureStrategy == null) {
+                authenticationFailureStrategy = SecurityConfig.get().getLoginConfigurer()
+                        .getFailureAuthenticationStrategy();
+            }
 
-        if (authenticationSuccessStrategy == null) {
-            authenticationSuccessStrategy = SecurityConfig.get().getLoginConfigurer().getSuccesAuthenticationStrategy();
+            if (authenticationSuccessStrategy == null) {
+                authenticationSuccessStrategy = SecurityConfig.get().getLoginConfigurer()
+                        .getSuccesAuthenticationStrategy();
+            }
         }
     }
 
@@ -141,7 +141,8 @@ public abstract class AbstractAuthenticationProcessingFilter extends OncePerRequ
      */
     private void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
             Authentication authResult) throws IOException, ServletException {
-        log.info("[+] authentication successful");
+        if (SecurityConfig.get().isDebug())
+            log.info("[+] Authentication successful");
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authResult);
         SecurityContextHolder.setContext(context);
@@ -161,7 +162,8 @@ public abstract class AbstractAuthenticationProcessingFilter extends OncePerRequ
      */
     private void unSuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
             AuthenticationException exception) throws IOException, ServletException {
-        log.warning("[+] authentication unsuccessful " + exception);
+        if (SecurityConfig.get().isDebug())
+            log.warning("[!] Authentication unsuccessful -> name:" + name + " -> Exception: " + exception);
         SecurityContextHolder.clear();
         if (authenticationFailureStrategy != null)
             authenticationFailureStrategy.onFailure(request, response, chain, exception);

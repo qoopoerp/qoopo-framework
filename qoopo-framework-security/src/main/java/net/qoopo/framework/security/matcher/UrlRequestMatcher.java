@@ -1,6 +1,6 @@
 package net.qoopo.framework.security.matcher;
 
-import org.apache.commons.math3.exception.NullArgumentException;
+import net.qoopo.framework.exception.NullArgumentException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

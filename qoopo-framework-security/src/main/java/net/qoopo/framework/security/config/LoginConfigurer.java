@@ -1,12 +1,12 @@
 package net.qoopo.framework.security.config;
 
-import org.apache.commons.math3.exception.NullArgumentException;
-
 import lombok.Getter;
 import lombok.Setter;
+import net.qoopo.framework.exception.NullArgumentException;
 import net.qoopo.framework.security.filter.strategy.failure.FailureStrategy;
 import net.qoopo.framework.security.filter.strategy.failure.RedirectToLoginFailureStrategy;
 import net.qoopo.framework.security.filter.strategy.failure.RedirectToPageFailureStrategy;
+import net.qoopo.framework.security.filter.strategy.failure.RequestBasicAuthenticationFailureStrategy;
 import net.qoopo.framework.security.filter.strategy.failure.SendErrorForbiddenStrategy;
 import net.qoopo.framework.security.filter.strategy.success.InvalidateSessionStrategy;
 import net.qoopo.framework.security.filter.strategy.success.MixSuccessStrategy;
@@ -17,6 +17,10 @@ import net.qoopo.framework.security.filter.strategy.success.SuccessStrategy;
 @Getter
 @Setter
 public class LoginConfigurer {
+
+    private boolean configured = false;
+    private boolean basicHttp = false;
+
     private String loginPage;
     private String logoutPage;
 
@@ -43,6 +47,14 @@ public class LoginConfigurer {
         // RedirectToLoginSuccessStrategy(),
         // new InvalidateSessionStrategy());
         // failureLogoutStrategy = null;
+        configured = true;
+        return this;
+    }
+
+    public LoginConfigurer basicHttp() {
+        configured = true;
+        basicHttp = true;
+        failureAuthenticationStrategy = new RequestBasicAuthenticationFailureStrategy();
         return this;
     }
 
@@ -57,6 +69,7 @@ public class LoginConfigurer {
 
         this.loginPage = loginPage;
         SecurityConfig.get().authorizeRequests(config -> config.permit(loginPage));
+        configured = true;
         return this;
     }
 

@@ -23,7 +23,6 @@ import net.qoopo.framework.security.filter.strategy.failure.FailureStrategy;
  * 
  * @author alberto
  */
-// @WebFilter(filterName = "filter_2_authorizationFilter", urlPatterns = { "/*" })
 public class AuthorizationFilter extends AbstractSecurityFilter {
 
     public static final Logger log = Logger.getLogger("AuthorizationFilter");
@@ -52,7 +51,8 @@ public class AuthorizationFilter extends AbstractSecurityFilter {
 
     private void unSuccessfulAuthorization(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
             SecurityException exception) throws IOException, ServletException {
-        log.warning("[+] Authorization unsuccessful for " + request.getServletPath());
+        if (SecurityConfig.get().isDebug())
+            log.warning("[+] Authorization unsuccessful for " + request.getServletPath());
         if (authenticationFailureStrategy != null)
             authenticationFailureStrategy.onFailure(request, response, chain, exception);
         // throw new AuthorizationDeniedException("Access Denied");
@@ -77,7 +77,8 @@ public class AuthorizationFilter extends AbstractSecurityFilter {
     private Authentication getAuthentication() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
-            log.warning("[!] No existe una autenticación");
+            if (SecurityConfig.get().isDebug())
+                log.warning("[!] No existe una autenticación");
         }
         return authentication;
     }

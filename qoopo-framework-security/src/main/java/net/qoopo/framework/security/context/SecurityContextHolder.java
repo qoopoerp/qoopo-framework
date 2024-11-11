@@ -2,6 +2,7 @@ package net.qoopo.framework.security.context;
 
 import java.util.logging.Logger;
 
+import net.qoopo.framework.security.config.SecurityConfig;
 import net.qoopo.framework.security.context.strategy.GlobalSecurityContextHolderStrategy;
 import net.qoopo.framework.security.context.strategy.InheritableThreadLocalSecurityContextHolderStrategy;
 import net.qoopo.framework.security.context.strategy.SecurityContextHolderStrategy;
@@ -25,7 +26,7 @@ public class SecurityContextHolder {
     private static String strategyName;
 
     private static int initializeCount = 0;
-    
+
     static {
         init();
     }
@@ -67,7 +68,8 @@ public class SecurityContextHolder {
     }
 
     public static void setContext(SecurityContext context) {
-        log.info("[+] Seteando securityContext, instancias:" + initializeCount);
+        if (SecurityConfig.get().isDebug())
+            log.info("[+] Seteando securityContext, instancias:" + initializeCount);
         strategy.setContext(context);
     }
 

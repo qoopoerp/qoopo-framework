@@ -21,6 +21,8 @@ public abstract class OncePerRequestFilter extends AbstractSecurityFilter {
 
     private String propertyName;
 
+
+
     public OncePerRequestFilter(String name) {
         super(name);
         this.propertyName = "FILTER_" + name + "_APPLIED";
@@ -49,14 +51,21 @@ public abstract class OncePerRequestFilter extends AbstractSecurityFilter {
             return;
         }
 
+        if (!enabled) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         // se asegura que el filtro se aplica una sola vez por request
         if (request.getAttribute(propertyName) != null) {
-            log.info("[!] Descartando filtro :" + name);
+            if (SecurityConfig.get().isDebug())
+                log.info("[!] Descartando filtro :" + name);
             chain.doFilter(request, response);
             return;
         }
         request.setAttribute(propertyName, Boolean.TRUE);
-        log.info("[+] Aplicando filtro único :" + name);
+        if (SecurityConfig.get().isDebug())
+            log.info("[+] Aplicando filtro único :" + name);
         doInternalFilter(request, response, chain);
     }
 

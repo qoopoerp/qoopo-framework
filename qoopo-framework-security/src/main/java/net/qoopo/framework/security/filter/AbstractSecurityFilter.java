@@ -21,6 +21,8 @@ public abstract class AbstractSecurityFilter implements Filter {
 
     protected String name;
 
+    protected boolean enabled = true;
+
     public AbstractSecurityFilter(String name) {
         this.name = name;
     }
@@ -42,12 +44,16 @@ public abstract class AbstractSecurityFilter implements Filter {
 
     private void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-
         if (!SecurityConfig.get().isEnabled()) {
             chain.doFilter(request, response);
             return;
         }
-        log.info("[0] Aplicando filtro :" + name);
+        if (!enabled) {
+            chain.doFilter(request, response);
+            return;
+        }
+        if (SecurityConfig.get().isDebug())
+            log.info("[0] Aplicando filtro :" + name);
         doInternalFilter(request, response, chain);
     }
 

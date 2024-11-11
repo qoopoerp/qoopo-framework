@@ -10,7 +10,7 @@ import net.qoopo.framework.security.config.SecurityConfig;
 
 /**
  * Realiza un redirect a la pagina de login regisrada, agregando el parámetro
- * pagoTo
+ * pageTo
  */
 public class RedirectToLoginFailureStrategy implements FailureStrategy {
 
@@ -25,16 +25,14 @@ public class RedirectToLoginFailureStrategy implements FailureStrategy {
             params += paramId + "=" + request.getParameter(paramId) + "&";
         }
 
-        // response.sendRedirect(request.getContextPath() +
-        // SecurityConfig.get().getLoginPage() + "?pageTo="
-        // + pagina + "&" + params);
         if (exception != null)
             response.sendRedirect(
                     request.getContextPath() + SecurityConfig.get().getLoginConfigurer().getLoginPage() + "?error="
-                            + exception.getMessage());
+                            + exception.getMessage() + "&pageTo=" + pagina + "&" + params);
         else
             response.sendRedirect(
-                    request.getContextPath() + SecurityConfig.get().getLoginConfigurer().getLoginPage() + "?noerror");
+                    request.getContextPath() + SecurityConfig.get().getLoginConfigurer().getLoginPage() + "?pageTo="
+                            + pagina + "&" + params);
 
     }
 

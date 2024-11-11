@@ -3,7 +3,6 @@ package net.qoopo.framework.security.filter.authentication;
 import java.util.List;
 import java.util.logging.Logger;
 
-import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import net.qoopo.framework.reflection.QoopoReflection;
@@ -19,107 +18,85 @@ import net.qoopo.framework.security.authentication.user.UserPasswordAutenticacio
 import net.qoopo.framework.security.authentication.user.provider.UserPasswordAutenticationProvider;
 import net.qoopo.framework.security.config.SecurityConfig;
 import net.qoopo.framework.security.filter.AbstractAuthenticationProcessingFilter;
-import net.qoopo.framework.security.matcher.UrlRequestMatcher;
 
 /**
- * Filtro que intentar autenticar cuando hay un formulario de usuario y password
+ * filtro para realizar la autenticacion en el formato user password
  *
  * @author alberto
  */
-// @WebFilter(filterName = "filter_4_userPasswordFilter", urlPatterns = { "/*"
-// })
-public class UserPasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+public abstract class AbstractUserPasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     private static Logger log = Logger.getLogger("userpassword filter");
 
-    private boolean onlyPost = true;
+    protected boolean onlyPost = true;
 
-    public UserPasswordAuthenticationFilter() {
-        super("userPasswordFilter");
+    public AbstractUserPasswordAuthenticationFilter(String name) {
+        super(name);
     }
 
-    public UserPasswordAuthenticationFilter(boolean onlyPost) {
-        super("userPasswordFilter");
+    public AbstractUserPasswordAuthenticationFilter(String name, boolean onlyPost) {
+        super(name);
         this.onlyPost = onlyPost;
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
         if (this.onlyPost && !request.getMethod().equals("POST")) {
+            log.warning("[!] No Post Method [" + name + "]");
             // throw new AuthenticationServiceException("Authentication method not
             // supported: " + request.getMethod());
             // log.info("not post method");
             return null;
         }
+        if (SecurityConfig.get().isDebug())
+            log.info("[*] Attempting Auhenticacion [" + name + "]");
 
-        log.info("[**] attemptAuhenticacion");
         String username = obtainUsername(request);
         username = (username != null) ? username.trim() : "";
         String password = obtainPassword(request);
         password = (password != null) ? password : "";
         if (username != null && password != null && !username.isEmpty() && !password.isEmpty()) {
-            log.info("[**] intentando con  " + username + " / " + password);
             UserPasswordAutenticacion authRequest = UserPasswordAutenticacion.unauthenticated(username, password);
             return super.authenticationManager.authenticate(authRequest);
         } else
             return null;
     }
 
-    protected String obtainUsername(HttpServletRequest request) {
-        String userName = request.getParameter("username");
-        if (userName == null || userName.isEmpty())
-            userName = request.getParameter("j_username");
-        if (userName == null || userName.isEmpty())
-            userName = request.getParameter("user");
-        return userName;
-    }
+    protected abstract String obtainUsername(HttpServletRequest request);
 
-    protected String obtainPassword(HttpServletRequest request) {
-        String password = request.getParameter("password");
-        if (password == null || password.isEmpty())
-            password = request.getParameter("j_password");
-        return password;
-    }
+    protected abstract String obtainPassword(HttpServletRequest request);
 
     /**
      * Sobrecarga la configuracion para setear el matcher del request
      */
     public void loadConfig() {
-        super.loadConfig();
-        if (requiresAuthenticationRequestMatcher == null) {
-            // si no encuentra una LoginPage usa la default del framework
-            if (SecurityConfig.get().getLoginConfigurer().getLoginPage() == null) {
-                SecurityConfig.get().login(login -> login.defaults());
-            }
-            // solo realiza la authenticación cuando la solicitud tenga la url de
-            // authenticacion
-            requiresAuthenticationRequestMatcher = new UrlRequestMatcher(
-                    SecurityConfig.get().getLoginConfigurer().getLoginPage(),
-                    onlyPost ? "POST" : null);
-        }
-
-        // configura el provider para el manager de autenticacion
-        if (authenticationManager != null && authenticationManager instanceof ProviderManager) {
-            ProviderManager providerManager = (ProviderManager) authenticationManager;
-            if (isRequireAddUserProvider(providerManager)) {
-                UserService userService = getUserService();
-                if (userService != null) {
-                    log.info("[+] UserService cargado -> " + userService.getClass().getCanonicalName());
-                    providerManager.addAuthenticationProvider(new UserPasswordAutenticationProvider(userService));
-                } else {
-                    UserRepository userRepository = getUserRepository();
-                    log.info("[+] UserRepository Cargado? -> [" + (userRepository != null) + "] -  "
-                            + (userRepository != null ? userRepository.getClass().getCanonicalName() : ""));
-                    if (userRepository != null) {
-                        providerManager.addAuthenticationProvider(new UserPasswordAutenticationProvider(
-                                new DefaultUserService(
-                                        userRepository, SecurityConfig.get().getPasswordEncoder())));
+        if (enabled) {
+            // configura el provider para el manager de autenticacion
+            if (authenticationManager != null && authenticationManager instanceof ProviderManager) {
+                ProviderManager providerManager = (ProviderManager) authenticationManager;
+                if (isRequireAddUserProvider(providerManager)) {
+                    UserService userService = getUserService();
+                    if (userService != null) {
+                        if (SecurityConfig.get().isDebug())
+                            log.info("[+] UserService cargado -> " + userService.getClass().getCanonicalName());
+                        providerManager.addAuthenticationProvider(new UserPasswordAutenticationProvider(userService));
                     } else {
-                        log.severe("No se encuentra una implementación de UserRepository");
+                        UserRepository userRepository = getUserRepository();
+                        if (SecurityConfig.get().isDebug())
+                            log.info("[+] UserRepository Cargado? -> [" + (userRepository != null) + "] -  "
+                                    + (userRepository != null ? userRepository.getClass().getCanonicalName() : ""));
+                        if (userRepository != null) {
+                            providerManager.addAuthenticationProvider(new UserPasswordAutenticationProvider(
+                                    new DefaultUserService(
+                                            userRepository, SecurityConfig.get().getPasswordEncoder())));
+                        } else {
+                            log.severe("No se encuentra una implementación de UserRepository");
+                        }
                     }
                 }
             }
         }
+        super.loadConfig();
     }
 
     /**
@@ -152,7 +129,8 @@ public class UserPasswordAuthenticationFilter extends AbstractAuthenticationProc
                 List.of(DefaultUserService.class));
         UserService userService = null;
         if (implementations != null && !implementations.isEmpty()) {
-            log.info("[+] UserService encontrados: " + implementations.size());
+            if (SecurityConfig.get().isDebug())
+                log.info("[+] UserService encontrados: " + implementations.size());
             userService = implementations.get(0);
         }
         return userService;
@@ -168,11 +146,12 @@ public class UserPasswordAuthenticationFilter extends AbstractAuthenticationProc
                 List.of(RandomUserRepository.class, InMemoryUserRepository.class));
         UserRepository userRepository = null;
         if (implementations != null && !implementations.isEmpty()) {
-            log.info("[+] Repositorios encontrados: " + implementations.size());
+            if (SecurityConfig.get().isDebug())
+                log.info("[+] Repositorios encontrados: " + implementations.size());
             userRepository = implementations.get(0);
         }
         if (userRepository == null) {
-            log.info("[+] No se encontró repositorios externos, se toma el primero");
+            log.warning("[+] No se encontró repositorios externos, se toma el primero");
             userRepository = new RandomUserRepository();
             // userRepository=implementations.get(0);
         }

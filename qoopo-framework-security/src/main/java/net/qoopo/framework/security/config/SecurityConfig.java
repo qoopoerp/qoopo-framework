@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import org.apache.commons.math3.exception.NullArgumentException;
+import net.qoopo.framework.exception.NullArgumentException;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -23,6 +23,7 @@ public class SecurityConfig {
 
     private static SecurityConfig INSTANCE = null;
 
+    private boolean debug = false;
     private boolean enabled = true;
     private AuthenticationManager authenticationManager = null;
     private List<AuthenticationProvider> authenticationProviders = new ArrayList<>();
@@ -39,9 +40,19 @@ public class SecurityConfig {
 
     public static SecurityConfig get() {
         if (INSTANCE == null) {
-            INSTANCE = new SecurityConfig();            
+            INSTANCE = new SecurityConfig();
         }
         return INSTANCE;
+    }
+
+    public SecurityConfig debug() {
+        this.debug = true;
+        return this;
+    }
+
+    public SecurityConfig noDebug() {
+        this.debug = false;
+        return this;
     }
 
     public SecurityConfig enable() {

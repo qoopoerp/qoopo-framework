@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import jakarta.servlet.http.HttpSession;
 import lombok.Getter;
 import lombok.Setter;
+import net.qoopo.framework.security.config.SecurityConfig;
 
 @Getter
 @Setter
@@ -26,7 +27,8 @@ public abstract class HttpRepository<T> {
     public void save(T context, HttpWarehouse warehouse) {
         HttpSession session = warehouse.getRequest().getSession(allowCreateSession);
         if (session != null) {
-            log.info("Si existe una sesión, se cuarda el atributo, sesion id=" + session.getId());
+            if (SecurityConfig.get().isDebug())
+                log.info("[+] Si existe una sesión, se cuarda el atributo, sesion id=" + session.getId());
             session.setAttribute(httpAttributeName, context);
         } else {
             log.info("No existe una sesión no se guarda nada");
@@ -36,14 +38,17 @@ public abstract class HttpRepository<T> {
     public T load(HttpWarehouse warehouse) {
         HttpSession session = warehouse.getRequest().getSession(false);
         if (session != null) {
-            log.info("Si hay una sesión , se carga el atributo, sesión id=" + session.getId());
+            if (SecurityConfig.get().isDebug())
+                log.info("[+] Si hay una sesión , se carga el atributo, sesión id=" + session.getId());
             Object value = session.getAttribute(httpAttributeName);
             if (value != null)
                 return (T) value;
         } else {
-            log.warning("Cargando, no hay una sesion");
+            if (SecurityConfig.get().isDebug())
+                log.warning("[+] Cargando, no hay una sesion");
         }
-        log.info("No se carga nada del atributo");
+        if (SecurityConfig.get().isDebug())
+            log.info("No se carga nada del atributo");
         return null;
     }
 }

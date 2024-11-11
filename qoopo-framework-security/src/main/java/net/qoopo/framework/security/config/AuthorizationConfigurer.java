@@ -1,6 +1,6 @@
 package net.qoopo.framework.security.config;
 
-import org.apache.commons.math3.exception.NullArgumentException;
+import net.qoopo.framework.exception.NullArgumentException;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +8,7 @@ import lombok.Setter;
 import net.qoopo.framework.security.filter.strategy.failure.FailureStrategy;
 import net.qoopo.framework.security.filter.strategy.failure.RedirectToLoginFailureStrategy;
 import net.qoopo.framework.security.filter.strategy.failure.RedirectToPageFailureStrategy;
+import net.qoopo.framework.security.filter.strategy.failure.RequestBasicAuthenticationFailureStrategy;
 import net.qoopo.framework.security.filter.strategy.failure.SendErrorForbiddenStrategy;
 
 @Getter
@@ -21,6 +22,11 @@ public class AuthorizationConfigurer {
         if (strategy == null)
             throw new NullArgumentException();
         this.setFailureAuthorizationStrategy(strategy);
+        return this;
+    }
+
+    public AuthorizationConfigurer onFailureAuthorizationRequestBasicAuthentication() {
+        this.setFailureAuthorizationStrategy(new RequestBasicAuthenticationFailureStrategy());
         return this;
     }
 

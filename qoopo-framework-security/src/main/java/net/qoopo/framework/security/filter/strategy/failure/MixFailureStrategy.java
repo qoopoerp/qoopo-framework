@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.math3.exception.NullArgumentException;
+import net.qoopo.framework.exception.NullArgumentException;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
