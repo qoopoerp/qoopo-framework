@@ -15,10 +15,10 @@ import net.qoopo.framework.security.authorization.AuthorizationResult;
 import net.qoopo.framework.security.authorization.manager.AuthorizationManager;
 import net.qoopo.framework.security.authorization.manager.RequestMatcherAuthorizationManager;
 import net.qoopo.framework.security.config.SecurityConfig;
+import net.qoopo.framework.security.core.permission.DefaultGrantedPermission;
+import net.qoopo.framework.security.core.permission.GrantedPermission;
 import net.qoopo.framework.security.matcher.UrlMatcher;
 import net.qoopo.framework.security.matcher.util.IPValidator;
-import net.qoopo.framework.security.permission.DefaultGrantedPermission;
-import net.qoopo.framework.security.permission.GrantedPermission;
 import net.qoopo.qoopo.security.test.request.FakeHttpServerRequest;
 
 public class AuthorizationTest {

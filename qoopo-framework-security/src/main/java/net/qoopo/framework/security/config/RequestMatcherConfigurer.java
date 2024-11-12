@@ -11,10 +11,10 @@ import net.qoopo.framework.security.authentication.matcher.DenyAllMatcher;
 import net.qoopo.framework.security.authentication.matcher.HasAnyRoleMatcher;
 import net.qoopo.framework.security.authentication.matcher.HasRoleMatcher;
 import net.qoopo.framework.security.authentication.matcher.PermitAllMatcher;
+import net.qoopo.framework.security.core.permission.DefaultGrantedPermission;
 import net.qoopo.framework.security.matcher.IpAddressMatcher;
 import net.qoopo.framework.security.matcher.RequestMatcher;
 import net.qoopo.framework.security.matcher.UrlRequestMatcher;
-import net.qoopo.framework.security.permission.DefaultGrantedPermission;
 
 /**
  * Realiza la configuración de los requestMatcher que serán aplicados

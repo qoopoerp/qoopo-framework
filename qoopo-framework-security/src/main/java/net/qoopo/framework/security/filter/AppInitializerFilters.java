@@ -8,8 +8,8 @@ import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 import net.qoopo.framework.security.config.SecurityConfig;
-import net.qoopo.framework.security.filter.authentication.BasicHttpAuthenticationFilter;
 import net.qoopo.framework.security.filter.authentication.UserPasswordFormAuthenticationFilter;
+import net.qoopo.framework.security.filter.http.BasicHttpAuthenticationFilter;
 
 @WebListener
 public class AppInitializerFilters implements ServletContextListener {

@@ -37,6 +37,7 @@
         <module>qoopo-framework-data</module>
         <module>qoopo-framework-core</module>
         <module>qoopo-framework-security</module>
+        <module>qoopo-framework-security-jwt</module>
         <module>qoopo-framework-web</module>
         <module>qoopo-framework-reports</module>
         <module>qoopo-framework-exporter</module>

@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.qoopo.framework.security.authentication.service.UserNotFoundException;
 import net.qoopo.framework.security.authentication.user.UserData;
+import net.qoopo.framework.security.authentication.user.UserNotFoundException;
 
 public class InMemoryUserRepository implements UserRepository {
 

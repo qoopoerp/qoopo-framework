@@ -6,14 +6,14 @@ import java.util.logging.Logger;
 
 import org.junit.jupiter.api.Test;
 
-import net.qoopo.framework.security.authentication.password.encoder.Argon2PasswordEncoder;
-import net.qoopo.framework.security.authentication.password.encoder.BCryptPasswordEncoder;
-import net.qoopo.framework.security.authentication.password.encoder.DefaulPasswordEncoder;
-import net.qoopo.framework.security.authentication.password.encoder.Md5PasswordEncoder;
-import net.qoopo.framework.security.authentication.password.encoder.PasswordEncoder;
-import net.qoopo.framework.security.authentication.password.encoder.Sha256PasswordEncoder;
-import net.qoopo.framework.security.authentication.password.encoder.Sha512PasswordEncoder;
-import net.qoopo.framework.security.authentication.password.encoder.ShaPasswordEncoder;
+import net.qoopo.framework.security.core.encoder.Argon2PasswordEncoder;
+import net.qoopo.framework.security.core.encoder.BCryptPasswordEncoder;
+import net.qoopo.framework.security.core.encoder.DefaulPasswordEncoder;
+import net.qoopo.framework.security.core.encoder.Md5PasswordEncoder;
+import net.qoopo.framework.security.core.encoder.PasswordEncoder;
+import net.qoopo.framework.security.core.encoder.Sha256PasswordEncoder;
+import net.qoopo.framework.security.core.encoder.Sha512PasswordEncoder;
+import net.qoopo.framework.security.core.encoder.ShaPasswordEncoder;
 
 public class PasswordEncodersTest {
 

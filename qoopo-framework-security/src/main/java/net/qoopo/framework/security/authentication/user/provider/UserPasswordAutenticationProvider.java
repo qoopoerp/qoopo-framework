@@ -2,8 +2,8 @@ package net.qoopo.framework.security.authentication.user.provider;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.qoopo.framework.security.authentication.service.UserService;
 import net.qoopo.framework.security.authentication.user.UserData;
+import net.qoopo.framework.security.authentication.user.UserService;
 
 /**
  * Provedor de autenticacion para usuario y password que usa un UserService

@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.qoopo.framework.security.authentication.Authentication;
 import net.qoopo.framework.security.authentication.CredentialsContainer;
-import net.qoopo.framework.security.permission.GrantedPermission;
+import net.qoopo.framework.security.core.permission.GrantedPermission;
 
 @Getter
 @Setter

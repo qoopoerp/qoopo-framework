@@ -8,11 +8,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import net.qoopo.framework.security.authentication.password.encoder.BCryptPasswordEncoder;
-import net.qoopo.framework.security.authentication.password.encoder.PasswordEncoder;
 import net.qoopo.framework.security.authentication.repository.RandomUserRepository;
 import net.qoopo.framework.security.authentication.repository.UserRepository;
 import net.qoopo.framework.security.authentication.user.UserData;
+import net.qoopo.framework.security.core.encoder.BCryptPasswordEncoder;
+import net.qoopo.framework.security.core.encoder.PasswordEncoder;
 
 public class UsersGenerationTest {
 

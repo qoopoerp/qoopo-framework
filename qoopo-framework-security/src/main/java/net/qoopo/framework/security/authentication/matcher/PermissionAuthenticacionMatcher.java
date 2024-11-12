@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.qoopo.framework.security.authentication.Authentication;
-import net.qoopo.framework.security.permission.GrantedPermission;
+import net.qoopo.framework.security.core.permission.GrantedPermission;
 
 public class PermissionAuthenticacionMatcher implements AuthenticationMatcher {
 

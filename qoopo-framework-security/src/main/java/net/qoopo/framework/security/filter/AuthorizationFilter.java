@@ -13,7 +13,7 @@ import net.qoopo.framework.security.authorization.AuthorizationResult;
 import net.qoopo.framework.security.authorization.manager.AuthorizationManager;
 import net.qoopo.framework.security.authorization.manager.RequestMatcherAuthorizationManager;
 import net.qoopo.framework.security.config.SecurityConfig;
-import net.qoopo.framework.security.context.SecurityContextHolder;
+import net.qoopo.framework.security.core.context.SecurityContextHolder;
 import net.qoopo.framework.security.exception.SecurityException;
 import net.qoopo.framework.security.filter.strategy.failure.FailureStrategy;
 

@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.qoopo.framework.security.permission.GrantedPermission;
+import net.qoopo.framework.security.core.permission.GrantedPermission;
 
 @Data
 @Builder

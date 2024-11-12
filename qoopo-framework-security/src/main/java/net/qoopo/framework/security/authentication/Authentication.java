@@ -1,8 +1,10 @@
 package net.qoopo.framework.security.authentication;
 
 import java.util.Collection;
+
+import net.qoopo.framework.security.core.permission.GrantedPermission;
+
 import java.io.Serializable;
-import net.qoopo.framework.security.permission.GrantedPermission;
 
 /**
  * Represneta una Autenticación.

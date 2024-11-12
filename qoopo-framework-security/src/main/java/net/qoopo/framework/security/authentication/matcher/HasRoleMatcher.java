@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import net.qoopo.framework.security.authentication.Authentication;
-import net.qoopo.framework.security.permission.DefaultGrantedPermission;
-import net.qoopo.framework.security.permission.GrantedPermission;
+import net.qoopo.framework.security.core.permission.DefaultGrantedPermission;
+import net.qoopo.framework.security.core.permission.GrantedPermission;
 
 /**
  * Requiere una autenticacion existente

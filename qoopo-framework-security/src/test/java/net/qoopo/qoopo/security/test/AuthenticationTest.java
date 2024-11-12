@@ -11,18 +11,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import net.qoopo.framework.security.authentication.Authentication;
-import net.qoopo.framework.security.authentication.password.encoder.BCryptPasswordEncoder;
-import net.qoopo.framework.security.authentication.password.encoder.PasswordEncoder;
 import net.qoopo.framework.security.authentication.provider.AuthenticationProvider;
 import net.qoopo.framework.security.authentication.repository.InMemoryUserRepository;
 import net.qoopo.framework.security.authentication.repository.RandomUserRepository;
 import net.qoopo.framework.security.authentication.repository.UserRepository;
-import net.qoopo.framework.security.authentication.service.DefaultUserService;
-import net.qoopo.framework.security.authentication.service.UserService;
 import net.qoopo.framework.security.authentication.user.DefaultUserData;
+import net.qoopo.framework.security.authentication.user.DefaultUserService;
 import net.qoopo.framework.security.authentication.user.UserData;
 import net.qoopo.framework.security.authentication.user.UserPasswordAutenticacion;
+import net.qoopo.framework.security.authentication.user.UserService;
 import net.qoopo.framework.security.authentication.user.provider.UserPasswordAutenticationProvider;
+import net.qoopo.framework.security.core.encoder.BCryptPasswordEncoder;
+import net.qoopo.framework.security.core.encoder.PasswordEncoder;
 
 public class AuthenticationTest {
 

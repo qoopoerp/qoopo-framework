@@ -5,16 +5,15 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import net.qoopo.framework.exception.NullArgumentException;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import net.qoopo.framework.exception.NullArgumentException;
 import net.qoopo.framework.security.authentication.manager.AuthenticationManager;
-import net.qoopo.framework.security.authentication.password.encoder.BCryptPasswordEncoder;
-import net.qoopo.framework.security.authentication.password.encoder.PasswordEncoder;
 import net.qoopo.framework.security.authentication.provider.AuthenticationProvider;
+import net.qoopo.framework.security.core.encoder.BCryptPasswordEncoder;
+import net.qoopo.framework.security.core.encoder.PasswordEncoder;
 
 @Getter
 @Setter
@@ -31,6 +30,7 @@ public class SecurityConfig {
     private RequestMatcherConfigurer requestMatcherConfigurer = new RequestMatcherConfigurer();
     private LoginConfigurer loginConfigurer = new LoginConfigurer();
     private AuthorizationConfigurer auhtorizationConfigurer = new AuthorizationConfigurer();
+    private TokensProvidersConfigurer tokensProvidersConfigurer = new TokensProvidersConfigurer();
 
     public static final String version = "1.0.0-beta";
 
@@ -126,6 +126,20 @@ public class SecurityConfig {
         if (login == null)
             throw new NullArgumentException();
         this.auhtorizationConfigurer = login.apply(auhtorizationConfigurer);
+        return this;
+    }
+
+    public SecurityConfig tokens(Supplier<TokensProvidersConfigurer> tokens) {
+        if (tokens == null)
+            throw new NullArgumentException();
+        this.tokensProvidersConfigurer = tokens.get();
+        return this;
+    }
+
+    public SecurityConfig tokens(Function<TokensProvidersConfigurer, TokensProvidersConfigurer> tokens) {
+        if (tokens == null)
+            throw new NullArgumentException();
+        this.tokensProvidersConfigurer = tokens.apply(tokensProvidersConfigurer);
         return this;
     }
 

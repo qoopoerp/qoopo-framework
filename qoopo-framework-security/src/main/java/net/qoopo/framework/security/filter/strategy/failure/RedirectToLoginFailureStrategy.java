@@ -28,11 +28,14 @@ public class RedirectToLoginFailureStrategy implements FailureStrategy {
         if (exception != null)
             response.sendRedirect(
                     request.getContextPath() + SecurityConfig.get().getLoginConfigurer().getLoginPage() + "?error="
-                            + exception.getMessage() + "&pageTo=" + pagina + "&" + params);
+                            + exception.getMessage()
+                            //  + "&pageTo=" + pagina + "&" + params
+                            );
         else
             response.sendRedirect(
-                    request.getContextPath() + SecurityConfig.get().getLoginConfigurer().getLoginPage() + "?pageTo="
-                            + pagina + "&" + params);
+                    request.getContextPath() + SecurityConfig.get().getLoginConfigurer().getLoginPage() 
+                    // + "?pageTo="+ pagina + "&" + params
+                    );
 
     }
 

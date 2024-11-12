@@ -1,10 +1,9 @@
 package net.qoopo.framework.security.config;
 
-import net.qoopo.framework.exception.NullArgumentException;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.qoopo.framework.exception.NullArgumentException;
 import net.qoopo.framework.security.filter.strategy.failure.FailureStrategy;
 import net.qoopo.framework.security.filter.strategy.failure.RedirectToLoginFailureStrategy;
 import net.qoopo.framework.security.filter.strategy.failure.RedirectToPageFailureStrategy;

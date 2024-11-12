@@ -8,10 +8,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import net.qoopo.framework.security.config.SecurityConfig;
-import net.qoopo.framework.security.context.SecurityContext;
-import net.qoopo.framework.security.context.SecurityContextHolder;
-import net.qoopo.framework.security.context.repository.SecurityContextHttpRepository;
-import net.qoopo.framework.security.context.repository.SecurityContextRepository;
+import net.qoopo.framework.security.core.context.SecurityContext;
+import net.qoopo.framework.security.core.context.SecurityContextHolder;
+import net.qoopo.framework.security.core.context.repository.SecurityContextHttpRepository;
+import net.qoopo.framework.security.core.context.repository.SecurityContextRepository;
 import net.qoopo.framework.security.web.repository.HttpWarehouse;
 
 /**

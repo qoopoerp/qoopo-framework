@@ -5,7 +5,6 @@ import lombok.Setter;
 import net.qoopo.framework.security.authentication.Authentication;
 import net.qoopo.framework.security.authentication.AuthenticationException;
 import net.qoopo.framework.security.authentication.provider.AuthenticationProvider;
-import net.qoopo.framework.security.authentication.service.PasswordService;
 
 /**
  * Controlador default que implementa la autenticación

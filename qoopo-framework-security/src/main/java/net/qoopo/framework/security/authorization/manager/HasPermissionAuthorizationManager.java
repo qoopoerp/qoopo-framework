@@ -8,7 +8,7 @@ import net.qoopo.framework.security.authentication.Authentication;
 import net.qoopo.framework.security.authentication.matcher.PermissionAuthenticacionMatcher;
 import net.qoopo.framework.security.authorization.AuthorizationResponse;
 import net.qoopo.framework.security.authorization.AuthorizationResult;
-import net.qoopo.framework.security.permission.GrantedPermission;
+import net.qoopo.framework.security.core.permission.GrantedPermission;
 
 /**
  * Implementacion de AuhtorizationManager que se encarga de verificar si una

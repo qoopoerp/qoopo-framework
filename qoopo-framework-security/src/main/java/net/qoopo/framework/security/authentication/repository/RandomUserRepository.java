@@ -6,11 +6,11 @@ import java.util.UUID;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
-import net.qoopo.framework.security.authentication.password.encoder.BCryptPasswordEncoder;
-import net.qoopo.framework.security.authentication.password.encoder.PasswordEncoder;
-import net.qoopo.framework.security.authentication.service.UserNotFoundException;
 import net.qoopo.framework.security.authentication.user.DefaultUserData;
 import net.qoopo.framework.security.authentication.user.UserData;
+import net.qoopo.framework.security.authentication.user.UserNotFoundException;
+import net.qoopo.framework.security.core.encoder.BCryptPasswordEncoder;
+import net.qoopo.framework.security.core.encoder.PasswordEncoder;
 
 /**
  * Implementación de un repositorio de usuario que genera usuarios y password

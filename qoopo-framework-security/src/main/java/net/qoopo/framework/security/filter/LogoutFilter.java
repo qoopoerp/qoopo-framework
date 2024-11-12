@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import net.qoopo.framework.security.authentication.Authentication;
 import net.qoopo.framework.security.config.SecurityConfig;
-import net.qoopo.framework.security.context.SecurityContextHolder;
+import net.qoopo.framework.security.core.context.SecurityContextHolder;
 import net.qoopo.framework.security.exception.SecurityException;
 import net.qoopo.framework.security.filter.strategy.failure.FailureStrategy;
 import net.qoopo.framework.security.filter.strategy.success.SuccessStrategy;
