@@ -6,7 +6,7 @@ public interface TokenProvider {
 
     public Token generate(UserData userData);
 
-    public boolean validate(Token token);
+    public boolean validate(String token);
 
     public Token getToken(String token);
 }
