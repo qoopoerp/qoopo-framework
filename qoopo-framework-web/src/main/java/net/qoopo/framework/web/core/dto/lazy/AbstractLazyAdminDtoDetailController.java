@@ -5,8 +5,8 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.qoopo.framework.db.repository.CrudRepository;
-import net.qoopo.framework.jpa.core.EntidadBase;
+import net.qoopo.framework.data.repository.CrudRepository;
+import net.qoopo.framework.jpa.core.AbstractEntity;
 import net.qoopo.framework.jpa.core.dtos.DtoBase;
 import net.qoopo.framework.jpa.filter.Filter;
 import net.qoopo.framework.jpa.filter.condicion.Campo;
@@ -23,7 +23,7 @@ import net.qoopo.framework.web.util.FacesUtils;
  */
 @Getter
 @Setter
-public abstract class AbstractLazyAdminDtoDetailController<R extends EntidadBase, DTO extends DtoBase, T>
+public abstract class AbstractLazyAdminDtoDetailController<R extends AbstractEntity, DTO extends DtoBase, T>
         extends AbstractLazyAdminDtoController<R, DTO> {
 
     public AbstractLazyAdminDtoDetailController(String entityClassName, Class<R> entityClass, Filter inicial,

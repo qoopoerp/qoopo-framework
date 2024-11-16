@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.qoopo.framework.db.jpa.Parametro;
+import net.qoopo.framework.data.jpa.JpaParameters;
 import net.qoopo.framework.jpa.filter.condicion.Condicion;
 import net.qoopo.framework.util.QoopoBuilder;
 
@@ -110,11 +110,11 @@ public class Filter implements Serializable {
         return this;
     }
 
-    public Parametro obtenerParametros(Parametro parametro) {
+    public JpaParameters obtenerJpaParameterss(JpaParameters JpaParameters) {
         if (condicion != null) {
-            condicion.obtenerParametros(parametro);
+            condicion.obtenerJpaParameterss(JpaParameters);
         }
-        return parametro;
+        return JpaParameters;
     }
 
     public String getPosterior() {

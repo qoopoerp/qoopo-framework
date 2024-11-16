@@ -70,6 +70,7 @@ public abstract class AbstractUserPasswordAuthenticationFilter extends AbstractA
      * Sobrecarga la configuracion para setear el matcher del request
      */
     public void loadConfig() {
+        super.loadConfig();
         if (enabled) {
             // configura el provider para el manager de autenticacion
             if (authenticationManager != null && authenticationManager instanceof ProviderManager) {
@@ -90,13 +91,12 @@ public abstract class AbstractUserPasswordAuthenticationFilter extends AbstractA
                                     new DefaultUserService(
                                             userRepository, SecurityConfig.get().getPasswordEncoder())));
                         } else {
-                            log.severe("No se encuentra una implementación de UserRepository");
+                            log.severe("[X] No se encuentra una implementación de UserRepository");
                         }
                     }
                 }
             }
         }
-        super.loadConfig();
     }
 
     /**
@@ -120,9 +120,9 @@ public abstract class AbstractUserPasswordAuthenticationFilter extends AbstractA
     }
 
     /**
-     * Busca una implementacion de un UserService que no se las predeterminada
+     * Busca una implementacion de un UserService que no sea las predeterminada
      * del framework,
-     * En caso de no encontrar usara la predeterminada
+     * 
      */
     private UserService getUserService() {
         List<UserService> implementations = QoopoReflection.getBeanImplemented(UserService.class,

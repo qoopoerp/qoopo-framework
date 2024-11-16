@@ -10,7 +10,7 @@ import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
 
-import net.qoopo.framework.jpa.core.EntidadBase;
+import net.qoopo.framework.jpa.core.AbstractEntity;
 import net.qoopo.framework.jpa.core.dtos.DtoBase;
 import net.qoopo.framework.jpa.filter.Filter;
 import net.qoopo.framework.jpa.filter.condicion.Campo;
@@ -27,7 +27,7 @@ import net.qoopo.framework.web.util.FacesUtils;
  * @author alberto
  * @param <T>
  */
-public abstract class AbstractLazyAdminDtoController<S extends EntidadBase, T extends DtoBase>
+public abstract class AbstractLazyAdminDtoController<S extends AbstractEntity, T extends DtoBase>
         extends AbstractAdminDtoController<S, T> {
 
     public AbstractLazyAdminDtoController(String entityClassName, Class<S> entityClass, Filter inicial,

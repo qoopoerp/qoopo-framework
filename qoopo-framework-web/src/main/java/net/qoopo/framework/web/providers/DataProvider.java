@@ -5,11 +5,11 @@ import java.util.ArrayList;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.qoopo.framework.jpa.core.EntidadBase;
+import net.qoopo.framework.jpa.core.AbstractEntity;
 
 @Getter
 @Setter
-public abstract class DataProvider<T extends EntidadBase> implements Serializable {
+public abstract class DataProvider<T extends AbstractEntity> implements Serializable {
 
     protected boolean cacheable = false;
 

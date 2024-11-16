@@ -28,22 +28,22 @@ public class Funcion implements Serializable {
 
     // el nombre que se muestra al usuario
     private String nombre;
-    // el nombre del campo en formato JPA para armar la consulta
-    private String nombreJPA;
+    // el nombre del campo en formato Jpa para armar la consulta
+    private String nombreJpa;
     private String antesCampo = "";
     private String despuesCampo = "";
 
     public Funcion() {
     }
 
-    public Funcion(String nombre, String nombreJPA) {
+    public Funcion(String nombre, String nombreJpa) {
         this.nombre = nombre;
-        this.nombreJPA = nombreJPA;
+        this.nombreJpa = nombreJpa;
     }
 
-    public Funcion(String nombre, String nombreJPA, String antesCampo, String despuesCampo) {
+    public Funcion(String nombre, String nombreJpa, String antesCampo, String despuesCampo) {
         this.nombre = nombre;
-        this.nombreJPA = nombreJPA;
+        this.nombreJpa = nombreJpa;
         this.antesCampo = antesCampo;
         this.despuesCampo = despuesCampo;
     }
@@ -56,19 +56,19 @@ public class Funcion implements Serializable {
         this.nombre = nombre;
     }
 
-    public String getNombreJPA() {
-        return nombreJPA;
+    public String getNombreJpa() {
+        return nombreJpa;
     }
 
-    public void setNombreJPA(String nombreJPA) {
-        this.nombreJPA = nombreJPA;
+    public void setNombreJpa(String nombreJpa) {
+        this.nombreJpa = nombreJpa;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
         hash = 53 * hash + Objects.hashCode(this.nombre);
-        hash = 53 * hash + Objects.hashCode(this.nombreJPA);
+        hash = 53 * hash + Objects.hashCode(this.nombreJpa);
         return hash;
     }
 
@@ -87,7 +87,7 @@ public class Funcion implements Serializable {
         if (!Objects.equals(this.nombre, other.nombre)) {
             return false;
         }
-        return Objects.equals(this.nombreJPA, other.nombreJPA);
+        return Objects.equals(this.nombreJpa, other.nombreJpa);
     }
 
     public String getAntesCampo() {
@@ -108,7 +108,7 @@ public class Funcion implements Serializable {
 
     @Override
     public String toString() {
-        return "Funcion{" + "nombre=" + nombre + ", nombreJPA=" + nombreJPA + '}';
+        return "Funcion{" + "nombre=" + nombre + ", nombreJpa=" + nombreJpa + '}';
     }
 
 }

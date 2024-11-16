@@ -40,7 +40,7 @@ public class AuthorizationFilter extends AbstractSecurityFilter {
         loadConfig();
         try {
             AuthorizationResult result = authorizationManager.authorize(getAuthentication(), request);
-            if (result != null && !result.isGranted()) {
+            if (result == null || (result != null && !result.isGranted())) {
                 unSuccessfulAuthorization(request, response, chain, new AuthorizationDeniedException("AccessDenied"));
             } else
                 chain.doFilter(request, response);

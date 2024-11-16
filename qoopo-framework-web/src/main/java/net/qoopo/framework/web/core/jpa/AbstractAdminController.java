@@ -42,7 +42,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.qoopo.framework.Accion;
 import net.qoopo.framework.QoopoFramework;
-import net.qoopo.framework.db.repository.CrudRepository;
+import net.qoopo.framework.data.repository.CrudRepository;
 import net.qoopo.framework.exporter.Exportable;
 import net.qoopo.framework.exporter.Exporter;
 import net.qoopo.framework.exporter.Importer;
@@ -54,7 +54,7 @@ import net.qoopo.framework.exporter.xls.XlsExporter;
 import net.qoopo.framework.exporter.xls.XlsImporter;
 import net.qoopo.framework.exporter.xlsx.XlsxExporter;
 import net.qoopo.framework.exporter.xlsx.XlsxImporter;
-import net.qoopo.framework.jpa.core.EntidadBase;
+import net.qoopo.framework.jpa.core.AbstractEntity;
 import net.qoopo.framework.jpa.core.interfaces.Agrupable;
 import net.qoopo.framework.jpa.core.interfaces.Auditable;
 import net.qoopo.framework.jpa.core.interfaces.CoreMetadata;
@@ -99,7 +99,7 @@ import net.qoopo.framework.web.vistas.ReporteBean;
 
 @Getter
 @Setter
-public abstract class AbstractAdminController<T extends EntidadBase> implements AdminBeanProgressable, Serializable {
+public abstract class AbstractAdminController<T extends AbstractEntity> implements AdminBeanProgressable, Serializable {
 
     public static final Logger log = Logger.getLogger("Qoopo");
 
@@ -164,7 +164,7 @@ public abstract class AbstractAdminController<T extends EntidadBase> implements 
     protected int exporterType = 1;
 
     /**
-     * El nombre de la clase JPA de la entidad a administra. Es el classname de T,
+     * El nombre de la clase Jpa de la entidad a administra. Es el classname de T,
      * el cual no puede ser obtenido antes de tener datos, pero es necesario en el
      * momento de buildFilter, antes de cargar los datos
      */
@@ -194,13 +194,13 @@ public abstract class AbstractAdminController<T extends EntidadBase> implements 
 
     protected NavController nav = new NavController(new Accion() {
         @Override
-        public Object ejecutar(Object... parametros) {
-            seleccionar((Integer) parametros[0]);
+        public Object ejecutar(Object... JpaParameterss) {
+            seleccionar((Integer) JpaParameterss[0]);
             return null;
         }
     }, new Accion() {
         @Override
-        public Object ejecutar(Object... parametros) {
+        public Object ejecutar(Object... JpaParameterss) {
             return getTotal();
         }
     });
@@ -209,7 +209,7 @@ public abstract class AbstractAdminController<T extends EntidadBase> implements 
      */
     protected Accion accion = new Accion() {
         @Override
-        public Object ejecutar(Object... parametros) {
+        public Object ejecutar(Object... JpaParameterss) {
             loadData();
             if (sessionBean != null && viewOption != null) {
                 sessionBean.addUrlParam("view", viewOption.getStringValue());
@@ -227,12 +227,12 @@ public abstract class AbstractAdminController<T extends EntidadBase> implements 
      */
     protected Accion accionUpdateProgress = new Accion() {
         @Override
-        public Object ejecutar(Object... parametros) {
-            setProgress((Integer) parametros[0]);
-            if (parametros.length > 1) {
-                setProgressStatus((String) parametros[1]);
+        public Object ejecutar(Object... JpaParameterss) {
+            setProgress((Integer) JpaParameterss[0]);
+            if (JpaParameterss.length > 1) {
+                setProgressStatus((String) JpaParameterss[1]);
             }
-            return (Integer) parametros[0];
+            return (Integer) JpaParameterss[0];
         }
     };
 
@@ -279,7 +279,7 @@ public abstract class AbstractAdminController<T extends EntidadBase> implements 
         // chatter = new Chatter(sessionBean, languageProvider);
     }
 
-    public void procesarParametro() {
+    public void procesarJpaParameters() {
         try {
             String filterValueTmp = "";
             if (FacesUtils.getRequestParameter("filterValue") != null) {
@@ -326,13 +326,13 @@ public abstract class AbstractAdminController<T extends EntidadBase> implements 
                 }
             }
 
-            // parametro del tipo vista
+            // JpaParameters del tipo vista
             if (FacesUtils.getRequestParameter("view") != null) {
                 viewOption.setValue(FacesUtils.getRequestParameter("view"));
             }
 
             if (viewOption.getValue() == ViewOption.FORM) {
-                // carga un objeto con el id del parametro
+                // carga un objeto con el id del JpaParameters
                 if (FacesUtils.getRequestParameter("id") != null) {
                     Optional<T> tmp = repository.find(Long.valueOf(FacesUtils.getRequestParameter("id")));
                     if (tmp.isPresent()) {

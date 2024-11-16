@@ -38,9 +38,10 @@
         <module>qoopo-framework-core</module>
         <module>qoopo-framework-security</module>
         <module>qoopo-framework-security-jwt</module>
-        <module>qoopo-framework-web</module>
+        <module>qoopo-framework-web</module>    
         <module>qoopo-framework-reports</module>
         <module>qoopo-framework-exporter</module>
+        <module>qoopo-framework-web-template</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

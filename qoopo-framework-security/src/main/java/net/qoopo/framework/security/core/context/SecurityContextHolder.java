@@ -44,7 +44,7 @@ public class SecurityContextHolder {
 
             strategyName = System.getenv(ENV_VARIABLE);
             if (strategyName == null) {
-                strategyName = INHERITABLE_THREAD_LOCAL;
+                strategyName = THREAD_LOCAL;
             }
             log.info("[+] SecurityContextHolderStrategy -> " + strategyName);
 
@@ -78,6 +78,8 @@ public class SecurityContextHolder {
     }
 
     public static void clear() {
+        if (SecurityConfig.get().isDebug())
+            log.info("[+] Limpiando securityContext, instancias:" + initializeCount);
         strategy.clear();
     }
 

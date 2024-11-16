@@ -40,7 +40,7 @@ public class SecurityContextPersistenceFilter extends OncePerRequestFilter {
         try {
             if (securityContextBefore != null) {
                 if (SecurityConfig.get().isDebug())
-                    log.info("[+] Se encontró security context en la session");
+                    log.info("[+] Security context cargado de la sesión ");
                 SecurityContextHolder.setContext(securityContextBefore);
             } else {
                 if (SecurityConfig.get().isDebug())
@@ -58,7 +58,7 @@ public class SecurityContextPersistenceFilter extends OncePerRequestFilter {
 
             this.repository.save(securityContextAfter, warehouse);
             // elimina para no dejar autenticado para las otras solicitudes
-            // SecurityContextHolder.clear();
+            SecurityContextHolder.clear();
         }
 
     }

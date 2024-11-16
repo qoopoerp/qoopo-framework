@@ -3,9 +3,9 @@ package net.qoopo.framework.jpa.daos;
 import java.util.Collections;
 import java.util.List;
 
-import net.qoopo.framework.db.jpa.JPA;
-import net.qoopo.framework.db.jpa.JpaTransaction;
-import net.qoopo.framework.db.jpa.Parametro;
+import net.qoopo.framework.data.jpa.Jpa;
+import net.qoopo.framework.data.jpa.JpaTransaction;
+import net.qoopo.framework.data.jpa.JpaParameters;
 import net.qoopo.framework.jpa.filter.Filter;
 
 /**
@@ -15,18 +15,18 @@ import net.qoopo.framework.jpa.filter.Filter;
  */
 public class FilterDAO<T> {
 
-    private JPA<T, Long> jpa;
+    private Jpa<T, Long> jpa;
 
     public FilterDAO() {
-        jpa = new JPA<>();
+        jpa = new Jpa<>();
     }
 
     public List<T> filtrar(JpaTransaction transaccion, Filter filtro) {
         if (filtro != null)
             return jpa
                     .setEm(transaccion.getEm())
-                    .setParam(filtro.obtenerParametros(Parametro.get()))
-                    .ejecutarQueryList(filtro.buildQuery());
+                    .setParam(filtro.obtenerJpaParameterss(JpaParameters.get()))
+                    .runQueryList(filtro.buildQuery());
         else {
             return Collections.EMPTY_LIST;
         }
@@ -35,8 +35,8 @@ public class FilterDAO<T> {
     public Long filtrarCount(JpaTransaction transaccion, Filter filtro) {
         return (Long) jpa
                 .setEm(transaccion.getEm())
-                .setParam(filtro.obtenerParametros(Parametro.get()))
-                .ejecutarQuery(filtro.buildQueryCount());
+                .setParam(filtro.obtenerJpaParameterss(JpaParameters.get()))
+                .runQuery(filtro.buildQueryCount());
     }
 
     public List<T> filtrar(JpaTransaction transaccion, Filter filtro, int first, int pageSize) {
@@ -44,8 +44,8 @@ public class FilterDAO<T> {
                 .setEm(transaccion.getEm())
                 .setFirstResult(first)
                 .setMaxResults(pageSize)
-                .setParam(filtro.obtenerParametros(Parametro.get()))
-                .ejecutarQueryList(filtro.buildQuery());
+                .setParam(filtro.obtenerJpaParameterss(JpaParameters.get()))
+                .runQueryList(filtro.buildQuery());
     }
 
     public Long filtrarCount(JpaTransaction transaccion, Filter filtro, int first, int pageSize) {
@@ -53,8 +53,8 @@ public class FilterDAO<T> {
                 .setEm(transaccion.getEm())
                 .setFirstResult(first)
                 .setMaxResults(pageSize)
-                .setParam(filtro.obtenerParametros(Parametro.get()))
-                .ejecutarQuery(filtro.buildQueryCount());
+                .setParam(filtro.obtenerJpaParameterss(JpaParameters.get()))
+                .runQuery(filtro.buildQueryCount());
     }
 
 }

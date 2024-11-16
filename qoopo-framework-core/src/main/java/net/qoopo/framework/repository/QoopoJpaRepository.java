@@ -1,7 +1,7 @@
 package net.qoopo.framework.repository;
 
 import net.qoopo.framework.QoopoFramework;
-import net.qoopo.framework.db.repository.JpaRepository;
+import net.qoopo.framework.data.repository.JpaRepository;
 
 /**
  * Utilitario que permite acceder a las funciones básicas de acceso a a base de

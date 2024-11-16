@@ -3,11 +3,11 @@ package net.qoopo.framework.repository;
 import java.util.logging.Logger;
 
 import net.qoopo.framework.QoopoFramework;
-import net.qoopo.framework.db.dao.GenericDAOSingleton;
-import net.qoopo.framework.db.jpa.JpaTransaction;
-import net.qoopo.framework.db.jpa.exceptions.IllegalOrphanException;
-import net.qoopo.framework.db.jpa.exceptions.NonexistentEntityException;
-import net.qoopo.framework.db.jpa.exceptions.RollbackFailureException;
+import net.qoopo.framework.data.dao.GenericDAOSingleton;
+import net.qoopo.framework.data.jpa.JpaTransaction;
+import net.qoopo.framework.data.jpa.exceptions.IllegalOrphanException;
+import net.qoopo.framework.data.jpa.exceptions.NonexistentEntityException;
+import net.qoopo.framework.data.jpa.exceptions.RollbackFailureException;
 import net.qoopo.framework.util.exceptions.QoopoException;
 
 /**

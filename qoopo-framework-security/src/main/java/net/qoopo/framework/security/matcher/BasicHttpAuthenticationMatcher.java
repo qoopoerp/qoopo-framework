@@ -3,8 +3,8 @@ package net.qoopo.framework.security.matcher;
 import java.util.Base64;
 import java.util.logging.Logger;
 
-import java.util.Arrays;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.core.HttpHeaders;
 
 /**
  * Valida la solicitud en función de un patrón
@@ -22,23 +22,20 @@ public class BasicHttpAuthenticationMatcher extends AbstractRequestMatcher {
 
     @Override
     public boolean matches(HttpServletRequest request) {
-
-        log.info("- consultando si reuiere autenticacion ");
-
-        String authHeader = request.getHeader("Authorization");
-
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         try {
             if (authHeader != null && authHeader.startsWith("Basic ")) {
                 String[] args = decodeBasicAuthToken(authHeader);
-                log.info("-> " + (args != null && args.length == 2 && args[0] != null && !args[0].isEmpty()) + " -"
-                        + Arrays.toString(args));
+                // if (SecurityConfig.get().isDebug())
+                // log.info("-> " + (args != null && args.length == 2 && args[0] != null &&
+                // !args[0].isEmpty()) + " -"
+                // + Arrays.toString(args));
                 return args != null && args.length == 2 && args[0] != null && !args[0].isEmpty();
             }
         } catch (Exception e) {
             e.printStackTrace();
-
         }
-        log.info("->false");
+
         return false;
         // return authHeader != null && authHeader.startsWith("Basic ");
     }

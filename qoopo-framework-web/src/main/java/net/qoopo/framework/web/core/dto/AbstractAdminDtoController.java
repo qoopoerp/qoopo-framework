@@ -42,7 +42,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.qoopo.framework.Accion;
 import net.qoopo.framework.QoopoFramework;
-import net.qoopo.framework.db.repository.CrudRepository;
+import net.qoopo.framework.data.repository.CrudRepository;
 import net.qoopo.framework.exporter.Exportable;
 import net.qoopo.framework.exporter.Exporter;
 import net.qoopo.framework.exporter.Importer;
@@ -54,7 +54,7 @@ import net.qoopo.framework.exporter.xls.XlsExporter;
 import net.qoopo.framework.exporter.xls.XlsImporter;
 import net.qoopo.framework.exporter.xlsx.XlsxExporter;
 import net.qoopo.framework.exporter.xlsx.XlsxImporter;
-import net.qoopo.framework.jpa.core.EntidadBase;
+import net.qoopo.framework.jpa.core.AbstractEntity;
 import net.qoopo.framework.jpa.core.dtos.DtoBase;
 import net.qoopo.framework.jpa.core.interfaces.Agrupable;
 import net.qoopo.framework.jpa.core.interfaces.Auditable;
@@ -100,7 +100,7 @@ import net.qoopo.framework.web.vistas.ReporteBean;
 
 @Getter
 @Setter
-public abstract class AbstractAdminDtoController<S extends EntidadBase, T extends DtoBase>
+public abstract class AbstractAdminDtoController<S extends AbstractEntity, T extends DtoBase>
         implements AdminBeanProgressable, Serializable {
 
     public static final Logger log = Logger.getLogger("Qoopo");
@@ -164,7 +164,7 @@ public abstract class AbstractAdminDtoController<S extends EntidadBase, T extend
     protected int exporterType = 1;
 
     /**
-     * El nombre de la clase JPA de la entidad a administra. Es el classname de T,
+     * El nombre de la clase Jpa de la entidad a administra. Es el classname de T,
      * el cual no puede ser obtenido antes de tener datos, pero es necesario en el
      * momento de buildFilter, antes de cargar los datos
      */
@@ -206,13 +206,13 @@ public abstract class AbstractAdminDtoController<S extends EntidadBase, T extend
 
     protected NavController nav = new NavController(new Accion() {
         @Override
-        public Object ejecutar(Object... parametros) {
-            seleccionar((Integer) parametros[0]);
+        public Object ejecutar(Object... JpaParameterss) {
+            seleccionar((Integer) JpaParameterss[0]);
             return null;
         }
     }, new Accion() {
         @Override
-        public Object ejecutar(Object... parametros) {
+        public Object ejecutar(Object... JpaParameterss) {
             return getTotal();
         }
     });
@@ -221,7 +221,7 @@ public abstract class AbstractAdminDtoController<S extends EntidadBase, T extend
      */
     protected Accion accion = new Accion() {
         @Override
-        public Object ejecutar(Object... parametros) {
+        public Object ejecutar(Object... JpaParameterss) {
             loadData();
             if (sessionBean != null && viewOption != null) {
                 sessionBean.addUrlParam("view", viewOption.getStringValue());
@@ -241,12 +241,12 @@ public abstract class AbstractAdminDtoController<S extends EntidadBase, T extend
      */
     protected Accion accionUpdateProgress = new Accion() {
         @Override
-        public Object ejecutar(Object... parametros) {
-            setProgress((Integer) parametros[0]);
-            if (parametros.length > 1) {
-                setProgressStatus((String) parametros[1]);
+        public Object ejecutar(Object... JpaParameterss) {
+            setProgress((Integer) JpaParameterss[0]);
+            if (JpaParameterss.length > 1) {
+                setProgressStatus((String) JpaParameterss[1]);
             }
-            return (Integer) parametros[0];
+            return (Integer) JpaParameterss[0];
         }
     };
 
@@ -271,15 +271,15 @@ public abstract class AbstractAdminDtoController<S extends EntidadBase, T extend
 
     public abstract int getTotal();
 
-    public boolean validateDelete(EntidadBase item) {
+    public boolean validateDelete(AbstractEntity item) {
         return true;
     }
 
-    public boolean validateArchive(EntidadBase item) {
+    public boolean validateArchive(AbstractEntity item) {
         return true;
     }
 
-    public void postDelete(EntidadBase item) {
+    public void postDelete(AbstractEntity item) {
         //
     }
 
@@ -291,7 +291,7 @@ public abstract class AbstractAdminDtoController<S extends EntidadBase, T extend
         // chatter = new Chatter(sessionBean, languageProvider);
     }
 
-    public void procesarParametro() {
+    public void procesarJpaParameters() {
         try {
             String filterValueTmp = "";
             if (FacesUtils.getRequestParameter("filterValue") != null) {
@@ -337,12 +337,12 @@ public abstract class AbstractAdminDtoController<S extends EntidadBase, T extend
                             });
                 }
             }
-            // parametro del tipo vista
+            // JpaParameters del tipo vista
             if (FacesUtils.getRequestParameter("view") != null) {
                 viewOption.setValue(FacesUtils.getRequestParameter("view"));
             }
 
-            // carga un objeto con el id del parametro
+            // carga un objeto con el id del JpaParameters
             if (FacesUtils.getRequestParameter("id") != null) {
                 Optional<S> tmp = repository.find(Long.valueOf(FacesUtils.getRequestParameter("id")));
                 if (tmp.isPresent()) {
@@ -438,7 +438,7 @@ public abstract class AbstractAdminDtoController<S extends EntidadBase, T extend
         loadTree(data);
         loadKanban(data);
         loadTimeLine(data);
-        // actualizo el parametro del view
+        // actualizo el JpaParameters del view
         sessionBean.addUrlParam("view", viewOption.getStringValue());
         log.info("[+] load data [" + QLogger.getTimeFormater(System.currentTimeMillis() - tInicio));
     }
@@ -860,7 +860,7 @@ public abstract class AbstractAdminDtoController<S extends EntidadBase, T extend
             }
         } else {
             try {
-                editItem((S) (EntidadBase) item);
+                editItem((S) (AbstractEntity) item);
             } catch (ClassCastException e) {
                 e.printStackTrace();
             }

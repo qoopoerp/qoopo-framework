@@ -1,0 +1,23 @@
+<ui:composition template="/WEB-INF/template/template-main-simple.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:p="http://primefaces.org/ui" xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="contenido">
+        <div align="left" class="ui-g">
+            <ui:repeat value="#{appListBean.appList}" var="app">
+                <div class="ui-g-6 ui-md-4 ui-lg-3 ui-xl-2 transicion_03">
+                    <div class="home-app-btn" accesskey="#{app.accesskey}">
+                        <p:commandLink actionListener="#{appListBean.openApp(app)}" update="@form"
+                            accesskey="#{app.accesskey}" title="#{app.description}">
+                            <h:panelGrid columns="1" style="text-align: center; width: 100%;">
+                                <p:graphicImage styleClass="imgInicio" library="imagenes"
+                                    name="#{temas.temaIconos}/#{app.imagen}" />
+                                <h:outputText styleClass="grid-item-titleInicio" value="#{app.name}" />
+                            </h:panelGrid>
+                        </p:commandLink>
+                    </div>
+                </div>
+            </ui:repeat>
+        </div>
+    </ui:define>
+</ui:composition>

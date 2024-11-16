@@ -3,8 +3,8 @@ package net.qoopo.framework.web.core.jpa.lazy;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.qoopo.framework.db.repository.CrudRepository;
-import net.qoopo.framework.jpa.core.EntidadBase;
+import net.qoopo.framework.data.repository.CrudRepository;
+import net.qoopo.framework.jpa.core.AbstractEntity;
 import net.qoopo.framework.jpa.filter.Filter;
 import net.qoopo.framework.jpa.filter.condicion.Campo;
 import net.qoopo.framework.jpa.filter.condicion.Condicion;
@@ -18,7 +18,7 @@ import net.qoopo.framework.web.util.FacesUtils;
  * @param <S>
  * @param <T>
  */
-public abstract class AbstractLazyAdminDetailController<S extends EntidadBase, T> extends AbstractLazyAdminController<S> {
+public abstract class AbstractLazyAdminDetailController<S extends AbstractEntity, T> extends AbstractLazyAdminController<S> {
 
     public AbstractLazyAdminDetailController(String entityClassName, Class<S> entityClass, Filter inicial,
             List<Condicion> condicionesDisponibles,

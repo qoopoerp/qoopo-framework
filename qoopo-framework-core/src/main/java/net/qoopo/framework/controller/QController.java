@@ -20,32 +20,32 @@ public interface QController {
 
     public String getName();
 
-    public void instanciar(Object... parametros);
+    public void instanciar(Object... JpaParameterss);
 
     public void set(String opcion, Object valor);
 
-    public Object get(String opcion, Object... parametros);
+    public Object get(String opcion, Object... JpaParameterss);
 
     /**
      * Ejecuta un metodo del controlador
      *
      * @param opcion
-     * @param parametros
+     * @param JpaParameterss
      * @return
      * @throws Exception
      */
-    public Object run(String opcion, Object... parametros) throws Exception;
+    public Object run(String opcion, Object... JpaParameterss) throws Exception;
 
-//    public Object runObserver(String opcion, Object... parametros) throws Exception;
+//    public Object runObserver(String opcion, Object... JpaParameterss) throws Exception;
     /**
      * Notifica a los observadores que se registraron en un evento
      *
      * @param event
-     * @param parametros
+     * @param JpaParameterss
      * @return
      * @throws Exception
      */
-    public Object notifyObserver(String event, Object... parametros) throws Exception;
+    public Object notifyObserver(String event, Object... JpaParameterss) throws Exception;
 
     /**
      * Devuelve la lista de los eventos a los que se va a suscribrir

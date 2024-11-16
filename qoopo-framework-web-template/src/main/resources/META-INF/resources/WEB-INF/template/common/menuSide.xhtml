@@ -1,0 +1,37 @@
+<div
+    class="q-flex q-flex-column"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    >
+    <div class="q-flex-header">
+        <div style="width: 100%; background-color: white; text-align: center;" class="hidden-sm hidden-xs">
+            <p:graphicImage style="max-height:15vh; max-width: 100%;" id="logoEmpresa" value="#{imagenesBean.getImage(mainBean.empresaActual.logo)}" />
+        </div>
+        <span href="#" class="list-group-item active" style="padding-top: 0px; padding-bottom: 0px; text-align: center; border:1px solid #ddd; border-radius: 0; ">
+            <h:outputText style=" color: white; font-size: 1rem; font-weight: bold;" value="#{texto.texto(mainBean.modulo.componente.codigoTexto).toUpperCase()}" /> 
+        </span>             
+    </div>   
+    <div class="q-flex-content">
+        <div class="list-group" id="menulateral" >
+            <ui:repeat  value="#{mainBean.modulo.comandos}" var="comando">                        
+                <p:commandLink  rendered="#{comando.comando.titulo!='%' and comando.comando.pagina!='--'}" 
+                                update="@form" 
+                                styleClass="list-group-item #{(mainBean.comandoSeleccionado.comando.codigo eq comando.comando.codigo)?'active':''}"     
+                                style="padding-left: 15px; padding-top: 2px; padding-bottom: 2px;" 
+                                actionListener="#{mainBean.menuAbrirComando(comando)}"                                
+                                >
+                    <p:graphicImage library="imagenes" name="#{temas.temaIconos}/#{comando.comando.imagen}" style="width: 20px; height: 20px;"   />
+                    <h:outputText styleClass="textoMenu" value=" #{texto.texto(comando.comando.codigoTexto)}" />
+                    <!--<span class="badge">1</span>-->  
+                </p:commandLink>
+                <h:panelGroup  rendered ="#{comando.comando.pagina=='--'}"> 
+                    <span  class="list-group-item" style="padding-left: 15px; padding-top: 2px; padding-bottom: 2px; ">                     
+                        <h:outputText styleClass="menu-titulo"   value=" #{comando.comando.titulo}" />                    
+                    </span>
+                </h:panelGroup>
+            </ui:repeat>
+        </div>
+    </div>
+</div>

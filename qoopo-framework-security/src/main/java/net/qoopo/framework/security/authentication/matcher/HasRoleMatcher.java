@@ -32,12 +32,12 @@ public class HasRoleMatcher implements AuthenticationMatcher {
     public boolean matches(Authentication authentication) {
         if (authentication != null && authentication.isAuthenticated()) {
             for (GrantedPermission permission : roles) {
-                log.info("validando rol -> " + permission.getPermission() + " tiene? "+GrantedPermission.contains(authentication.getPermissions(), permission));
+                // log.info("validando rol -> " + permission.getPermission() + " tiene? "+GrantedPermission.contains(authentication.getPermissions(), permission));
                 if (!GrantedPermission.contains(authentication.getPermissions(), permission))
                     return false;
             }
         } else {
-            log.info("No autenticado ");
+            // log.info("No autenticado ");
             return false;
         }
         return true;

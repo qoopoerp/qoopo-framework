@@ -19,29 +19,29 @@ public class Campo implements Serializable {
     private int tipo = STRING;
     // el nombre que se muestra al usuario
     private String nombre;
-    // el nombre del campo en formato JPA para armar la consulta
-    private String nombreJPA;
+    // el nombre del campo en formato Jpa para armar la consulta
+    private String nombreJpa;
 
     public Campo() {
     }
 
-    public Campo(String nombre, String nombreJPA) {
+    public Campo(String nombre, String nombreJpa) {
         this.nombre = nombre;
-        this.nombreJPA = nombreJPA;
+        this.nombreJpa = nombreJpa;
         tipo = STRING;
     }
 
-    public Campo(int tipo, String nombre, String nombreJPA) {
+    public Campo(int tipo, String nombre, String nombreJpa) {
         this.tipo = tipo;
         this.nombre = nombre;
-        this.nombreJPA = nombreJPA;
+        this.nombreJpa = nombreJpa;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
         hash = 37 * hash + Objects.hashCode(this.nombre);
-        hash = 37 * hash + Objects.hashCode(this.nombreJPA);
+        hash = 37 * hash + Objects.hashCode(this.nombreJpa);
         return hash;
     }
 
@@ -61,7 +61,7 @@ public class Campo implements Serializable {
         if (!Objects.equals(this.nombre, other.nombre)) {
             return false;
         }
-        if (!Objects.equals(this.nombreJPA, other.nombreJPA)) {
+        if (!Objects.equals(this.nombreJpa, other.nombreJpa)) {
             return false;
         }
         return true;
@@ -69,7 +69,7 @@ public class Campo implements Serializable {
 
     @Override
     public String toString() {
-        return "Campo { nombre=" + nombre + ", nombreJPA=" + nombreJPA + '}';
+        return "Campo { nombre=" + nombre + ", nombreJpa=" + nombreJpa + '}';
     }
 
 }

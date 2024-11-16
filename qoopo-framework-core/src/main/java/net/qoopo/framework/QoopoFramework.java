@@ -18,7 +18,7 @@ import net.qoopo.framework.tasks.QoopoTask;
  * 
  * Features:
  * 
- * - Acceso al controlador JPA para el acceso a la base de datos GenericBusiness
+ * - Acceso al controlador Jpa para el acceso a la base de datos GenericBusiness
  * -
  * -
  * 

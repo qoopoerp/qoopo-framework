@@ -5,7 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.qoopo.framework.QoopoFramework;
-import net.qoopo.framework.db.jpa.JpaTransaction;
+import net.qoopo.framework.data.jpa.JpaTransaction;
 import net.qoopo.framework.jpa.daos.FilterDAO;
 import net.qoopo.framework.jpa.filter.Filter;
 import net.qoopo.framework.util.QLogger;

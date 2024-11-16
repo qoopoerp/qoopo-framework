@@ -35,7 +35,7 @@ public abstract class AbstractAuthenticationProcessingFilter extends OncePerRequ
 
     protected SuccessStrategy authenticationSuccessStrategy;
 
-    protected SessionAuthenticationStrategy sessionStrategy = new SimpleAuthenticationSessionStrategy();
+    protected SessionAuthenticationStrategy sessionStrategy = null;
 
     protected AuthenticationManager authenticationManager = null;
 
@@ -62,7 +62,8 @@ public abstract class AbstractAuthenticationProcessingFilter extends OncePerRequ
             // si llega aqui necesita realizar una autenticacion
             Authentication authentication = attemptAuthentication(request, response);
             if (authentication != null && authentication.isAuthenticated()) {
-                sessionStrategy.onAuthentication(authentication, request, response);
+                if (sessionStrategy != null)
+                    sessionStrategy.onAuthentication(authentication, request, response);
                 successfulAuthentication(request, response, chain, authentication);
             } else {
                 unSuccessfulAuthentication(request, response, chain, null);
@@ -126,6 +127,11 @@ public abstract class AbstractAuthenticationProcessingFilter extends OncePerRequ
                 authenticationSuccessStrategy = SecurityConfig.get().getLoginConfigurer()
                         .getSuccesAuthenticationStrategy();
             }
+
+            if (sessionStrategy == null) {
+                sessionStrategy = SecurityConfig.get().getSessionStrategy();
+            }
+
         }
     }
 
@@ -148,6 +154,9 @@ public abstract class AbstractAuthenticationProcessingFilter extends OncePerRequ
         SecurityContextHolder.setContext(context);
         if (authenticationSuccessStrategy != null)
             authenticationSuccessStrategy.onSucess(request, response, chain, authResult);
+
+        chain.doFilter(request, response);
+
     }
 
     /**

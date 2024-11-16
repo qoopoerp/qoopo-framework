@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.qoopo.framework.db.jpa.Parametro;
+import net.qoopo.framework.data.jpa.JpaParameters;
 import net.qoopo.framework.jpa.core.interfaces.Duplicable;
 import net.qoopo.framework.util.QoopoBuilder;
 
@@ -244,53 +244,53 @@ public class Condicion implements Duplicable, Serializable {
         this.siguiente = siguiente;
     }
 
-    public void obtenerParametros(Parametro parametro) {
+    public void obtenerJpaParameterss(JpaParameters jpaParameters) {
         if (this.valor1 != null)
             // switch (this.campo.getTipo()) {
             switch (this.valor1.getTipo()) {
                 case Campo.STRING:
-                    parametro.agregar(this.valor1.getNombre(), this.valor1.getValorString());
+                    jpaParameters.add(this.valor1.getNombre(), this.valor1.getValorString());
                     break;
                 case Campo.BOLEANO:
-                    parametro.agregar(this.valor1.getNombre(), this.valor1.getValorBoolean());
+                    jpaParameters.add(this.valor1.getNombre(), this.valor1.getValorBoolean());
                     break;
                 case Campo.FECHA:
-                    parametro.agregar(this.valor1.getNombre(), this.valor1.getValorFecha());
+                    jpaParameters.add(this.valor1.getNombre(), this.valor1.getValorFecha());
                     break;
                 case Campo.NUMERICO:
-                    parametro.agregar(this.valor1.getNombre(), this.valor1.getValorNumerico());
+                    jpaParameters.add(this.valor1.getNombre(), this.valor1.getValorNumerico());
                     break;
                 case Campo.INTEGER:
-                    parametro.agregar(this.valor1.getNombre(), this.valor1.getValorInteger());
+                    jpaParameters.add(this.valor1.getNombre(), this.valor1.getValorInteger());
                     break;
                 case Campo.LONG:
-                    parametro.agregar(this.valor1.getNombre(), this.valor1.getValorLong());
+                    jpaParameters.add(this.valor1.getNombre(), this.valor1.getValorLong());
                     break;
             }
         if (this.valor2 != null)
             // switch (this.campo.getTipo()) {
             switch (this.valor2.getTipo()) {
                 case Campo.STRING:
-                    parametro.agregar(this.valor2.getNombre(), this.valor2.getValorString());
+                    jpaParameters.add(this.valor2.getNombre(), this.valor2.getValorString());
                     break;
                 case Campo.BOLEANO:
-                    parametro.agregar(this.valor2.getNombre(), this.valor2.getValorBoolean());
+                    jpaParameters.add(this.valor2.getNombre(), this.valor2.getValorBoolean());
                     break;
                 case Campo.FECHA:
-                    parametro.agregar(this.valor2.getNombre(), this.valor2.getValorFecha());
+                    jpaParameters.add(this.valor2.getNombre(), this.valor2.getValorFecha());
                     break;
                 case Campo.NUMERICO:
-                    parametro.agregar(this.valor2.getNombre(), this.valor2.getValorNumerico());
+                    jpaParameters.add(this.valor2.getNombre(), this.valor2.getValorNumerico());
                     break;
                 case Campo.INTEGER:
-                    parametro.agregar(this.valor2.getNombre(), this.valor2.getValorInteger());
+                    jpaParameters.add(this.valor2.getNombre(), this.valor2.getValorInteger());
                     break;
                 case Campo.LONG:
-                    parametro.agregar(this.valor2.getNombre(), this.valor2.getValorLong());
+                    jpaParameters.add(this.valor2.getNombre(), this.valor2.getValorLong());
                     break;
             }
         if (this.siguiente != null)
-            this.siguiente.obtenerParametros(parametro);
+            this.siguiente.obtenerJpaParameterss(jpaParameters);
     }
 
     public String buildQuery() {
@@ -308,15 +308,15 @@ public class Condicion implements Duplicable, Serializable {
                 int nElements = 1;
                 salida.append(" (");
                 if (this.campo != null)
-                    nElements = (this.campo.getNombreJPA().split(",")).length;
+                    nElements = (this.campo.getNombreJpa().split(",")).length;
                 for (int i = 0; i < nElements; i++) {
                     if (this.funcion != null)
                         salida.append(this.funcion.getAntesCampo());
                     if (this.campo != null)
-                        salida.append(this.campo.getNombreJPA().split(",")[i].trim()).append(" ");
+                        salida.append(this.campo.getNombreJpa().split(",")[i].trim()).append(" ");
                     if (this.funcion != null) {
                         salida.append(this.funcion.getDespuesCampo());
-                        salida.append(this.funcion.getNombreJPA()).append(" ");
+                        salida.append(this.funcion.getNombreJpa()).append(" ");
                     }
                     if (this.valor1 != null)
                         salida.append(":").append(this.valor1.getNombre());

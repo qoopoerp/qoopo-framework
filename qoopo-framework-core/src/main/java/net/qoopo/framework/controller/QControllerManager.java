@@ -80,14 +80,14 @@ public final class QControllerManager {
      *
      * @param name
      * @param opcion
-     * @param parametros
+     * @param JpaParameterss
      * @return
      */
-    public static Object run(String name, String opcion, Object... parametros) {
+    public static Object run(String name, String opcion, Object... JpaParameterss) {
         try {
             QController tmp = get(name);
             if (tmp != null) {
-                return tmp.run(opcion, parametros);
+                return tmp.run(opcion, JpaParameterss);
             }
         } catch (Exception ex) {
             log.log(Level.SEVERE, null, ex);
@@ -99,15 +99,15 @@ public final class QControllerManager {
      * Notifica a los observadores que se registraron en un evento
      *
      * @param event
-     * @param parametros
+     * @param JpaParameterss
      */
-    public static void notifyObserver(String event, Object... parametros) {
+    public static void notifyObserver(String event, Object... JpaParameterss) {
         try {
             List<QController> tmp = observers.get(event);
             if (tmp != null && !tmp.isEmpty()) {
                 tmp.forEach(q -> {
                     try {
-                        q.notifyObserver(event, parametros);
+                        q.notifyObserver(event, JpaParameterss);
                     } catch (Exception ex) {
                         Logger.getLogger(QControllerManager.class.getName()).log(Level.SEVERE, null, ex);
                     }

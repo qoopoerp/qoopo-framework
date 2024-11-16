@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
-import net.qoopo.framework.jpa.core.EntidadBase;
+import net.qoopo.framework.jpa.core.AbstractEntity;
 import net.qoopo.framework.jpa.core.interfaces.Agrupable;
 import net.qoopo.framework.models.Columna;
 import net.qoopo.framework.models.OpcionBase;
@@ -59,7 +59,7 @@ public class TreeController implements Serializable {
         this.bean = bean;
     }
 
-    public void seleccionarEditar(EntidadBase objeto) {
+    public void seleccionarEditar(AbstractEntity objeto) {
         try {
             if (bean != null) {
                 bean.edit(objeto);
@@ -69,7 +69,7 @@ public class TreeController implements Serializable {
         }
     }
 
-    public void eliminar(EntidadBase objeto) {
+    public void eliminar(AbstractEntity objeto) {
         try {
             if (bean != null) {
                 bean.delete(objeto);

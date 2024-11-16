@@ -28,10 +28,11 @@ public abstract class HttpRepository<T> {
         HttpSession session = warehouse.getRequest().getSession(allowCreateSession);
         if (session != null) {
             if (SecurityConfig.get().isDebug())
-                log.info("[+] Si existe una sesión, se cuarda el atributo, sesion id=" + session.getId());
+                log.info("[+] Guardando en la sesion id=" + session.getId());
             session.setAttribute(httpAttributeName, context);
         } else {
-            log.info("No existe una sesión no se guarda nada");
+            if (SecurityConfig.get().isDebug())
+                log.info("No se guardó nada");
         }
     }
 
@@ -39,7 +40,7 @@ public abstract class HttpRepository<T> {
         HttpSession session = warehouse.getRequest().getSession(false);
         if (session != null) {
             if (SecurityConfig.get().isDebug())
-                log.info("[+] Si hay una sesión , se carga el atributo, sesión id=" + session.getId());
+                log.info("[+] Cargando de sesión existente id=" + session.getId());
             Object value = session.getAttribute(httpAttributeName);
             if (value != null)
                 return (T) value;
@@ -48,7 +49,7 @@ public abstract class HttpRepository<T> {
                 log.warning("[+] Cargando, no hay una sesion");
         }
         if (SecurityConfig.get().isDebug())
-            log.info("No se carga nada del atributo");
+            log.info("No se cargó nada");
         return null;
     }
 }

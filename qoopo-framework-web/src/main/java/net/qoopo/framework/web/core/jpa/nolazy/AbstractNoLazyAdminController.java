@@ -2,7 +2,7 @@ package net.qoopo.framework.web.core.jpa.nolazy;
 
 import java.util.List;
 
-import net.qoopo.framework.jpa.core.EntidadBase;
+import net.qoopo.framework.jpa.core.AbstractEntity;
 import net.qoopo.framework.jpa.filter.Filter;
 import net.qoopo.framework.jpa.filter.condicion.Campo;
 import net.qoopo.framework.jpa.filter.condicion.Condicion;
@@ -16,7 +16,7 @@ import net.qoopo.framework.web.core.jpa.AbstractAdminController;
  * @author alberto
  * @param <T>
  */
-public abstract class AbstractNoLazyAdminController<T extends EntidadBase> extends AbstractAdminController<T> {
+public abstract class AbstractNoLazyAdminController<T extends AbstractEntity> extends AbstractAdminController<T> {
 
     public AbstractNoLazyAdminController(String entityClassName, Class<T> entityClass, Filter inicial,
             List<Condicion> condicionesDisponibles,

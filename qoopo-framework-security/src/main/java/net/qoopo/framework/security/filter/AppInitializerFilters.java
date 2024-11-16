@@ -8,8 +8,9 @@ import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 import net.qoopo.framework.security.config.SecurityConfig;
+import net.qoopo.framework.security.filter.authentication.BasicHttpAuthenticationFilter;
+import net.qoopo.framework.security.filter.authentication.TokenAuthenticationFilter;
 import net.qoopo.framework.security.filter.authentication.UserPasswordFormAuthenticationFilter;
-import net.qoopo.framework.security.filter.http.BasicHttpAuthenticationFilter;
 
 @WebListener
 public class AppInitializerFilters implements ServletContextListener {
@@ -42,6 +43,11 @@ public class AppInitializerFilters implements ServletContextListener {
                                 "filter_4_BasicAuthenticationFilter",
                                 new BasicHttpAuthenticationFilter());
                 basicHttpFilter.addMappingForUrlPatterns(null, false, "/*");
+
+                FilterRegistration.Dynamic tokenAuthenticationFilter = servletContext.addFilter(
+                                "TokenAuthenticationFilter",
+                                new TokenAuthenticationFilter());
+                tokenAuthenticationFilter.addMappingForUrlPatterns(null, false, "/*");
 
                 FilterRegistration.Dynamic filtro1 = servletContext.addFilter(
                                 "filter_1_securitycontextPersistenceFilter",

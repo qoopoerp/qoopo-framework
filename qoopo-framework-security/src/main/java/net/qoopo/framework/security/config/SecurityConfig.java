@@ -12,6 +12,9 @@ import lombok.Setter;
 import net.qoopo.framework.exception.NullArgumentException;
 import net.qoopo.framework.security.authentication.manager.AuthenticationManager;
 import net.qoopo.framework.security.authentication.provider.AuthenticationProvider;
+import net.qoopo.framework.security.authentication.session.NullAuthenticationSessionStrategy;
+import net.qoopo.framework.security.authentication.session.SessionAuthenticationStrategy;
+import net.qoopo.framework.security.authentication.session.SimpleAuthenticationSessionStrategy;
 import net.qoopo.framework.security.core.encoder.BCryptPasswordEncoder;
 import net.qoopo.framework.security.core.encoder.PasswordEncoder;
 
@@ -31,6 +34,7 @@ public class SecurityConfig {
     private LoginConfigurer loginConfigurer = new LoginConfigurer();
     private AuthorizationConfigurer auhtorizationConfigurer = new AuthorizationConfigurer();
     private TokensProvidersConfigurer tokensProvidersConfigurer = new TokensProvidersConfigurer();
+    protected SessionAuthenticationStrategy sessionStrategy = new SimpleAuthenticationSessionStrategy();
 
     public static final String version = "1.0.0-beta";
 
@@ -140,6 +144,23 @@ public class SecurityConfig {
         if (tokens == null)
             throw new NullArgumentException();
         this.tokensProvidersConfigurer = tokens.apply(tokensProvidersConfigurer);
+        return this;
+    }
+
+    public SecurityConfig sessionStrategy(SessionAuthenticationStrategy strategy) {
+        if (strategy == null)
+            throw new NullArgumentException();
+        sessionStrategy = strategy;
+        return this;
+    }
+
+    public SecurityConfig sessionOnAuthentication() {
+        sessionStrategy = new SimpleAuthenticationSessionStrategy();
+        return this;
+    }
+
+    public SecurityConfig sessionNull() {
+        sessionStrategy = new NullAuthenticationSessionStrategy();
         return this;
     }
 
