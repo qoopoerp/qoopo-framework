@@ -1,10 +1,6 @@
-package net.qoopo.framework.web.core.dto;
+package net.qoopo.framework.web.controller.dto;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,47 +9,29 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.primefaces.event.DragDropEvent;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.ReorderEvent;
 import org.primefaces.event.SelectEvent;
-import org.primefaces.event.schedule.ScheduleEntryMoveEvent;
-import org.primefaces.event.schedule.ScheduleEntryResizeEvent;
 import org.primefaces.event.timeline.TimelineModificationEvent;
 import org.primefaces.event.timeline.TimelineSelectEvent;
 import org.primefaces.model.DefaultScheduleEvent;
-import org.primefaces.model.DefaultScheduleModel;
-import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.ScheduleEvent;
-import org.primefaces.model.ScheduleModel;
-import org.primefaces.model.StreamedContent;
 import org.primefaces.model.timeline.TimelineEvent;
-import org.primefaces.model.timeline.TimelineModel;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.faces.context.FacesContext;
-import jakarta.faces.event.ActionEvent;
-import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
-import net.qoopo.framework.Accion;
 import net.qoopo.framework.QoopoFramework;
-import net.qoopo.framework.data.repository.CrudRepository;
-import net.qoopo.framework.exporter.Exportable;
-import net.qoopo.framework.exporter.Exporter;
 import net.qoopo.framework.exporter.Importer;
-import net.qoopo.framework.exporter.csv.CsvExporter;
-import net.qoopo.framework.exporter.csv.CsvImporter;
-import net.qoopo.framework.exporter.json.JsonExporter;
-import net.qoopo.framework.exporter.json.JsonImporter;
-import net.qoopo.framework.exporter.xls.XlsExporter;
-import net.qoopo.framework.exporter.xls.XlsImporter;
-import net.qoopo.framework.exporter.xlsx.XlsxExporter;
-import net.qoopo.framework.exporter.xlsx.XlsxImporter;
+import net.qoopo.framework.filter.FilterJpaRepository;
+import net.qoopo.framework.filter.core.Filter;
+import net.qoopo.framework.filter.core.condition.Condition;
+import net.qoopo.framework.filter.core.condition.Field;
+import net.qoopo.framework.filter.core.condition.Value;
 import net.qoopo.framework.jpa.core.AbstractEntity;
 import net.qoopo.framework.jpa.core.dtos.DtoBase;
 import net.qoopo.framework.jpa.core.interfaces.Agrupable;
@@ -62,34 +40,15 @@ import net.qoopo.framework.jpa.core.interfaces.CoreMetadata;
 import net.qoopo.framework.jpa.core.interfaces.Eventable;
 import net.qoopo.framework.jpa.core.interfaces.Graficable;
 import net.qoopo.framework.jpa.core.interfaces.Ordenable;
-import net.qoopo.framework.jpa.filter.Filter;
-import net.qoopo.framework.jpa.filter.GeneralFilter;
-import net.qoopo.framework.jpa.filter.condicion.Campo;
-import net.qoopo.framework.jpa.filter.condicion.Condicion;
-import net.qoopo.framework.jpa.filter.condicion.Valor;
-import net.qoopo.framework.lang.LanguageProvider;
 import net.qoopo.framework.models.OpcionBase;
-import net.qoopo.framework.multitenant.MultitenantFilter;
-import net.qoopo.framework.multitenant.TenantProvider;
-import net.qoopo.framework.reports.Reporte;
-import net.qoopo.framework.repository.FilterJpaRepository;
 import net.qoopo.framework.repository.QoopoJpaRepositorySingleton;
 import net.qoopo.framework.util.QLogger;
 import net.qoopo.framework.util.QoopoUtil;
-import net.qoopo.framework.web.AppSessionBeanInterface;
-import net.qoopo.framework.web.ImagenesBean;
-import net.qoopo.framework.web.SecurityContextBean;
-import net.qoopo.framework.web.components.filter.FilterController;
-import net.qoopo.framework.web.components.graph.GraphController;
-import net.qoopo.framework.web.components.kanban.ColumnDragDrop;
 import net.qoopo.framework.web.components.kanban.KanbanColumn;
-import net.qoopo.framework.web.components.nav.NavController;
-import net.qoopo.framework.web.components.tree.TreeController;
 import net.qoopo.framework.web.components.viewoption.ViewOption;
+import net.qoopo.framework.web.controller.entity.AbstractAdminEntityFilteredController;
 import net.qoopo.framework.web.core.interfaces.AdminBeanProgressable;
 import net.qoopo.framework.web.util.FacesUtils;
-import net.qoopo.framework.web.vistas.ChatterInterface;
-import net.qoopo.framework.web.vistas.ReporteBean;
 
 /**
  * Clase de esqueleto de los beans de administración
@@ -100,100 +59,11 @@ import net.qoopo.framework.web.vistas.ReporteBean;
 
 @Getter
 @Setter
-public abstract class AbstractAdminDtoController<S extends AbstractEntity, T extends DtoBase>
-        implements AdminBeanProgressable, Serializable {
-
-    public static final Logger log = Logger.getLogger("Qoopo");
-
-    @Inject
-    protected AppSessionBeanInterface sessionBean;
-
-    @Inject
-    protected SecurityContextBean securityBean;
-
-    @Inject
-    protected TenantProvider tenantProvider;
-
-    @Inject
-    protected LanguageProvider languageProvider;
-
-    @Inject
-    protected ReporteBean reporteBean;
-
-    @Inject
-    protected ImagenesBean imagenesBean;
-
-    protected ChatterInterface chatter;
-
-    protected S objeto = null;
-    protected List<T> listaSeleccionados = new ArrayList<>();
-    protected Iterable<T> data = new ArrayList<>(); // en los beans que tienen carga diferida, este corresponde a los
-    // datos que se muestran actualmente
-    protected List<KanbanColumn> columnas = new ArrayList<>(); // para la vista de kanban
-    protected ColumnDragDrop columnDragDrop = new ColumnDragDrop();
-    protected boolean editando;
-    protected FilterController filter;
-    protected ScheduleModel eventModel = new DefaultScheduleModel();
-    protected ScheduleEvent event = new DefaultScheduleEvent<>();
-    protected TimelineModel<T, Object> timeLineModel = new TimelineModel<>();
-    protected TimelineEvent<T> eventTimeLine;
-    protected LocalDateTime timeLineStart;
-    protected LocalDateTime timeLineEnd;
-    protected transient Reporte reporte;
-    protected transient StreamedContent contenidoExportar;
-    protected transient InputStream inputArchivoImport;
-    protected GraphController<T> graph = null;
-    protected TreeController tree = null;
-    protected int count;
-    protected Integer progress;
-    protected String progressStatus;
-
-    // indica si se puede archivar, como una factura no tiene sentido archivarls
-    protected boolean canArchive = true;
-
-    protected Exporter exporter = new CsvExporter();
-
-    protected Importer importer = new CsvImporter();
-
-    protected int importerType = 1;
-    /**
-     * Se puede establecer el nombre del archivo a exportar, en caso de no definirlo
-     * se usa el nombre de la clase de la entidad
-     */
-    protected String exportedNameFile = null;
-    protected int exporterType = 1;
-
-    /**
-     * El nombre de la clase Jpa de la entidad a administra. Es el classname de T,
-     * el cual no puede ser obtenido antes de tener datos, pero es necesario en el
-     * momento de buildFilter, antes de cargar los datos
-     */
-    protected String entityClassName = "";
-
-    protected final Class<S> entityClass;
-
-    /**
-     * Los campos que van a estar disponibles en el filtro
-     */
-    protected List<Campo> campos = new ArrayList<>();
-
-    protected final List<OpcionBase> opcionesGrupos = new ArrayList<>();
-
-    protected final List<Condicion> condicionesDisponibles = new ArrayList<>();
-
-    protected Filter inicial = null;
-
-    protected Condicion condicionFija = null;
-
-    protected String filterName = "";
+public abstract class AbstractAdminFilteredDtoController<S extends AbstractEntity, T extends DtoBase>
+        extends AbstractAdminEntityFilteredController<S, T, Long>
+        implements AdminBeanProgressable {
 
     protected boolean entitiesLoaded = false;
-
-    protected boolean masivo = false;
-
-    protected FilterJpaRepository<T> filterRepository;
-
-    protected CrudRepository<S, Long> repository;
 
     /**
      * Transforma el campo del dto al campo de la entidad para agregar en el sortby
@@ -204,94 +74,20 @@ public abstract class AbstractAdminDtoController<S extends AbstractEntity, T ext
         return field;
     }
 
-    protected NavController nav = new NavController(new Accion() {
-        @Override
-        public Object ejecutar(Object... JpaParameterss) {
-            seleccionar((Integer) JpaParameterss[0]);
-            return null;
-        }
-    }, new Accion() {
-        @Override
-        public Object ejecutar(Object... JpaParameterss) {
-            return getTotal();
-        }
-    });
-    /**
-     * Accion que se ejecuta en los filtros, predeterminado cargar lista
-     */
-    protected Accion accion = new Accion() {
-        @Override
-        public Object ejecutar(Object... JpaParameterss) {
-            loadData();
-            if (sessionBean != null && viewOption != null) {
-                sessionBean.addUrlParam("view", viewOption.getStringValue());
-            }
-            return null;
-        }
-    };
-
-    protected final ViewOption viewOption = new ViewOption(accion);
-
-    /**
-     * Accion que se ejecuta para la actualizacion del valor de progress
-     *
-     * Ejemplo de uso new Thread(() -> {
-     * InventarioQuants.calculateQuants(empresa, accionUpdateProgress);
-     * }).start();
-     */
-    protected Accion accionUpdateProgress = new Accion() {
-        @Override
-        public Object ejecutar(Object... JpaParameterss) {
-            setProgress((Integer) JpaParameterss[0]);
-            if (JpaParameterss.length > 1) {
-                setProgressStatus((String) JpaParameterss[1]);
-            }
-            return (Integer) JpaParameterss[0];
-        }
-    };
-
-    public AbstractAdminDtoController(String entityClassName, Class<S> entityClass, Filter inicial,
-            List<Condicion> condicionesDisponibles,
-            List<Campo> campos,
+    public AbstractAdminFilteredDtoController(String entityClassName, Class<T> entityClass, Filter inicial,
+            List<Condition> condicionesDisponibles,
+            List<Field> campos,
             List<OpcionBase> opcionesGrupos) {
-        this.entityClassName = entityClassName;
+        super(entityClassName, entityClass);
         this.inicial = inicial;
         this.campos.addAll(campos);
         this.opcionesGrupos.addAll(opcionesGrupos);
         this.condicionesDisponibles.addAll(condicionesDisponibles);
-        this.entityClass = entityClass;
+        setFilterRepository(new FilterJpaRepository<>(QoopoFramework.get().getDataSourceName(), entityClass));
         log.info("AdminDtoabstractClass ->" + entityClassName);
     }
 
-    protected abstract void initChatter();
-
-    public abstract void initObjeto();
-
-    public abstract void loadData();
-
-    public abstract int getTotal();
-
-    public boolean validateDelete(AbstractEntity item) {
-        return true;
-    }
-
-    public boolean validateArchive(AbstractEntity item) {
-        return true;
-    }
-
-    public void postDelete(AbstractEntity item) {
-        //
-    }
-
-    @PostConstruct
-    public void postConstruct() {
-        graph = new GraphController<T>(languageProvider);
-        tree = new TreeController();
-        initChatter();
-        // chatter = new Chatter(sessionBean, languageProvider);
-    }
-
-    public void procesarJpaParameters() {
+    public void procesarParametro() {
         try {
             String filterValueTmp = "";
             if (FacesUtils.getRequestParameter("filterValue") != null) {
@@ -302,34 +98,34 @@ public abstract class AbstractAdminDtoController<S extends AbstractEntity, T ext
                 filterName = FacesUtils.getRequestParameter("filter");
                 if (condicionesDisponibles != null && !condicionesDisponibles.isEmpty()) {
                     condicionesDisponibles.stream()
-                            .filter(c -> c.getNombre().equals(filterName))
+                            .filter(c -> c.getName().equals(filterName))
                             .collect(Collectors.toList())
                             .forEach(c1 -> {
-                                Condicion c2 = c1.clonar();
+                                Condition c2 = c1.clonar();
                                 if (filterValue != null && !filterValue.isEmpty()) {
-                                    switch (c2.getCampo().getTipo()) {
-                                        case Campo.INTEGER:
-                                            c2.setValor1(new Valor(Integer.valueOf(filterValue)));
+                                    switch (c2.getField().getTipo()) {
+                                        case Field.INTEGER:
+                                            c2.setValue(new Value(Integer.valueOf(filterValue)));
                                             break;
-                                        case Campo.LONG:
-                                            c2.setValor1(new Valor(Long.valueOf(filterValue)));
+                                        case Field.LONG:
+                                            c2.setValue(new Value(Long.valueOf(filterValue)));
                                             break;
-                                        case Campo.BOLEANO:
-                                            c2.setValor1(new Valor(Boolean.valueOf(filterValue)));
+                                        case Field.BOLEANO:
+                                            c2.setValue(new Value(Boolean.valueOf(filterValue)));
                                             break;
-                                        case Campo.NUMERICO:
-                                            c2.setValor1(new Valor(new BigDecimal(filterValue)));
+                                        case Field.NUMERICO:
+                                            c2.setValue(new Value(new BigDecimal(filterValue)));
                                             break;
-                                        case Campo.FECHA:
-                                            c2.setValor1(new Valor(
+                                        case Field.FECHA:
+                                            c2.setValue(new Value(
                                                     LocalDateTime.from(QoopoUtil.getSDF().parse(filterValue))));
                                             break;
-                                        case Campo.STRING:
+                                        case Field.STRING:
                                         default:
-                                            c2.setValor1(new Valor(filterValue));
+                                            c2.setValue(new Value(filterValue));
                                             break;
                                     }
-                                    c2.setNombre(filterName + " = " + filterValue);
+                                    c2.setName(filterName + " = " + filterValue);
                                     log.info("[+] cambiando valor del filtro " + filterName + " a " + filterValue);
                                 }
                                 // filter.limpiar();
@@ -356,65 +152,6 @@ public abstract class AbstractAdminDtoController<S extends AbstractEntity, T ext
         }
     }
 
-    public void clonar() {
-        try {
-            S temp = (S) objeto.clonar();
-            if (objeto instanceof Auditable) {
-                if (((Auditable) temp).getMetadato() == null) {
-                    ((Auditable) temp).setMetadato(sessionBean.addEvent(((Auditable) temp).getMetadato(),
-                            "Clonado de " + objeto.toString()));
-                }
-                chatter.saveProperties();
-            }
-            nuevo();
-            this.objeto = temp;
-        } catch (Exception e) {
-            FacesUtils.addErrorMessage(languageProvider.getTextValue(1649));
-        }
-    }
-
-    /**
-     * Configura los filtros genericos en caso que no se definan personalizaciones
-     */
-    public void buildFilter() {
-        try {
-            Filter _inicial = null;
-
-            if (this.inicial == null)
-                _inicial = GeneralFilter.all(entityClassName);
-            else
-                _inicial = inicial;
-
-            Condicion alwaysCondition = null;
-
-            if (this.condicionFija != null)
-                alwaysCondition = this.condicionFija;
-            else {
-                if (QoopoFramework.get().getMultitenantConfigurer().isEnabled())
-                    alwaysCondition = MultitenantFilter.tenantCondition(
-                            tenantProvider.getTenantId());
-            }
-
-            filter = new FilterController(_inicial, alwaysCondition, campos,
-                    this.opcionesGrupos,
-                    accion);
-
-            if (condicionesDisponibles != null && !condicionesDisponibles.isEmpty()) {
-                condicionesDisponibles.forEach(c -> filter.agregarCondicionDisponible(c));
-            }
-            if (canArchive) {
-                filter.agregarCondicionDisponible(GeneralFilter.condicionActivo());
-                filter.agregarCondicionDisponible(GeneralFilter.condicionArchivado());
-            }
-            filter.seleccionarFiltroOnly(_inicial);
-            if (canArchive)
-                filter.agregarCondicion(GeneralFilter.condicionActivo()); // muestra inicialmente los no archivados
-            filter.procesar();// esta linea termina llamando al metodo loadData
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * Obliga a cargar las entidades de los DTO
      */
@@ -428,19 +165,8 @@ public abstract class AbstractAdminDtoController<S extends AbstractEntity, T ext
     }
 
     protected void loadData(Iterable<T> data) {
-        if (listaSeleccionados != null)
-            listaSeleccionados.clear();
-        long tInicio = System.currentTimeMillis();
         entitiesLoaded = false;
-        setData(data);
-        loadEvents(data);
-        loadGraph(data);
-        loadTree(data);
-        loadKanban(data);
-        loadTimeLine(data);
-        // actualizo el JpaParameters del view
-        sessionBean.addUrlParam("view", viewOption.getStringValue());
-        log.info("[+] load data [" + QLogger.getTimeFormater(System.currentTimeMillis() - tInicio));
+        super.loadData(data);
     }
 
     /**
@@ -451,6 +177,7 @@ public abstract class AbstractAdminDtoController<S extends AbstractEntity, T ext
      * 
      * @param data
      */
+    @Override
     public void loadKanban(Iterable<T> data) {
         // vista kanban
         this.columnas.clear();
@@ -504,7 +231,8 @@ public abstract class AbstractAdminDtoController<S extends AbstractEntity, T ext
      *
      * @param lista
      */
-    private void loadEvents(Iterable<T> lista) {
+    @Override
+    protected void loadEvents(Iterable<T> lista) {
         try {
             eventModel.clear();
             if (viewOption.getValue() == ViewOption.CALENDAR && lista != null) {
@@ -539,7 +267,8 @@ public abstract class AbstractAdminDtoController<S extends AbstractEntity, T ext
      *
      * @param lista
      */
-    private void loadTree(Iterable<T> lista) {
+    @Override
+    protected void loadTree(Iterable<T> lista) {
         try {
             if (viewOption.getValue() == ViewOption.LIST) {
                 // tree.setDatos(lista);
@@ -556,7 +285,8 @@ public abstract class AbstractAdminDtoController<S extends AbstractEntity, T ext
      *
      * @param lista
      */
-    private void loadGraph(Iterable<T> lista) {
+    @Override
+    protected void loadGraph(Iterable<T> lista) {
         try {
             this.graph.clear();
             if (viewOption.getValue() == ViewOption.GRAPH) {
@@ -577,7 +307,8 @@ public abstract class AbstractAdminDtoController<S extends AbstractEntity, T ext
      *
      * @param lista
      */
-    private TimelineEvent createTimeLineEvent(Eventable ob, String grupo) {
+    @Override
+    protected TimelineEvent createTimeLineEvent(Eventable ob, String grupo) {
         TimelineEvent event = TimelineEvent.builder()
                 .data(ob)
                 // .data(ob.getEventoNombre())
@@ -592,7 +323,8 @@ public abstract class AbstractAdminDtoController<S extends AbstractEntity, T ext
         return event;
     }
 
-    private void loadTimeLine(Iterable<T> lista) {
+    @Override
+    protected void loadTimeLine(Iterable<T> lista) {
         try {
             timeLineModel.clear();
             if (viewOption.getValue() == ViewOption.TIMELINE && lista != null) {
@@ -655,15 +387,12 @@ public abstract class AbstractAdminDtoController<S extends AbstractEntity, T ext
                         }
                     }
                 }
-                repository.delete(item);
-                postDelete(item);
-                loadData();
-                FacesUtils.addInfoMessage(languageProvider.getTextValue(22));
+                super.delete(item);
                 // en caso de estar mostrando el objeto, debe regresar a la vista default
                 viewOption.reset();
             }
         } catch (Exception ex) {
-            FacesUtils.addErrorMessage(languageProvider.getTextValue(20) + ex.getMessage());
+            FacesUtils.addErrorMessage(languageProvider.getTextValue("common.error") + ": " + ex.getMessage());
             log.log(Level.SEVERE, ex.getMessage(), ex);
         }
     }
@@ -692,62 +421,15 @@ public abstract class AbstractAdminDtoController<S extends AbstractEntity, T ext
                         }
                     }
                 }
-                repository.delete(objeto);
-                postDelete(objeto);
-                loadData();
+                super.delete();
                 if (nav.getActual() >= getTotal()) {
                     nav.setActual(getTotal() - 1);
                 }
                 seleccionar(nav.getActual());
-                FacesUtils.addInfoMessage(languageProvider.getTextValue(22));
                 viewOption.reset();
             }
         } catch (Exception ex) {
-            FacesUtils.addErrorMessage(languageProvider.getTextValue(20) + ex.getMessage());
-            log.log(Level.SEVERE, ex.getMessage(), ex);
-        }
-    }
-
-    /**
-     * Metodo que archiva el registro abierto
-     */
-    public void archive() {
-        try {
-            if (validateArchive(objeto)) {
-                objeto.setArchived(true);
-                if (objeto instanceof Auditable) {
-                    // solo agrega un metadato en caso que no exista uno
-                    if (((Auditable) objeto).getMetadato() == null) {
-                        ((Auditable) objeto).setMetadato(sessionBean.addEvent(((Auditable) objeto).getMetadato(),
-                                "Archivado"));
-                    }
-                    chatter.saveProperties();
-                }
-                update();
-            }
-        } catch (Exception ex) {
-            FacesUtils.addErrorMessage(languageProvider.getTextValue(20) + ex.getMessage());
-            log.log(Level.SEVERE, ex.getMessage(), ex);
-        }
-    }
-
-    /**
-     * Metodo que des-archiva el registro abierto
-     */
-    public void unarchive() {
-        try {
-            objeto.setArchived(false);
-            if (objeto instanceof Auditable) {
-                // solo agrega un metadato en caso que no exista uno
-                if (((Auditable) objeto).getMetadato() == null) {
-                    ((Auditable) objeto).setMetadato(sessionBean.addEvent(((Auditable) objeto).getMetadato(),
-                            "Desarchivado"));
-                }
-                chatter.saveProperties();
-            }
-            update();
-        } catch (Exception ex) {
-            FacesUtils.addErrorMessage(languageProvider.getTextValue(20) + ex.getMessage());
+            FacesUtils.addErrorMessage(languageProvider.getTextValue("common.error") + ": " + ex.getMessage());
             log.log(Level.SEVERE, ex.getMessage(), ex);
         }
     }
@@ -761,8 +443,7 @@ public abstract class AbstractAdminDtoController<S extends AbstractEntity, T ext
                 ((Auditable) objeto).setMetadato(sessionBean.addCreatedEvent(((Auditable) objeto).getMetadato()));
                 chatter.saveProperties();
             }
-            objeto = (S) repository.save(objeto);
-            loadData();
+            super.save();
             editItem(objeto);
         } catch (Exception ex) {
             FacesUtils.addErrorMessage(ex);
@@ -784,35 +465,16 @@ public abstract class AbstractAdminDtoController<S extends AbstractEntity, T ext
                 chatter.saveProperties(false); // ya no guarda los metadatos pues se guardan en cascada con el edit
                                                // siguiente a esta linea
             }
-            objeto = (S) repository.save(objeto);
-            // loadData();
-            Optional<S> tmp = repository.find(objeto.getId());
-            if (tmp.isPresent())
-                objeto = tmp.get();
-            else
-                log.severe("no se encontro el objeto deespues de actualizar");
+            super.save();
+            // Optional<S> tmp = repository.find(objeto.getId());
+            // if (tmp.isPresent())
+            // objeto = tmp.get();
+            // else
+            // log.severe("no se encontro el objeto deespues de actualizar");
             editItem(objeto);
         } catch (Exception ex) {
             FacesUtils.addErrorMessage(ex.getMessage());
             log.log(Level.SEVERE, ex.getMessage(), ex);
-        }
-    }
-
-    /**
-     * Método que debe ser llamado cuando se presione el botón "Crear" de las
-     * plantillas
-     */
-    public void nuevo() {
-        log.info("dto call new -> " + entityClassName);
-        initObjeto();
-        sessionBean.removeUrlParam("id");
-        viewOption.setValue(ViewOption.FORM);
-        sessionBean.addUrlParam("view", "form");
-        editando = false;
-        if (objeto instanceof Auditable) {
-            chatter.mostrar(((Auditable) objeto).getMetadato(), (Auditable) objeto);
-        } else {
-            chatter.mostrar(null, null);
         }
     }
 
@@ -875,14 +537,15 @@ public abstract class AbstractAdminDtoController<S extends AbstractEntity, T ext
      * @param item
      */
     public void editItem(S item) {
+        super.edit(item);
+
         log.info("editItem ->" + entityClassName + " -> " + item);
         // cambio la url para mostrar el id actual
         if (item != null && !masivo) {
             sessionBean.addUrlParam("id", String.valueOf(item.getId()));
             sessionBean.addUrlParam("view", "form");
         }
-        setObjeto(item);
-        editando = true;
+
         if (!masivo)
             viewOption.setValue(ViewOption.FORM);
         if (chatter != null) {
@@ -904,131 +567,6 @@ public abstract class AbstractAdminDtoController<S extends AbstractEntity, T ext
         } else {
             log.severe("EL BEAN DEL METADATOS ESTA NULO !!!");
         }
-    }
-
-    /**
-     * Método interno usado por los botones de navegación (anterior, siguiente,
-     * etc)
-     *
-     * @param indice
-     */
-    public abstract void seleccionar(int indice);
-
-    /**
-     * Devuelve la lista de los objetos seleccionados
-     *
-     * @return
-     */
-    public List<T> getListaSeleccionados() {
-        return listaSeleccionados;
-    }
-
-    /**
-     * Recibe la lista de los objetos seleccionados
-     *
-     * @param listaSeleccionados
-     */
-    public void setListaSeleccionados(List<T> listaSeleccionados) {
-        this.listaSeleccionados = listaSeleccionados;
-    }
-
-    /**
-     * Devuelve el objeto, si no se ha seleccionado ningún devuelve el primer
-     * objeto de la lista, si no hay una lista crea un nuevo objeto listo para
-     * ser guardado
-     *
-     * @return
-     */
-    public S getObjeto() {
-        if (objeto == null) {
-            if (getTotal() > 0) {
-                this.seleccionar(1);
-            } else {
-                this.initObjeto();
-            }
-        }
-        return objeto;
-    }
-
-    /**
-     * Setea el objeto, solo uso interno, se debe usar edit para ser llamado
-     * externamente
-     *
-     * @param objeto
-     */
-    public void setObjeto(S objeto) {
-        this.objeto = objeto;
-    }
-
-    /**
-     * Devuelve el procesado de filtros
-     *
-     * @return
-     */
-    public FilterController getFilter() {
-        return filter;
-    }
-
-    /**
-     * Recibe el procesador de filtros
-     *
-     * @param filter
-     */
-    public void setFilter(FilterController filter) {
-        this.filter = filter;
-
-    }
-
-    public Reporte getReporte() {
-        return reporte;
-    }
-
-    public void setReporte(Reporte reporte) {
-        this.reporte = reporte;
-    }
-
-    public boolean isEditando() {
-        return editando;
-    }
-
-    public void setEditando(boolean editando) {
-        this.editando = editando;
-    }
-
-    public ScheduleModel getEventModel() {
-        return eventModel;
-    }
-
-    public void setEventModel(ScheduleModel eventModel) {
-        this.eventModel = eventModel;
-    }
-
-    public ScheduleEvent getEvent() {
-        return event;
-    }
-
-    public void setEvent(ScheduleEvent event) {
-        this.event = event;
-    }
-
-    public void addEvent(ActionEvent actionEvent) {
-        if (event.getId() == null) {
-            eventModel.addEvent(event);
-        } else {
-            eventModel.updateEvent(event);
-        }
-        event = new DefaultScheduleEvent<>();
-    }
-
-    public void onDateSelect(SelectEvent selectEvent) {
-
-        // DefaultScheduleEvent.builder().
-        DefaultScheduleEvent _event = DefaultScheduleEvent.builder()
-                .title("")
-                .startDate((LocalDateTime) selectEvent.getObject())
-                .endDate((LocalDateTime) selectEvent.getObject())
-                .build();
-        event = _event;
     }
 
     public void onEventSelect(SelectEvent selectEvent) {
@@ -1063,91 +601,9 @@ public abstract class AbstractAdminDtoController<S extends AbstractEntity, T ext
         }
     }
 
-    public void onEventMove(ScheduleEntryMoveEvent event) {
-        //
-    }
-
-    public void onEventResize(ScheduleEntryResizeEvent event) {
-        //
-    }
-
-    public void updateExporter() {
-        log.info("actualizando exporter " + exporterType);
-        switch (exporterType) {
-            case 1:
-                exporter = new CsvExporter();
-                break;
-            case 2:
-                exporter = new XlsExporter();
-                break;
-            case 3:
-                exporter = new XlsxExporter();
-                break;
-            case 4:
-                exporter = new JsonExporter();
-                break;
-        }
-    }
-
-    public void updateImporter() {
-        log.info("actualizando importer " + importerType);
-        switch (importerType) {
-            case 1:
-                importer = new CsvImporter();
-                break;
-            case 2:
-                importer = new XlsImporter();
-                break;
-            case 3:
-                importer = new XlsxImporter();
-                break;
-            case 4:
-                importer = new JsonImporter();
-                break;
-        }
-    }
-
     public void exportar() {
-        log.warning("[!] Exportando [" + getClass().getName() + "]");
-        try {
-            loadEntities();
-            String fileName = null;
-            if (exportedNameFile != null)
-                fileName = exportedNameFile;
-            else
-                fileName = data.iterator().next().getClass().getSimpleName();
-            exportar(exporter, data, fileName);
-        } catch (Exception ex) {
-            FacesUtils.addErrorMessage("Error al exportar " + ex.getMessage());
-            log.log(Level.SEVERE, ex.getMessage(), ex);
-        }
-    }
-
-    public void exportar(Exporter exporter, Iterable<T> data, String nombre) {
-        try {
-            exporter.clear();
-            byte[] datos;
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            exporter.setOutputExporter(bos);
-            for (Object oitem : data) {
-                if (oitem instanceof Exportable) {
-                    Exportable item = (Exportable) oitem;
-                    exporter.startItem();
-                    item.exportar(exporter);
-                    exporter.endItem();
-                }
-            }
-            exporter.exportar();
-            datos = bos.toByteArray();
-            bos.close();
-            InputStream is = new ByteArrayInputStream(datos);
-            contenidoExportar = DefaultStreamedContent.builder().contentType(exporter.getMimetype())
-                    .name(nombre + exporter.getExtension())
-                    .stream(() -> is).build();
-        } catch (Exception ex) {
-            FacesUtils.addErrorMessage("Error al exportar " + ex.getMessage());
-            log.log(Level.SEVERE, ex.getMessage(), ex);
-        }
+        loadEntities();
+        super.exportar();
     }
 
     /**

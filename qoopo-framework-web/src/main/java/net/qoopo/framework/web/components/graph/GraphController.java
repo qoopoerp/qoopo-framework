@@ -17,7 +17,7 @@ import net.qoopo.framework.jpa.core.AbstractEntity;
 import net.qoopo.framework.jpa.core.interfaces.Graficable;
 import net.qoopo.framework.lang.LanguageProvider;
 import net.qoopo.framework.models.OpcionBase;
-import net.qoopo.framework.web.core.jpa.AbstractAdminController;
+import net.qoopo.framework.web.controller.entity.AbstractAdminFilteredController;
 
 /**
  * Este controller maneja la vista de Graficos de todos los modulos
@@ -65,8 +65,8 @@ public class GraphController<T extends AbstractEntity> implements Serializable {
     public void cargarDatos(Object bean) {
         try {
             if (bean != null) {
-                if (bean instanceof AbstractAdminController) {
-                    AbstractAdminController<T> mBean = (AbstractAdminController<T>) bean;
+                if (bean instanceof AbstractAdminFilteredController) {
+                    AbstractAdminFilteredController<T> mBean = (AbstractAdminFilteredController<T>) bean;
                     setDatos(mBean.getData());
                     recargar();
                 }

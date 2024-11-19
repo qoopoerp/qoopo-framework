@@ -1,4 +1,4 @@
-package net.qoopo.framework.web.core.dto.lazy;
+package net.qoopo.framework.web.controller.entity.lazy;
 
 import java.util.List;
 import java.util.Map;
@@ -10,14 +10,13 @@ import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
 
+import net.qoopo.framework.filter.core.Filter;
+import net.qoopo.framework.filter.core.condition.Condition;
+import net.qoopo.framework.filter.core.condition.Field;
 import net.qoopo.framework.jpa.core.AbstractEntity;
-import net.qoopo.framework.jpa.core.dtos.DtoBase;
-import net.qoopo.framework.jpa.filter.Filter;
-import net.qoopo.framework.jpa.filter.condicion.Campo;
-import net.qoopo.framework.jpa.filter.condicion.Condicion;
 import net.qoopo.framework.models.OpcionBase;
 import net.qoopo.framework.web.components.viewoption.ViewOption;
-import net.qoopo.framework.web.core.dto.AbstractAdminDtoController;
+import net.qoopo.framework.web.controller.entity.AbstractAdminFilteredController;
 import net.qoopo.framework.web.util.FacesUtils;
 
 /**
@@ -27,12 +26,11 @@ import net.qoopo.framework.web.util.FacesUtils;
  * @author alberto
  * @param <T>
  */
-public abstract class AbstractLazyAdminDtoController<S extends AbstractEntity, T extends DtoBase>
-        extends AbstractAdminDtoController<S, T> {
+public abstract class AbstractLazyAdminController<T extends AbstractEntity> extends AbstractAdminFilteredController<T> {
 
-    public AbstractLazyAdminDtoController(String entityClassName, Class<S> entityClass, Filter inicial,
-            List<Condicion> condicionesDisponibles,
-            List<Campo> campos, List<OpcionBase> opcionesGrupos) {
+    public AbstractLazyAdminController(String entityClassName, Class<T> entityClass, Filter inicial,
+            List<Condition> condicionesDisponibles,
+            List<Field> campos, List<OpcionBase> opcionesGrupos) {
         super(entityClassName, entityClass, inicial, condicionesDisponibles, campos, opcionesGrupos);
     }
 
@@ -62,11 +60,12 @@ public abstract class AbstractLazyAdminDtoController<S extends AbstractEntity, T
                             @Override
                             public List<T> load(int first, int pageSize, Map<String, SortMeta> sortBy,
                                     Map<String, FilterMeta> filterBy) {
-                                String posterior = filter.getFiltro().getPosterior();
+                                String posterior = filter.getFiltro().getNext();
+                                // Ordenamiento
                                 if (sortBy != null && !sortBy.isEmpty()) {
                                     posterior = " order by ";
                                     for (SortMeta meta : sortBy.values()) {
-                                        posterior += " o." + getSortField(meta.getField()) + " "
+                                        posterior += " o." + meta.getField() + " "
                                                 + (SortOrder.ASCENDING.equals(meta.getOrder()) ? " asc " : " desc ");
                                     }
                                     // como cambio el orden enfuncion de las columnas y es un order by completo,
@@ -77,39 +76,39 @@ public abstract class AbstractLazyAdminDtoController<S extends AbstractEntity, T
                                 // if (filterBy != null) {
                                 // filter.getFiltro().setCondicion(null);
                                 // for (FilterMeta meta : filterBy.values()) {
-                                // filter.getFiltro().agregarCondicion(Condicion.build(new
-                                // Campo(meta.getFilterField(), "o." + meta.getFilterField()), Funcion.CONTIENE,
+                                // filter.getFiltro().appendCondition(Condition.build(new
+                                // Field(meta.getFilterField(), "o." + meta.getFilterField()), Funcion.CONTIENE,
                                 // new Valor("val", "%" + (String) meta.getFilterValue() + "%")),
-                                // Condicion.AND);
+                                // Condition.AND);
                                 // }
                                 // }
-                                filter.getFiltro().setPosterior(posterior);
+                                filter.getFiltro().setNext(posterior);
                                 if (listaSeleccionados != null)
                                     listaSeleccionados.clear();
-                                return filterRepository.filtrar(filter.getFiltro(), first, pageSize);
+                                return filterRepository.apply(filter.getFiltro(), first, pageSize);
                             }
 
                             @Override
                             public int count(Map<String, FilterMeta> map) {
-                                return filterRepository.filtrarCount(filter.getFiltro()).intValue();
+                                return filterRepository.applyCount(filter.getFiltro()).intValue();
                             }
                         };
                     }
-                    lista.setRowCount(filterRepository.filtrarCount(filter.getFiltro()).intValue());
+                    lista.setRowCount(filterRepository.applyCount(filter.getFiltro()).intValue());
                     setData(lista.getWrappedData());// la data para poder exportar la pagina actual
+                    // super.loadData(lista); //carga la data para las otras vistas
                     break;
                 case ViewOption.GRID:
                 case ViewOption.GRAPH:
                 case ViewOption.FORM:
                 case ViewOption.CALENDAR:
                 case ViewOption.TIMELINE:
-                    super.loadData(filterRepository.filtrar(filter.getFiltro()));
+                    super.loadData(filterRepository.apply(filter.getFiltro()));
                     break;
             }
         } catch (Exception ex) {
             FacesUtils.addErrorMessage(ex);
-            ex.printStackTrace();
-            Logger.getLogger(AbstractLazyAdminDtoController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AbstractLazyAdminController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

@@ -1,13 +1,13 @@
-package net.qoopo.framework.web.core.jpa.nolazy;
+package net.qoopo.framework.web.controller.entity.nolazy;
 
 import java.util.List;
 
+import net.qoopo.framework.filter.core.Filter;
+import net.qoopo.framework.filter.core.condition.Condition;
+import net.qoopo.framework.filter.core.condition.Field;
 import net.qoopo.framework.jpa.core.AbstractEntity;
-import net.qoopo.framework.jpa.filter.Filter;
-import net.qoopo.framework.jpa.filter.condicion.Campo;
-import net.qoopo.framework.jpa.filter.condicion.Condicion;
 import net.qoopo.framework.models.OpcionBase;
-import net.qoopo.framework.web.core.jpa.AbstractAdminController;
+import net.qoopo.framework.web.controller.entity.AbstractAdminFilteredController;
 
 /**
  * Clase de esqueleto de los beans de administración que no manejan los datos
@@ -16,11 +16,11 @@ import net.qoopo.framework.web.core.jpa.AbstractAdminController;
  * @author alberto
  * @param <T>
  */
-public abstract class AbstractNoLazyAdminController<T extends AbstractEntity> extends AbstractAdminController<T> {
+public abstract class AbstractNoLazyAdminController<T extends AbstractEntity> extends AbstractAdminFilteredController<T> {
 
     public AbstractNoLazyAdminController(String entityClassName, Class<T> entityClass, Filter inicial,
-            List<Condicion> condicionesDisponibles,
-            List<Campo> campos, List<OpcionBase> opcionesGrupos) {
+            List<Condition> condicionesDisponibles,
+            List<Field> campos, List<OpcionBase> opcionesGrupos) {
         super(entityClassName, entityClass, inicial, condicionesDisponibles, campos, opcionesGrupos);
     }
 
@@ -94,9 +94,8 @@ public abstract class AbstractNoLazyAdminController<T extends AbstractEntity> ex
      * implementaciones
      */
     public void loadData() {
-        setLista(filterRepository.filtrar(filter.getFiltro()));
-        listaSeleccionados.clear();
-        // QoopoUtil.launchErrorTrace();
+        setLista(filterRepository.apply(filter.getFiltro()));
+        listaSeleccionados.clear();        
     }
 
 }

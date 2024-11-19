@@ -15,7 +15,7 @@ import net.qoopo.framework.jpa.core.AbstractEntity;
 import net.qoopo.framework.jpa.core.interfaces.Agrupable;
 import net.qoopo.framework.models.Columna;
 import net.qoopo.framework.models.OpcionBase;
-import net.qoopo.framework.web.core.jpa.AbstractAdminController;
+import net.qoopo.framework.web.controller.entity.AbstractAdminFilteredController;
 
 /**
  * Este bean maneja la vista de Graficos de todos los modulos
@@ -37,7 +37,7 @@ public class TreeController implements Serializable {
     private List<Columna> columnas = new ArrayList<>();
     private Iterable datos;
     private boolean opcionesCargadas = false;
-    protected AbstractAdminController bean;// el bean que llama al metodo
+    protected AbstractAdminFilteredController bean;// el bean que llama al metodo
 
     public TreeController() {
         // constructor
@@ -51,11 +51,11 @@ public class TreeController implements Serializable {
         this.datos = datos;
     }
 
-    public AbstractAdminController getBean() {
+    public AbstractAdminFilteredController getBean() {
         return bean;
     }
 
-    public void setBean(AbstractAdminController bean) {
+    public void setBean(AbstractAdminFilteredController bean) {
         this.bean = bean;
     }
 

@@ -29,6 +29,21 @@
         </dependency>
         <dependency>
             <groupId>net.qoopo</groupId>
+            <artifactId>qoopo-framework-exporter-csv</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.qoopo</groupId>
+            <artifactId>qoopo-framework-exporter-xls</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.qoopo</groupId>
+            <artifactId>qoopo-framework-exporter-json</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.qoopo</groupId>
             <artifactId>qoopo-framework-security</artifactId>
             <version>1.0.0</version>
         </dependency>

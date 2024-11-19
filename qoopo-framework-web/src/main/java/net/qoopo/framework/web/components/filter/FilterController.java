@@ -12,16 +12,17 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 
 import jakarta.faces.event.AjaxBehaviorEvent;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import net.qoopo.framework.filter.core.Filter;
+import net.qoopo.framework.filter.core.condition.Condition;
+import net.qoopo.framework.filter.core.condition.Field;
+import net.qoopo.framework.filter.core.condition.Function;
+import net.qoopo.framework.filter.core.condition.Value;
 import net.qoopo.framework.Accion;
-import net.qoopo.framework.jpa.filter.Filter;
-import net.qoopo.framework.jpa.filter.condicion.Campo;
-import net.qoopo.framework.jpa.filter.condicion.Condicion;
-import net.qoopo.framework.jpa.filter.condicion.Funcion;
-import net.qoopo.framework.jpa.filter.condicion.Valor;
 import net.qoopo.framework.models.OpcionBase;
-import net.qoopo.framework.util.QoopoBuilder;
 
 /**
  * Gestor de filtros
@@ -30,19 +31,18 @@ import net.qoopo.framework.util.QoopoBuilder;
  */
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 public class FilterController implements Serializable {
 
     public static final Logger log = Logger.getLogger("Qoopo");
 
-    public static Builder getBuilder() {
-        return new Builder();
-    }
-
     private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-    private final List<Condicion> previas = new ArrayList<>();
-    private final List<Condicion> sugerencias = new ArrayList<>();
-    private List<Condicion> condiciones = new ArrayList<>(); // las condiciones del filtro
-    private List<Campo> camposDisponibles; // los campos disponibles para la busqueda en la funcion de completar
+    private final List<Condition> previas = new ArrayList<>();
+    private final List<Condition> sugerencias = new ArrayList<>();
+    @Builder.Default
+    private List<Condition> condiciones = new ArrayList<>(); // las condiciones del filtro
+    private List<Field> camposDisponibles; // los campos disponibles para la busqueda en la function de completar
     private List<OpcionBase> camposGrupo; // los campos por los que se puede agrupar
     private OpcionBase campoGrupo = OpcionBase.SIN_GRUPO;
     private Filter filtro;
@@ -56,31 +56,31 @@ public class FilterController implements Serializable {
      * otros Filtros. Por ejemplo que solo muestre registros de una sola empresa,
      * o que estos registros sea de un solo tipo
      */
-    private Condicion condicionPermanente;
+    private Condition condicionPermanente;
 
     // filtros preconfigurados que se puedan mostar en la GUI
-    private List<Condicion> condicionesDisponibles = new ArrayList<>();
+    private List<Condition> condicionesDisponibles = new ArrayList<>();
 
     private FilterController() {
         //
     }
 
-    public FilterController(Filter filtroInicial, List<Campo> camposDisponibles, Accion accion) {
+    public FilterController(Filter filtroInicial, List<Field> camposDisponibles, Accion accion) {
         // if (filtroInicial == null) {
         // throw new QoopoException("El filtro inicial no puede ser nulo");
         // }
         this.filtro = filtroInicial;
         this.camposDisponibles = camposDisponibles;
         this.accion = accion;
-        this.condicionPermanente = filtro.getCondicion();
+        this.condicionPermanente = filtro.getCondition();
     }
 
-    public FilterController(Filter filtroInicial, Condicion condicionPermanente, List<Campo> camposDisponibles,
+    public FilterController(Filter filtroInicial, Condition condicionPermanente, List<Field> camposDisponibles,
             Accion accion) {
         this(filtroInicial, condicionPermanente, camposDisponibles, null, accion);
     }
 
-    public FilterController(Filter filtroInicial, Condicion condicionPermanente, List<Campo> camposDisponibles,
+    public FilterController(Filter filtroInicial, Condition condicionPermanente, List<Field> camposDisponibles,
             List<OpcionBase> camposGrupo, Accion accion) {
         this.filtro = filtroInicial;
         this.camposDisponibles = camposDisponibles;
@@ -89,7 +89,7 @@ public class FilterController implements Serializable {
         this.condicionPermanente = condicionPermanente;
     }
 
-    public void agregarCondicion(Condicion condicion) {
+    public void appendCondition(Condition condicion) {
         if (condiciones == null) {
             condiciones = new ArrayList<>();
         }
@@ -97,7 +97,7 @@ public class FilterController implements Serializable {
             condiciones.add(condicion);
     }
 
-    public void agregarCondicionDisponible(Condicion condicion) {
+    public void appendAvalaibleCondition(Condition condicion) {
         if (condicion != null)
             condicionesDisponibles.add(condicion);
     }
@@ -122,9 +122,9 @@ public class FilterController implements Serializable {
         if (condiciones == null) {
             condiciones = new ArrayList<>();
         }
-        Condicion condicion = filtro.getCondicion();
+        Condition condicion = filtro.getCondition();
         if (condicion != null) {
-            condicion.setNombre(filtro.getNombre());
+            condicion.setName(filtro.getName());
             condiciones.add(condicion);
         }
     }
@@ -134,8 +134,8 @@ public class FilterController implements Serializable {
      *
      * @param filtro
      */
-    public void seleccionarCondicion(Condicion condicion) {
-        agregarCondicion(condicion);
+    public void seleccionarCondicion(Condition condicion) {
+        appendCondition(condicion);
         procesar();
     }
 
@@ -143,20 +143,20 @@ public class FilterController implements Serializable {
         // log.info("[+] filter-controller: Procesar");
         try {
             if (this.condicionPermanente != null) {
-                this.filtro.setCondicion(this.condicionPermanente.clonar());
+                this.filtro.setCondition(this.condicionPermanente.clonar());
             } else {
-                this.filtro.setCondicion(null);
+                this.filtro.setCondition(null);
             }
             if (this.condiciones != null && !this.condiciones.isEmpty()) {
-                for (Condicion condicion : this.condiciones) {
+                for (Condition condicion : this.condiciones) {
                     if (condicion.isExclusivo()) {
                         // log.warning("El filto es exclusivo, elimino los filtros anteriores " +
                         // condicion);
-                        this.filtro.setCondicion(null);
+                        this.filtro.setCondition(null);
                     }
-                    this.filtro.agregarCondicion(condicion.clonar(), 1);
+                    this.filtro.appendCondition(condicion.clonar(), 1); //1=And
                 }
-                Condicion.CONDICIONES.addAll(this.condiciones);
+                Condition.CONDICIONES.addAll(this.condiciones);
             }
         } catch (Exception e) {
             log.log(Level.SEVERE, e.getMessage(), e);
@@ -174,11 +174,11 @@ public class FilterController implements Serializable {
         procesar();
     }
 
-    public void seleccionar(SelectEvent<Condicion> event) {
+    public void seleccionar(SelectEvent<Condition> event) {
         procesar();
     }
 
-    public void desSeleccionar(UnselectEvent<Condicion> event) {
+    public void desSeleccionar(UnselectEvent<Condition> event) {
         procesar();
     }
 
@@ -193,8 +193,8 @@ public class FilterController implements Serializable {
         procesar();
     }
 
-    public void agruparPor(OpcionBase campo) {
-        setCampoGrupo(campo);
+    public void agruparPor(OpcionBase field) {
+        setCampoGrupo(field);
         procesar();
     }
 
@@ -208,84 +208,84 @@ public class FilterController implements Serializable {
         procesar();
     }
 
-    public List<Condicion> completarFiltros(String query) {
+    public List<Condition> completarFiltros(String query) {
         // log.info("---> Completando filtro");
         sugerencias.clear();
-        List<Condicion> temp = new ArrayList<>();
+        List<Condition> temp = new ArrayList<>();
         if (previas != null && !previas.isEmpty()) {
-            Condicion.CONDICIONES.removeAll(previas);
+            Condition.CONDICIONES.removeAll(previas);
         }
         // agrega las que estan actualmente seleccionadas
-        for (Condicion item : condiciones) {
-            Condicion.CONDICIONES.add(item);
+        for (Condition item : condiciones) {
+            Condition.CONDICIONES.add(item);
         }
         query = query.trim();
         if (query.length() < 1) {
             return temp;
         }
         String strCriterio = "criterio";
-        for (Campo campo : camposDisponibles) {
+        for (Field field : camposDisponibles) {
             try {
-                switch (campo.getTipo()) {
-                    case Campo.STRING:
-                        temp.add(Condicion.getBuilder().campo(campo).funcion(Funcion.CONTIENE)
-                                .valor(new Valor(strCriterio, "%" + query.toLowerCase().replace(" ", "%") + "%"))
+                switch (field.getTipo()) {
+                    case Field.STRING:
+                        temp.add(Condition.builder().field(field).function(Function.CONTIENE)
+                                .value(new Value(strCriterio, "%" + query.toLowerCase().replace(" ", "%") + "%"))
                                 .build());
-                        temp.add(Condicion.getBuilder().campo(campo).funcion(Funcion.NO_CONTIENE)
-                                .valor(new Valor(strCriterio, "%" + query.toLowerCase() + "%")).build());
+                        temp.add(Condition.builder().field(field).function(Function.NO_CONTIENE)
+                                .value(new Value(strCriterio, "%" + query.toLowerCase() + "%")).build());
                         break;
-                    case Campo.BOLEANO:
+                    case Field.BOLEANO:
                         // LOS BOLEANOS SOLO ES VERDADERO O FALSO
-                        temp.add(Condicion.getBuilder().campo(campo).funcion(Funcion.ES_VERDADERO).build());
-                        temp.add(Condicion.getBuilder().campo(campo).funcion(Funcion.ES_FALSO).build());
+                        temp.add(Condition.builder().field(field).function(Function.ES_VERDADERO).build());
+                        temp.add(Condition.builder().field(field).function(Function.ES_FALSO).build());
                         break;
-                    case Campo.NUMERICO:
-                        temp.add(Condicion.getBuilder().campo(campo).funcion(Funcion.MAYOR_QUE)
-                                .valor(new Valor(strCriterio, new BigDecimal(query))).build());
-                        temp.add(Condicion.getBuilder().campo(campo).funcion(Funcion.MENOR_QUE)
-                                .valor(new Valor(strCriterio, new BigDecimal(query))).build());
-                        temp.add(Condicion.getBuilder().campo(campo).funcion(Funcion.MAYOR_O_IGUAL_QUE)
-                                .valor(new Valor(strCriterio, new BigDecimal(query))).build());
-                        temp.add(Condicion.getBuilder().campo(campo).funcion(Funcion.MENOR_O_IGUAL_QUE)
-                                .valor(new Valor(strCriterio, new BigDecimal(query))).build());
-                        temp.add(Condicion.getBuilder().campo(campo).funcion(Funcion.IGUAL)
-                                .valor(new Valor(strCriterio, new BigDecimal(query))).build());
-                        temp.add(Condicion.getBuilder().campo(campo).funcion(Funcion.DIFERENTE)
-                                .valor(new Valor(strCriterio, new BigDecimal(query))).build());
+                    case Field.NUMERICO:
+                        temp.add(Condition.builder().field(field).function(Function.MAYOR_QUE)
+                                .value(new Value(strCriterio, new BigDecimal(query))).build());
+                        temp.add(Condition.builder().field(field).function(Function.MENOR_QUE)
+                                .value(new Value(strCriterio, new BigDecimal(query))).build());
+                        temp.add(Condition.builder().field(field).function(Function.MAYOR_O_IGUAL_QUE)
+                                .value(new Value(strCriterio, new BigDecimal(query))).build());
+                        temp.add(Condition.builder().field(field).function(Function.MENOR_O_IGUAL_QUE)
+                                .value(new Value(strCriterio, new BigDecimal(query))).build());
+                        temp.add(Condition.builder().field(field).function(Function.IGUAL)
+                                .value(new Value(strCriterio, new BigDecimal(query))).build());
+                        temp.add(Condition.builder().field(field).function(Function.DIFERENTE)
+                                .value(new Value(strCriterio, new BigDecimal(query))).build());
                         break;
-                    case Campo.INTEGER:
-                        temp.add(Condicion.getBuilder().campo(campo).funcion(Funcion.MAYOR_QUE)
-                                .valor(new Valor(strCriterio, Integer.valueOf(query))).build());
-                        temp.add(Condicion.getBuilder().campo(campo).funcion(Funcion.MENOR_QUE)
-                                .valor(new Valor(strCriterio, Integer.valueOf(query))).build());
-                        temp.add(Condicion.getBuilder().campo(campo).funcion(Funcion.IGUAL)
-                                .valor(new Valor(strCriterio, Integer.valueOf(query))).build());
-                        temp.add(Condicion.getBuilder().campo(campo).funcion(Funcion.DIFERENTE)
-                                .valor(new Valor(strCriterio, Integer.valueOf(query))).build());
+                    case Field.INTEGER:
+                        temp.add(Condition.builder().field(field).function(Function.MAYOR_QUE)
+                                .value(new Value(strCriterio, Integer.valueOf(query))).build());
+                        temp.add(Condition.builder().field(field).function(Function.MENOR_QUE)
+                                .value(new Value(strCriterio, Integer.valueOf(query))).build());
+                        temp.add(Condition.builder().field(field).function(Function.IGUAL)
+                                .value(new Value(strCriterio, Integer.valueOf(query))).build());
+                        temp.add(Condition.builder().field(field).function(Function.DIFERENTE)
+                                .value(new Value(strCriterio, Integer.valueOf(query))).build());
                         break;
-                    case Campo.LONG:
-                        temp.add(Condicion.getBuilder().campo(campo).funcion(Funcion.MAYOR_QUE)
-                                .valor(new Valor(strCriterio, Long.valueOf(query))).build());
-                        temp.add(Condicion.getBuilder().campo(campo).funcion(Funcion.MENOR_QUE)
-                                .valor(new Valor(strCriterio, Long.valueOf(query))).build());
-                        temp.add(Condicion.getBuilder().campo(campo).funcion(Funcion.IGUAL)
-                                .valor(new Valor(strCriterio, Long.valueOf(query))).build());
-                        temp.add(Condicion.getBuilder().campo(campo).funcion(Funcion.DIFERENTE)
-                                .valor(new Valor(strCriterio, Long.valueOf(query))).build());
+                    case Field.LONG:
+                        temp.add(Condition.builder().field(field).function(Function.MAYOR_QUE)
+                                .value(new Value(strCriterio, Long.valueOf(query))).build());
+                        temp.add(Condition.builder().field(field).function(Function.MENOR_QUE)
+                                .value(new Value(strCriterio, Long.valueOf(query))).build());
+                        temp.add(Condition.builder().field(field).function(Function.IGUAL)
+                                .value(new Value(strCriterio, Long.valueOf(query))).build());
+                        temp.add(Condition.builder().field(field).function(Function.DIFERENTE)
+                                .value(new Value(strCriterio, Long.valueOf(query))).build());
                         break;
-                    case Campo.FECHA:
-                        temp.add(Condicion.getBuilder().campo(campo).funcion(Funcion.MAYOR_QUE)
-                                .valor(new Valor(strCriterio, sdf.parse(query))).build());
-                        temp.add(Condicion.getBuilder().campo(campo).funcion(Funcion.MENOR_QUE)
-                                .valor(new Valor(strCriterio, sdf.parse(query))).build());
-                        temp.add(Condicion.getBuilder().campo(campo).funcion(Funcion.MAYOR_O_IGUAL_QUE)
-                                .valor(new Valor(strCriterio, sdf.parse(query))).build());
-                        temp.add(Condicion.getBuilder().campo(campo).funcion(Funcion.MENOR_O_IGUAL_QUE)
-                                .valor(new Valor(strCriterio, sdf.parse(query))).build());
-                        temp.add(Condicion.getBuilder().campo(campo).funcion(Funcion.IGUAL)
-                                .valor(new Valor(strCriterio, sdf.parse(query))).build());
-                        temp.add(Condicion.getBuilder().campo(campo).funcion(Funcion.DIFERENTE)
-                                .valor(new Valor(strCriterio, sdf.parse(query))).build());
+                    case Field.FECHA:
+                        temp.add(Condition.builder().field(field).function(Function.MAYOR_QUE)
+                                .value(new Value(strCriterio, sdf.parse(query))).build());
+                        temp.add(Condition.builder().field(field).function(Function.MENOR_QUE)
+                                .value(new Value(strCriterio, sdf.parse(query))).build());
+                        temp.add(Condition.builder().field(field).function(Function.MAYOR_O_IGUAL_QUE)
+                                .value(new Value(strCriterio, sdf.parse(query))).build());
+                        temp.add(Condition.builder().field(field).function(Function.MENOR_O_IGUAL_QUE)
+                                .value(new Value(strCriterio, sdf.parse(query))).build());
+                        temp.add(Condition.builder().field(field).function(Function.IGUAL)
+                                .value(new Value(strCriterio, sdf.parse(query))).build());
+                        temp.add(Condition.builder().field(field).function(Function.DIFERENTE)
+                                .value(new Value(strCriterio, sdf.parse(query))).build());
                         break;
                     default:
                         break;
@@ -308,11 +308,11 @@ public class FilterController implements Serializable {
 
         previas.clear();
         previas.addAll(sugerencias);
-        Condicion.CONDICIONES.addAll(sugerencias);
+        Condition.CONDICIONES.addAll(sugerencias);
         return temp;
     }
 
-    public List<Condicion> getCondiciones() {
+    public List<Condition> getCondiciones() {
         return condiciones;
     }
 
@@ -322,7 +322,7 @@ public class FilterController implements Serializable {
      *
      * @param condiciones
      */
-    public void setCondiciones(List<Condicion> condiciones) {
+    public void setCondiciones(List<Condition> condiciones) {
         // log.info("[~] Seteando condiciones");
         if (condiciones == null) {
             condiciones = new ArrayList<>();
@@ -330,7 +330,7 @@ public class FilterController implements Serializable {
         } else {
             /*
              * log.info("[~] Seteando condiciones --  size " + condiciones.size());
-             * for (Condicion item : condiciones) {
+             * for (Condition item : condiciones) {
              * log.info("[~] condicion:" + item.getNombre());
              * }
              */
@@ -346,46 +346,6 @@ public class FilterController implements Serializable {
             this.condiciones = condiciones;
             procesar();
         }
-    }
-
-    public static class Builder implements QoopoBuilder<FilterController> {
-
-        private final FilterController gestor = new FilterController();
-
-        public Builder() {
-            //
-        }
-
-        public Builder filtro(Filter filtro) {
-            gestor.setFiltro(filtro);
-            return this;
-        }
-
-        public Builder accion(Accion accion) {
-            gestor.setAccion(accion);
-            return this;
-        }
-
-        public Builder agregarCondicionDisponible(Condicion condicion) {
-            gestor.agregarCondicionDisponible(condicion);
-            return this;
-        }
-
-        public Builder condicionPermanente(Condicion condicionPermanente) {
-            gestor.condicionPermanente = condicionPermanente;
-            return this;
-        }
-
-        public Builder campos(List<Campo> campos) {
-            gestor.setCamposDisponibles(campos);
-            return this;
-        }
-
-        @Override
-        public FilterController build() {
-            return gestor;
-        }
-
     }
 
 }

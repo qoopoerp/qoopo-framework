@@ -1,13 +1,13 @@
-package net.qoopo.framework.web.core.jpa.nolazy;
+package net.qoopo.framework.web.controller.entity.lazy;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import net.qoopo.framework.filter.core.Filter;
+import net.qoopo.framework.filter.core.condition.Condition;
+import net.qoopo.framework.filter.core.condition.Field;
 import net.qoopo.framework.data.repository.CrudRepository;
 import net.qoopo.framework.jpa.core.AbstractEntity;
-import net.qoopo.framework.jpa.filter.Filter;
-import net.qoopo.framework.jpa.filter.condicion.Campo;
-import net.qoopo.framework.jpa.filter.condicion.Condicion;
 import net.qoopo.framework.models.OpcionBase;
 import net.qoopo.framework.web.util.FacesUtils;
 
@@ -18,10 +18,11 @@ import net.qoopo.framework.web.util.FacesUtils;
  * @param <S>
  * @param <T>
  */
-public abstract class AbstractNoLazyAdminDetailController<S extends AbstractEntity, T> extends AbstractNoLazyAdminController<S> {
+public abstract class AbstractLazyAdminDetailController<S extends AbstractEntity, T> extends AbstractLazyAdminController<S> {
 
-    public AbstractNoLazyAdminDetailController(String entityClassName, Class<S> entityClass, Filter inicial,
-            List<Condicion> condicionesDisponibles, List<Campo> campos, List<OpcionBase> opcionesGrupos) {
+    public AbstractLazyAdminDetailController(String entityClassName, Class<S> entityClass, Filter inicial,
+            List<Condition> condicionesDisponibles,
+            List<Field> campos, List<OpcionBase> opcionesGrupos) {
         super(entityClassName, entityClass, inicial, condicionesDisponibles, campos, opcionesGrupos);
     }
 
@@ -37,12 +38,6 @@ public abstract class AbstractNoLazyAdminDetailController<S extends AbstractEnti
     public abstract void eliminarDetalle(T item);
 
     @Override
-    public void edit(S item) {
-        super.edit(item); // To change body of generated methods, choose Tools | Templates.
-        listaEliminar.clear();
-    }
-
-    @Override
     public void update() {
         try {
             for (T det : listaEliminar) {
@@ -52,6 +47,12 @@ public abstract class AbstractNoLazyAdminDetailController<S extends AbstractEnti
             FacesUtils.addErrorMessage(languageProvider.getTextValue(20) + e.getMessage());
         }
         super.update();
+    }
+
+    @Override
+    public void edit(S item) {
+        super.edit(item); // To change body of generated methods, choose Tools | Templates.
+        listaEliminar.clear();
     }
 
     public T getItemDetalle() {

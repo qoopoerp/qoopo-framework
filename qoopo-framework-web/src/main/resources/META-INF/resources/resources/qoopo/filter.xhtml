@@ -15,11 +15,11 @@
 
     <h:panelGrid columns="10" styleClass="float-right">
         <p:autoComplete styleClass="seleccion ui-g-nopad" value="#{cc.attrs.value.condiciones}" multiple="true"
-            completeMethod="#{cc.attrs.value.completarFiltros}" var="criterio" itemLabel="#{criterio.nombre}"
+            completeMethod="#{cc.attrs.value.completarFiltros}" var="criterio" itemLabel="#{criterio.name}"
             itemValue="#{criterio}" converter="criterioConverterComplete" forceSelection="true" accesskey="q"
             dropdown="false">
             <p:column style="width:80%">
-                #{criterio.nombre}
+                #{criterio.name}
             </p:column>
             <p:ajax event="itemSelect" listener="#{cc.attrs.value.seleccionar}" update="@form" />
             <p:ajax event="itemUnselect" listener="#{cc.attrs.value.desSeleccionar}" update="@form" />
@@ -34,7 +34,7 @@
                 <p:commandLink update="@form" styleClass="list-group-item"
                     style="padding-left: 15px; padding-top: 2px; padding-bottom: 2px;"
                     actionListener="#{cc.attrs.value.seleccionarCondicion(value)}">
-                    <h:outputText styleClass="textoMenu" value="#{value.nombre}" />
+                    <h:outputText styleClass="textoMenu" value="#{value.name}" />
                 </p:commandLink>
             </ui:repeat>
         </p:overlayPanel>
