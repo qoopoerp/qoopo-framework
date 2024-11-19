@@ -1,20 +1,20 @@
 package net.qoopo.framework.multitenant;
 
-import net.qoopo.framework.jpa.filter.condicion.Campo;
-import net.qoopo.framework.jpa.filter.condicion.Condicion;
-import net.qoopo.framework.jpa.filter.condicion.Funcion;
-import net.qoopo.framework.jpa.filter.condicion.Valor;
+import net.qoopo.framework.filter.core.condition.Condition;
+import net.qoopo.framework.filter.core.condition.Field;
+import net.qoopo.framework.filter.core.condition.Function;
+import net.qoopo.framework.filter.core.condition.Value;
 
 public class MultitenantFilter {
 
     /**
-     * El campo que identifica el Tenant
+     * El Field que identifica el Tenant
      */
-    public static Campo TENANT_ID = new Campo(Campo.LONG, "Empresa", "o.empresa.id");
+    public static Field TENANT_ID = new Field(Field.LONG, "Empresa", "o.empresa.id");
 
-    public static Condicion tenantCondition(Long tenantId) {
-        return Condicion.getBuilder().campo(TENANT_ID).funcion(Funcion.IGUAL)
-                .valor(new Valor("tenantId", tenantId)).build();
+    public static Condition tenantCondition(Long tenantId) {
+        return Condition.builder().field(TENANT_ID).function(Function.IGUAL)
+                .value(new Value("tenantId", tenantId)).build();
     }
 
 }

@@ -40,6 +40,16 @@
             <version>1.0.0</version>
         </dependency>
         <dependency>
+            <groupId>net.qoopo</groupId>
+            <artifactId>qoopo-framework-filter</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.qoopo</groupId>
+            <artifactId>qoopo-framework-filter-jpa</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
             <version>14.0.0</version>

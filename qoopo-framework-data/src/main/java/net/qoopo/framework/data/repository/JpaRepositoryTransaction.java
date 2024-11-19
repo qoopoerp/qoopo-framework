@@ -19,10 +19,10 @@ public class JpaRepositoryTransaction<T, ID> implements CrudRepository<T, ID> {
     protected TransactionJpaCrudDAO<T, ID> crudDao;
     protected String datasourceName;
 
-    public JpaRepositoryTransaction(String datasourceName) {
-        crudDao = new TransactionJpaCrudDAO<>();
-        this.datasourceName = datasourceName;
-    }
+    // public JpaRepositoryTransaction(String datasourceName) {
+    // crudDao = new TransactionJpaCrudDAO<>();
+    // this.datasourceName = datasourceName;
+    // }
 
     public JpaRepositoryTransaction(Class<T> entityClass, String datasourceName) {
         crudDao = new TransactionJpaCrudDAO<>(entityClass);

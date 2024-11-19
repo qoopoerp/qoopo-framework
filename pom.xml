@@ -32,15 +32,22 @@
     </distributionManagement>
 
     <modules>
+        <module>qoopo-framework-pattern-specification</module>
         <module>qoopo-framework-reflection</module>
         <module>qoopo-framework-commons</module>
+        <module>qoopo-framework-commons-date</module>
         <module>qoopo-framework-data</module>
         <module>qoopo-framework-core</module>
+        <module>qoopo-framework-filter</module>
+        <module>qoopo-framework-filter-jpa</module>
         <module>qoopo-framework-security</module>
         <module>qoopo-framework-security-jwt</module>
-        <module>qoopo-framework-web</module>    
-        <module>qoopo-framework-reports</module>
         <module>qoopo-framework-exporter</module>
+        <module>qoopo-framework-exporter-csv</module>
+        <module>qoopo-framework-exporter-xls</module>
+        <module>qoopo-framework-exporter-json</module>
+        <module>qoopo-framework-reports</module>
+        <module>qoopo-framework-web</module>
         <module>qoopo-framework-web-template</module>
     </modules>
     <properties>

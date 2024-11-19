@@ -27,7 +27,7 @@ public class Jpa<T, ID> implements Serializable {
 
     public static Jpa get() {
         // log.warning("[!!] Instanciando Jpa por get");
-        return new Jpa<>();
+        return new Jpa<>(null);
     }
 
     private Class<T> entityClass;
@@ -38,9 +38,9 @@ public class Jpa<T, ID> implements Serializable {
     private int maxResults = -1;
     private int firstResult = -1;
 
-    public Jpa() {
-        //
-    }
+    // public Jpa() {
+    // //
+    // }
 
     public Jpa(Class<T> entityClass) {
         this.entityClass = entityClass;

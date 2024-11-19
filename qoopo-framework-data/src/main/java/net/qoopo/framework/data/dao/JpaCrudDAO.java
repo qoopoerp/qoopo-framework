@@ -24,34 +24,34 @@ public class JpaCrudDAO<T, ID> implements CrudDAO<T, ID> {
     private EntityManagerFactory emf = null;
     private EntityManager em = null;
 
-    public JpaCrudDAO() {
-        jpa = new Jpa<>();
-    }
+    // public JpaCrudDAO() {
+    // jpa = new Jpa<>();
+    // }
 
     public JpaCrudDAO(Class<T> entityClass) {
-        jpa = new Jpa<>();
+        jpa = new Jpa<>(entityClass);
         this.entityClass = entityClass;
     }
 
     public JpaCrudDAO(Class<T> entityClass, EntityManagerFactory emf) {
-        jpa = new Jpa<>();
+        jpa = new Jpa<>(entityClass);
         this.entityClass = entityClass;
         this.emf = emf;
     }
 
     public JpaCrudDAO(Class<T> entityClass, EntityManager em) {
-        jpa = new Jpa<>();
+        jpa = new Jpa<>(entityClass);
         this.entityClass = entityClass;
         this.em = em;
     }
 
     public JpaCrudDAO(EntityManagerFactory emf) {
-        jpa = new Jpa<>();
+        jpa = new Jpa<>(entityClass);
         this.emf = emf;
     }
 
     public JpaCrudDAO(EntityManager em) {
-        jpa = new Jpa<>();
+        jpa = new Jpa<>(entityClass);
         this.em = em;
     }
 
@@ -108,12 +108,11 @@ public class JpaCrudDAO<T, ID> implements CrudDAO<T, ID> {
             throws Exception, NonexistentEntityException, RollbackFailureException, IllegalOrphanException {
         if (entityClass == null)
             entityClass = (Class<T>) item.getClass();
-
+        EntityManager em = getEntityManager();
         try {
             em.getTransaction().begin();
             jpa.setEm(em).setEntityClass(entityClass).delete(item);
             em.getTransaction().commit();
-
         } catch (Exception e) {
             em.getTransaction().rollback();
             throw e;
@@ -125,7 +124,20 @@ public class JpaCrudDAO<T, ID> implements CrudDAO<T, ID> {
     @Override
     public void deletebyId(ID id)
             throws Exception, NonexistentEntityException, RollbackFailureException, IllegalOrphanException {
-        jpa.setEm(getEntityManager()).setEntityClass(entityClass).deletebyId(id);
+        // jpa.setEm(getEntityManager()).setEntityClass(entityClass).deletebyId(id);
+
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            jpa.setEm(em).setEntityClass(entityClass).deletebyId(id);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw e;
+        } finally {
+            em.close();
+        }
+
     }
 
     @Override

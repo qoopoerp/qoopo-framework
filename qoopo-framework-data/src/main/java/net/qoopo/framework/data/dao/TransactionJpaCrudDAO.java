@@ -21,12 +21,12 @@ public class TransactionJpaCrudDAO<T, ID> implements TransactionCrudDAO<T, ID> {
 
     private Class<T> entityClass = null;
 
-    public TransactionJpaCrudDAO() {
-        jpa = new Jpa<>();
-    }
+    // public TransactionJpaCrudDAO() {
+    // jpa = new Jpa<>();
+    // }
 
     public TransactionJpaCrudDAO(Class<T> entityClass) {
-        jpa = new Jpa<>();
+        jpa = new Jpa<>(entityClass);
         this.entityClass = entityClass;
     }
 

@@ -21,11 +21,11 @@ public class JpaRepository<T, ID> implements CrudRepository<T, ID> {
     protected String datasourceName;
     protected EntityManagerFactory emf;
 
-    public JpaRepository(String datasourceName) {
-        emf = Persistence.createEntityManagerFactory(datasourceName);
-        crudDao = new JpaCrudDAO<>(emf);
-        this.datasourceName = datasourceName;
-    }
+    // public JpaRepository(String datasourceName) {
+    // emf = Persistence.createEntityManagerFactory(datasourceName);
+    // crudDao = new JpaCrudDAO<>(emf);
+    // this.datasourceName = datasourceName;
+    // }
 
     public JpaRepository(Class<T> entityClass, String datasourceName) {
         emf = Persistence.createEntityManagerFactory(datasourceName);
