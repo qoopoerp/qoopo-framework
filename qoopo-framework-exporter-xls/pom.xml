@@ -4,8 +4,8 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.qoopo</groupId>
-    <artifactId>qoopo-framework-exporter</artifactId>
-    <name>qoopo-framework-exporter</name>
+    <artifactId>qoopo-framework-exporter-xls</artifactId>
+    <name>qoopo-framework-exporter-xls</name>
     <version>1.0.0</version>
     <packaging>jar</packaging>
     <repositories>
@@ -37,6 +37,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>net.qoopo</groupId>
+            <artifactId>qoopo-framework-exporter</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>5.6.0</version>
@@ -53,6 +58,29 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <version>5.6.0</version>
             <scope>test</scope>
+        </dependency>
+
+        <!--archivos
+        excel-->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>5.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml-full</artifactId>
+            <version>5.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-scratchpad</artifactId>
+            <version>5.0.0</version>
         </dependency>
     </dependencies>
 

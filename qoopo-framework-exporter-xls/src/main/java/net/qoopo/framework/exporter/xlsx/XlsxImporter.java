@@ -1,7 +1,6 @@
 package net.qoopo.framework.exporter.xlsx;
 
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +21,7 @@ public class XlsxImporter implements Importer {
 
     protected InputStream in;
 
-    private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    // private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
     private List<String> campos = new ArrayList<>();
     protected List<Map<String, String>> data = null;
