@@ -43,18 +43,18 @@ public class FechasUtil {
         Calendar c = Calendar.getInstance();
         c.setTime(fecha);
         switch (tipo) {
-            case 2:
-                return c.get(2) + 1;
-            case 3:
-                return c.get(1);
-            case 7:
-                return c.get(4);
-            case 4:
-                return c.get(11);
-            case 5:
-                return c.get(12);
-            case 6:
-                return c.get(13);
+            case MESES:
+                return c.get(Calendar.MONTH) + 1;
+            case ANIOS:
+                return c.get(Calendar.YEAR);
+            case SEMANAS:
+                return c.get(Calendar.WEEK_OF_MONTH);
+            case HORAS:
+                return c.get(Calendar.HOUR_OF_DAY);
+            case MINUTOS:
+                return c.get(Calendar.MINUTE);
+            case SEGUNDOS:
+                return c.get(Calendar.SECOND);
         }
         return c.get(5);
     }
