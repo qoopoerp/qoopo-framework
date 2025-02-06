@@ -29,8 +29,11 @@
         <p:commandButton icon="pi pi-server" id="groupBtnSm" type="button" accesskey="j" />
         <p:commandButton icon="pi pi-sort" id="sortBtnSm" type="button" />
 
-        <p:overlayPanel id="valuePanelSm" for="valueBtnSm">
-            <ui:repeat value="#{cc.attrs.value.condicionesDisponibles}" var="value">
+        <p:menu  model="#{cc.attrs.value.conditionsMenuModel}" toggleable="true"  overlay="true" trigger="valueBtnSm"  my="left top" at="left bottom"/>
+
+        <p:overlayPanel id="valuePanelSm" for="valueBtnSm" rendered="false">
+            <!-- <p:menu  model="# {cc.attrs.value.conditionsMenuModel}" toggleable="true" /> -->
+            <ui:repeat value="#{cc.attrs.value.condicionesDisponibles}" var="value" rendered="false">
                 <p:commandLink update="@form" styleClass="list-group-item"
                     style="padding-left: 15px; padding-top: 2px; padding-bottom: 2px;"
                     actionListener="#{cc.attrs.value.seleccionarCondicion(value)}">

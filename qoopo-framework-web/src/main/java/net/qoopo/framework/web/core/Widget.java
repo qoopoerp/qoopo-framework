@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ServiceLoader;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import lombok.Getter;
@@ -47,8 +45,6 @@ public abstract class Widget implements Serializable {
     private String url = null;
     private List<ActionWrapper> buttons = new ArrayList<>();
 
-    private static List<Widget> INSTANCES = new ArrayList<>();
-
     /**
      * Ejecuta la accion principal del widget
      */
@@ -79,33 +75,6 @@ public abstract class Widget implements Serializable {
 
     public boolean isRenderUrl() {
         return url != null;
-    }
-
-    public static void load() {
-        try {
-            INSTANCES.clear();
-            ServiceLoader<Widget> cargados = ServiceLoader.load(Widget.class);
-            cargados.forEach(widget -> {
-                log.info("Widget cargado: [".concat(widget.getName()).concat("] ")
-                        .concat(widget.getClass().getName()));
-                if (widget.getJsfName() == null) {
-                    widget.setJsfName("#{" + widget.getClass().getSimpleName() + "}");
-                }
-                INSTANCES.add(widget);
-            });
-        } catch (Exception e) {
-            log.log(Level.SEVERE, e.getMessage(), e);
-        }
-    }
-
-    public static void register(Widget widget) {
-        if (!INSTANCES.contains(widget)) {
-            INSTANCES.add(widget);
-        }
-    }
-
-    public static List<Widget> getAll() {
-        return INSTANCES;
     }
 
     public boolean isText() {

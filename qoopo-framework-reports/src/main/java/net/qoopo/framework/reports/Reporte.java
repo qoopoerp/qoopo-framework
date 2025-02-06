@@ -24,7 +24,7 @@ public class Reporte {
     private String nombre;
     private String tipo;
     private String outputFile;
-    private HashMap<String, Object> JpaParameterss;
+    private HashMap<String, Object> parameters;
     private StreamedContent contenido;
     private List source;
     private GestorReporte gestor;
@@ -58,11 +58,11 @@ public class Reporte {
         // addParam("SUBREPORT_DIR", reportsPath + "/");
     }
 
-    public Reporte(String nombreReporte, String nombre, String tipo, HashMap<String,Object> JpaParameterss, String reportsPath) {
+    public Reporte(String nombreReporte, String nombre, String tipo, HashMap<String,Object> parameters, String reportsPath) {
         this.nombreReporte = nombreReporte;
         this.nombre = nombre;
         this.tipo = tipo;
-        this.JpaParameterss = JpaParameterss;
+        this.parameters = parameters;
         gestor = new GestorReporte(reportsPath);
         // agrego el JpaParameters SUBREPORT_DIR que es el mismo para todos los reportes, la
         // ruta de los reportes
@@ -81,85 +81,85 @@ public class Reporte {
     }
 
     public void addParam(String JpaParameters, Object valor) {
-        if (JpaParameterss == null) {
-            JpaParameterss = new HashMap<>();
+        if (parameters == null) {
+            parameters = new HashMap<>();
         }
-        JpaParameterss.put(JpaParameters, valor);
+        parameters.put(JpaParameters, valor);
     }
 
     public void generarPdf() throws JRException, FileNotFoundException {
-        outputFile = gestor.exportPDF(nombreReporte, contentBytes, JpaParameterss, nombre,
+        outputFile = gestor.exportPDF(nombreReporte, contentBytes, parameters, nombre,
                 new JRBeanCollectionDataSource(source));
     }
 
     public StreamedContent generarPdfStream() throws JRException, FileNotFoundException {
-        contenido = gestor.exportPDFStream(nombreReporte, contentBytes, JpaParameterss, nombre,
+        contenido = gestor.exportPDFStream(nombreReporte, contentBytes, parameters, nombre,
                 new JRBeanCollectionDataSource(source));
         return contenido;
     }
 
     public void generarXLSX() throws JRException, FileNotFoundException {
-        outputFile = gestor.exportXLSX(nombreReporte, contentBytes, JpaParameterss, nombre,
+        outputFile = gestor.exportXLSX(nombreReporte, contentBytes, parameters, nombre,
                 new JRBeanCollectionDataSource(source));
     }
 
     public StreamedContent generarXLSXStream() throws JRException, FileNotFoundException {
-        contenido = gestor.exportXLSXStream(nombreReporte, contentBytes, JpaParameterss, nombre,
+        contenido = gestor.exportXLSXStream(nombreReporte, contentBytes, parameters, nombre,
                 new JRBeanCollectionDataSource(source));
         return contenido;
     }
 
     public void generarDOCX() throws JRException, FileNotFoundException {
-        outputFile = gestor.exportDOCX(nombreReporte, contentBytes, JpaParameterss, nombre,
+        outputFile = gestor.exportDOCX(nombreReporte, contentBytes, parameters, nombre,
                 new JRBeanCollectionDataSource(source));
     }
 
     public StreamedContent generarDOCXStream() throws JRException, FileNotFoundException {
-        contenido = gestor.exportDOCXStream(nombreReporte, contentBytes, JpaParameterss, nombre,
+        contenido = gestor.exportDOCXStream(nombreReporte, contentBytes, parameters, nombre,
                 new JRBeanCollectionDataSource(source));
         return contenido;
     }
 
     public void generarPPTX() throws JRException, FileNotFoundException {
-        outputFile = gestor.exportPPTX(nombreReporte, contentBytes, JpaParameterss, nombre,
+        outputFile = gestor.exportPPTX(nombreReporte, contentBytes, parameters, nombre,
                 new JRBeanCollectionDataSource(source));
     }
 
     public StreamedContent generarPPTXStream() throws JRException, FileNotFoundException {
-        contenido = gestor.exportPPTXStream(nombreReporte, contentBytes, JpaParameterss, nombre,
+        contenido = gestor.exportPPTXStream(nombreReporte, contentBytes, parameters, nombre,
                 new JRBeanCollectionDataSource(source));
         return contenido;
     }
 
     public void generarODT() throws JRException, FileNotFoundException {
-        outputFile = gestor.exportODT(nombreReporte, contentBytes, JpaParameterss, nombre,
+        outputFile = gestor.exportODT(nombreReporte, contentBytes, parameters, nombre,
                 new JRBeanCollectionDataSource(source));
     }
 
     public StreamedContent generarODTStream() throws JRException, FileNotFoundException {
-        contenido = gestor.exportODTStream(nombreReporte, contentBytes, JpaParameterss, nombre,
+        contenido = gestor.exportODTStream(nombreReporte, contentBytes, parameters, nombre,
                 new JRBeanCollectionDataSource(source));
         return contenido;
     }
 
     public void generarODS() throws JRException, FileNotFoundException {
-        outputFile = gestor.exportODS(nombreReporte, contentBytes, JpaParameterss, nombre,
+        outputFile = gestor.exportODS(nombreReporte, contentBytes, parameters, nombre,
                 new JRBeanCollectionDataSource(source));
     }
 
     public StreamedContent generarODSStream() throws JRException, FileNotFoundException {
-        contenido = gestor.exportODSStream(nombreReporte, contentBytes, JpaParameterss, nombre,
+        contenido = gestor.exportODSStream(nombreReporte, contentBytes, parameters, nombre,
                 new JRBeanCollectionDataSource(source));
         return contenido;
     }
 
     public void generarXML() throws JRException, FileNotFoundException {
-        outputFile = gestor.exportXML(nombreReporte, contentBytes, JpaParameterss, nombre,
+        outputFile = gestor.exportXML(nombreReporte, contentBytes, parameters, nombre,
                 new JRBeanCollectionDataSource(source));
     }
 
     public StreamedContent generarXMLStream() throws JRException, FileNotFoundException {
-        contenido = gestor.exportXMLStream(nombreReporte, contentBytes, JpaParameterss, nombre,
+        contenido = gestor.exportXMLStream(nombreReporte, contentBytes, parameters, nombre,
                 new JRBeanCollectionDataSource(source));
         return contenido;
     }

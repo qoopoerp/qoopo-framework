@@ -8,7 +8,7 @@ import java.io.Serializable;
  */
 public abstract class Accion implements Serializable {
 
-    public abstract Object ejecutar(Object... JpaParameterss);
+    public abstract Object ejecutar(Object... parameters);
 
     /**
      * Verifica si la accion es difeente de nula y ejecuta la accion.No se
@@ -16,11 +16,11 @@ public abstract class Accion implements Serializable {
      * accion
      *
      * @param accion
-     * @param JpaParameterss
+     * @param parameters
      */
-    public static void verificaEjecuta(Accion accion, Object... JpaParameterss) {
+    public static void verificaEjecuta(Accion accion, Object... parameters) {
         if (accion != null) {
-            accion.ejecutar(JpaParameterss);
+            accion.ejecutar(parameters);
         }
     }
 }

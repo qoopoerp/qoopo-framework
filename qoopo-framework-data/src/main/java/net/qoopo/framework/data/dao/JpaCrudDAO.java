@@ -124,8 +124,6 @@ public class JpaCrudDAO<T, ID> implements CrudDAO<T, ID> {
     @Override
     public void deletebyId(ID id)
             throws Exception, NonexistentEntityException, RollbackFailureException, IllegalOrphanException {
-        // jpa.setEm(getEntityManager()).setEntityClass(entityClass).deletebyId(id);
-
         EntityManager em = getEntityManager();
         try {
             em.getTransaction().begin();

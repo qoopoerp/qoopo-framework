@@ -28,4 +28,8 @@ public class Util {
     public static String getTime(long inicial) {
         return "(" + getTimeFormater(System.currentTimeMillis() - inicial) + ")";
     }
+
+    public static String nvl(String valor) {
+        return (valor != null) ? valor : "";// espacio
+    }
 }

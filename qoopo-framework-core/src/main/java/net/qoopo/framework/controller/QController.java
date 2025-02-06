@@ -15,37 +15,39 @@ import java.util.List;
  *
  * @author alberto
  */
-//net.qoopo.qoopo.controller.QController
+// net.qoopo.qoopo.controller.QController
+@Deprecated(forRemoval = true)
 public interface QController {
 
     public String getName();
 
-    public void instanciar(Object... JpaParameterss);
+    public void instanciar(Object... parameters);
 
     public void set(String opcion, Object valor);
 
-    public Object get(String opcion, Object... JpaParameterss);
+    public Object get(String opcion, Object... parameters);
 
     /**
      * Ejecuta un metodo del controlador
      *
      * @param opcion
-     * @param JpaParameterss
+     * @param parameters
      * @return
      * @throws Exception
      */
-    public Object run(String opcion, Object... JpaParameterss) throws Exception;
+    public Object run(String opcion, Object... parameters) throws Exception;
 
-//    public Object runObserver(String opcion, Object... JpaParameterss) throws Exception;
+    // public Object runObserver(String opcion, Object... parameters) throws
+    // Exception;
     /**
      * Notifica a los observadores que se registraron en un evento
      *
      * @param event
-     * @param JpaParameterss
+     * @param parameters
      * @return
      * @throws Exception
      */
-    public Object notifyObserver(String event, Object... JpaParameterss) throws Exception;
+    public Object notifyObserver(String event, Object... parameters) throws Exception;
 
     /**
      * Devuelve la lista de los eventos a los que se va a suscribrir

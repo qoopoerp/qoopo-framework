@@ -7,17 +7,14 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.poi.ss.formula.functions.T;
-
 import lombok.Getter;
 import lombok.Setter;
 import net.qoopo.framework.NVL;
 import net.qoopo.framework.chart.QChartJS;
-import net.qoopo.framework.jpa.core.AbstractEntity;
 import net.qoopo.framework.jpa.core.interfaces.Graficable;
 import net.qoopo.framework.lang.LanguageProvider;
 import net.qoopo.framework.models.OpcionBase;
-import net.qoopo.framework.web.controller.entity.AbstractAdminFilteredController;
+import net.qoopo.framework.web.controller.entity.complete.AbstractEntityCrudCompleteController;
 
 /**
  * Este controller maneja la vista de Graficos de todos los modulos
@@ -26,7 +23,7 @@ import net.qoopo.framework.web.controller.entity.AbstractAdminFilteredController
  */
 @Getter
 @Setter
-public class GraphController<T extends AbstractEntity> implements Serializable {
+public class GraphController<T> implements Serializable {
 
     public static final Logger log = Logger.getLogger("Qoopo-graph-controller");
 
@@ -65,8 +62,9 @@ public class GraphController<T extends AbstractEntity> implements Serializable {
     public void cargarDatos(Object bean) {
         try {
             if (bean != null) {
-                if (bean instanceof AbstractAdminFilteredController) {
-                    AbstractAdminFilteredController<T> mBean = (AbstractAdminFilteredController<T>) bean;
+                if (bean instanceof AbstractEntityCrudCompleteController) {
+                    // AbstractEntityCrudCompleteController<T> mBean = (AbstractEntityCrudCompleteController<T>) bean;
+                    AbstractEntityCrudCompleteController mBean = (AbstractEntityCrudCompleteController) bean;
                     setDatos(mBean.getData());
                     recargar();
                 }

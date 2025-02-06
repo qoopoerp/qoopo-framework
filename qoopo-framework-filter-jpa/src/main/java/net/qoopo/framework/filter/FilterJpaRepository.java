@@ -94,8 +94,9 @@ public class FilterJpaRepository<T> implements FilterRepository<T> {
         } finally {
             trx.close();
         }
-        log.log(Level.INFO, "Filtro [{0}] -- Terminado {1}",
-                new Object[] { filtro.getName() + " (" + filtro.getCollection() + ")", Util.getTime(inicial) });
+        log.log(Level.INFO, "Filtro [{0}] -- Terminado {1} {2}/{3}",
+                new Object[] { filtro.getName() + " (" + filtro.getCollection() + ")", Util.getTime(inicial), first,
+                        pageSize });
         return valor;
     }
 
@@ -120,9 +121,9 @@ public class FilterJpaRepository<T> implements FilterRepository<T> {
         } finally {
             trx.close();
         }
-        log.log(Level.INFO, "Filtro Count [{0}] -- Terminado {1}",
+        log.log(Level.INFO, "Filtro Count [{0}] -- Terminado {1}  {2}/{3}",
                 new Object[] { filtro.getName() + " (" + filtro.getCollection() + ")",
-                        Util.getTime(inicial) });
+                        Util.getTime(inicial), first, pageSize });
         return valor;
     }
 

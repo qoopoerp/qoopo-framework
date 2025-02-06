@@ -11,9 +11,9 @@ import jakarta.persistence.ParameterMode;
 
 public class JpaParameter implements Serializable {
 
-    private String JpaParameters;
+    private String parameter;
     private transient Object valor;
-    // usado para los JpaParameterss de los sp
+    // usado para los parameters de los sp
     private int indice = 0;
     private Class parameterClass;
     private ParameterMode parameterMode;
@@ -22,8 +22,8 @@ public class JpaParameter implements Serializable {
         //
     }
 
-    public JpaParameter(String JpaParameters, Object valor) {
-        this.JpaParameters = JpaParameters;
+    public JpaParameter(String parameter, Object valor) {
+        this.parameter = parameter;
         this.valor = valor;
     }
 
@@ -33,7 +33,7 @@ public class JpaParameter implements Serializable {
     }
 
     public JpaParameter(String JpaParameters, Class parameterClass, ParameterMode parameterMode) {
-        this.JpaParameters = JpaParameters;
+        this.parameter = JpaParameters;
         this.parameterClass = parameterClass;
         this.parameterMode = parameterMode;
     }
@@ -44,12 +44,12 @@ public class JpaParameter implements Serializable {
         this.parameterMode = parameterMode;
     }
 
-    public String getJpaParameters() {
-        return JpaParameters;
+    public String getParameter() {
+        return parameter;
     }
 
-    public void setJpaParameters(String JpaParameters) {
-        this.JpaParameters = JpaParameters;
+    public void setParameter(String JpaParameters) {
+        this.parameter = JpaParameters;
     }
 
     public Object getValor() {
@@ -63,7 +63,7 @@ public class JpaParameter implements Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 61 * hash + (this.JpaParameters != null ? this.JpaParameters.hashCode() : 0);
+        hash = 61 * hash + (this.parameter != null ? this.parameter.hashCode() : 0);
         hash = 61 * hash + (this.valor != null ? this.valor.hashCode() : 0);
         return hash;
     }
@@ -77,7 +77,7 @@ public class JpaParameter implements Serializable {
             return false;
         }
         final JpaParameter other = (JpaParameter) obj;
-        if ((this.JpaParameters == null) ? (other.JpaParameters != null) : !this.JpaParameters.equals(other.JpaParameters)) {
+        if ((this.parameter == null) ? (other.parameter != null) : !this.parameter.equals(other.parameter)) {
             return false;
         }
         return !(this.valor != other.valor && (this.valor == null || !this.valor.equals(other.valor)));
@@ -85,7 +85,7 @@ public class JpaParameter implements Serializable {
 
     @Override
     public String toString() {
-        return "JpaParametersJpa{" + "JpaParameters=" + JpaParameters + ", valor=" + valor + '}';
+        return "JpaParametersJpa{" + "JpaParameters=" + parameter + ", valor=" + valor + '}';
     }
 
     public ParameterMode getParameterMode() {

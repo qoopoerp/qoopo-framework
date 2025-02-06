@@ -1,6 +1,5 @@
 package net.qoopo.framework.security.config;
 
-import java.beans.DefaultPersistenceDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

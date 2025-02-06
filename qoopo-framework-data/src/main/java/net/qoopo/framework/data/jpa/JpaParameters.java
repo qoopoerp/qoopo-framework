@@ -21,19 +21,19 @@ public class JpaParameters {
         lista = new ArrayList<>();
     }
 
-    public JpaParameters add(String JpaParameters, Object valor) {
+    public JpaParameters add(String parameter, Object valor) {
         if (lista == null) {
             lista = new ArrayList<>();
         }
-        lista.add(new JpaParameter(JpaParameters, valor));
+        lista.add(new JpaParameter(parameter, valor));
         return this;
     }
 
-    public JpaParameters add(String JpaParameters, Class clase, ParameterMode parameterMode) {
+    public JpaParameters add(String parameter, Class clase, ParameterMode parameterMode) {
         if (lista == null) {
             lista = new ArrayList<>();
         }
-        lista.add(new JpaParameter(JpaParameters, clase, parameterMode));
+        lista.add(new JpaParameter(parameter, clase, parameterMode));
         return this;
     }
 
@@ -63,6 +63,16 @@ public class JpaParameters {
 
     public List<JpaParameter> getLista() {
         return lista;
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder("{");
+        if (lista != null) {
+            lista.forEach(c -> sb.append(c.getParameter() != null ? c.getParameter() : c.getIndice()).append(": ")
+                    .append(c.getValor()).append(" , "));
+        }
+        sb.append("}");
+        return sb.toString();
     }
 
 }

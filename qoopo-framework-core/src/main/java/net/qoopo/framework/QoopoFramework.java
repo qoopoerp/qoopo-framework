@@ -9,8 +9,8 @@ import lombok.Setter;
 import net.qoopo.framework.controller.QControllerManager;
 import net.qoopo.framework.exception.NullArgumentException;
 import net.qoopo.framework.multitenant.MultitenantConfigurer;
-import net.qoopo.framework.services.QoopoService;
-import net.qoopo.framework.tasks.QoopoTask;
+import net.qoopo.framework.services.QServiceLoader;
+import net.qoopo.framework.tasks.QTaskLoader;
 
 /**
  * QoopoFramework es un conjunto de rutinas y utilitarios que serán utilizados
@@ -27,8 +27,6 @@ import net.qoopo.framework.tasks.QoopoTask;
  */
 @Getter
 @Setter
-// @Builder
-// @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class QoopoFramework {
 
     private static QoopoFramework INSTANCE = null;
@@ -75,10 +73,8 @@ public class QoopoFramework {
      * tareas
      */
     public void load() {
-        QoopoTask.load();
-        // QoopoTask.start();
-        QoopoService.load();
-        QoopoService.start();
+        QTaskLoader.load();
+        QServiceLoader.load();
         QControllerManager.load();
     }
 }

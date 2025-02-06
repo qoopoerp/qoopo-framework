@@ -29,6 +29,8 @@ public class Condition implements Serializable {
 
     public static Condition EMPTY = new Condition();
 
+    private Long id;
+
     private Field field;
 
     private Function function;

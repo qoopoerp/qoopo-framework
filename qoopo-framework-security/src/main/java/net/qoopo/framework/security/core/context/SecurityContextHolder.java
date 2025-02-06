@@ -46,7 +46,8 @@ public class SecurityContextHolder {
             if (strategyName == null) {
                 strategyName = THREAD_LOCAL;
             }
-            log.info("[+] SecurityContextHolderStrategy -> " + strategyName);
+            if (SecurityConfig.get().isDebug())
+                log.info("[+] SecurityContextHolderStrategy -> " + strategyName);
 
             switch (strategyName) {
                 case MODE_GLOBAL:

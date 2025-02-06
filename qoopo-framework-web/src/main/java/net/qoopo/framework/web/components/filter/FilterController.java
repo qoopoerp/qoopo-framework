@@ -2,26 +2,35 @@ package net.qoopo.framework.web.components.filter;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.primefaces.component.menu.Menu;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
+import org.primefaces.model.menu.DefaultMenuItem;
+import org.primefaces.model.menu.DefaultMenuModel;
+import org.primefaces.model.menu.DefaultSubMenu;
+import org.primefaces.model.menu.MenuElement;
+import org.primefaces.model.menu.MenuModel;
+import org.primefaces.model.menu.Submenu;
 
 import jakarta.faces.event.AjaxBehaviorEvent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import net.qoopo.framework.Accion;
 import net.qoopo.framework.filter.core.Filter;
 import net.qoopo.framework.filter.core.condition.Condition;
+import net.qoopo.framework.filter.core.condition.ConditionCollection;
 import net.qoopo.framework.filter.core.condition.Field;
 import net.qoopo.framework.filter.core.condition.Function;
 import net.qoopo.framework.filter.core.condition.Value;
-import net.qoopo.framework.Accion;
 import net.qoopo.framework.models.OpcionBase;
 
 /**
@@ -61,6 +70,8 @@ public class FilterController implements Serializable {
     // filtros preconfigurados que se puedan mostar en la GUI
     private List<Condition> condicionesDisponibles = new ArrayList<>();
 
+    private MenuModel conditionsMenuModel;
+
     private FilterController() {
         //
     }
@@ -98,8 +109,48 @@ public class FilterController implements Serializable {
     }
 
     public void appendAvalaibleCondition(Condition condicion) {
-        if (condicion != null)
+        if (condicion != null) {
             condicionesDisponibles.add(condicion);
+        }
+
+    }
+
+    public void buildConditionsMenu() {
+        log.info("construyendo conditions");
+        conditionsMenuModel = new DefaultMenuModel();
+
+        for (Condition condition : condicionesDisponibles) {
+            log.info("[+] Agregando " + condition.getName());
+            conditionsMenuModel.getElements().add(buildConditionMenuItem(condition));
+        }
+        conditionsMenuModel.generateUniqueIds();
+    }
+
+    private MenuElement buildConditionMenuItem(Condition condition) {
+        try {
+            if (condition instanceof ConditionCollection) {
+
+                Submenu subMenu = DefaultSubMenu.builder().label(condition.getName())
+                        .build();
+
+                for (Condition child : ((ConditionCollection) condition).getItems())
+                    subMenu.getElements().add(buildConditionMenuItem(child));
+                return subMenu;
+            } else {
+                condition.setId(new SecureRandom().nextLong());
+                return DefaultMenuItem.builder()
+                        .value(condition.getName())
+                        // .icon("pi pi-save")
+                        // .ajax(false)
+                        .command("#{cc.attrs.value.selectCondition(" + condition.getId() + ")}")
+                        .update("@form")
+                        .build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+
     }
 
     /**
@@ -129,12 +180,43 @@ public class FilterController implements Serializable {
         }
     }
 
+    public void selectCondition(Long id) {
+        log.info("select condtion id -> " + id);
+        try {
+            if (condicionesDisponibles != null && !condicionesDisponibles.isEmpty()) {
+                condicionesDisponibles.stream().forEach(c -> selectCondition(id, c));
+            }
+        } catch (Exception e) {
+            log.severe("Error in select condition id, imprimiendo los que existen");
+            // if (condicionesDisponibles != null && !condicionesDisponibles.isEmpty()) {
+            // condicionesDisponibles.stream()
+            // .forEach(c -> log.info("Condition id-> " + c.getId() + " name->" +
+            // c.getName()));
+            // }
+
+            e.printStackTrace();
+
+        }
+    }
+
+    private void selectCondition(Long id, Condition condition) {
+        if (condition instanceof ConditionCollection) {
+            ((ConditionCollection) condition).getItems().forEach(c -> selectCondition(id, c));
+
+        } else {
+            if (condition.getId().equals(id)) {
+                seleccionarCondicion(condition);
+            }
+        }
+    }
+
     /**
      * Selecciona uno de los filtros preconfigurados
      *
      * @param filtro
      */
     public void seleccionarCondicion(Condition condicion) {
+        log.info("select condition -> " + condicion);
         appendCondition(condicion);
         procesar();
     }
@@ -154,7 +236,7 @@ public class FilterController implements Serializable {
                         // condicion);
                         this.filtro.setCondition(null);
                     }
-                    this.filtro.appendCondition(condicion.clonar(), 1); //1=And
+                    this.filtro.appendCondition(condicion.clonar(), 1); // 1=And
                 }
                 Condition.CONDICIONES.addAll(this.condiciones);
             }

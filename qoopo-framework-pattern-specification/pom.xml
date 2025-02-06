@@ -1,5 +1,5 @@
 <project xmlns:pom="http://maven.apache.org/POM/4.0.0">
-    <name>qoopo-framework-core</name>
+    <name>qoopo-framework-pattern-specification</name>
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.qoopo</groupId>
     <artifactId>qoopo-framework-pattern-specification</artifactId>

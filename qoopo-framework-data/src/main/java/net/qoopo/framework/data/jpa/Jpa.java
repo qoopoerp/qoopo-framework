@@ -57,7 +57,7 @@ public class Jpa<T, ID> implements Serializable {
 
     public void deletebyId(ID id)
             throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException {
-        em.remove(find(id));
+        delete(em.find(entityClass, id));
     }
 
     public void delete(T item) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException {
@@ -104,7 +104,7 @@ public class Jpa<T, ID> implements Serializable {
     }
 
     /**
-     * Configura el query con los JpaParameterss, hints , resultados maximos y
+     * Configura el query con los parameters, hints , resultados maximos y
      * primeros resultados
      *
      * @param q
@@ -115,12 +115,12 @@ public class Jpa<T, ID> implements Serializable {
                 if (p.getIndice() > 0) {
                     q.setParameter(p.getIndice(), p.getValor());
                 } else {
-                    q.setParameter((String) p.getJpaParameters(), p.getValor());
+                    q.setParameter((String) p.getParameter(), p.getValor());
                 }
             });
         }
         if (hints != null && !hints.isEmpty()) {
-            hints.forEach(p -> q.setHint((String) p.getJpaParameters(), p.getValor()));
+            hints.forEach(p -> q.setHint((String) p.getParameter(), p.getValor()));
         }
 
         if (maxResults > -1) {
@@ -133,14 +133,14 @@ public class Jpa<T, ID> implements Serializable {
     }
 
     /**
-     * Configura el query con los JpaParameterss, hints , resultados maximos y
+     * Configura el query con los parameters, hints , resultados maximos y
      * primeros resultados
      *
      * @param q
      */
     private void configStoreProcedureQuery(StoredProcedureQuery q) {
         if (storeParam != null && storeParam.getLista() != null && !storeParam.getLista().isEmpty()) {
-            storeParam.getLista().forEach(p -> q.registerStoredProcedureParameter(p.getJpaParameters(),
+            storeParam.getLista().forEach(p -> q.registerStoredProcedureParameter(p.getParameter(),
                     p.getParameterClass(), p.getParameterMode()));
         }
     }

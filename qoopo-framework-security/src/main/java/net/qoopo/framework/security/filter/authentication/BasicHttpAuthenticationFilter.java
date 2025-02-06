@@ -8,7 +8,7 @@ import net.qoopo.framework.security.config.SecurityConfig;
 import net.qoopo.framework.security.matcher.BasicHttpAuthenticationMatcher;
 
 /**
- * Filtro que intentar autenticar cuando hay una solicitud de autneticación
+ * Filtro que intentar autenticar cuando hay una solicitud de autenticacion
  * basica http
  *
  * @author alberto
@@ -27,11 +27,13 @@ public class BasicHttpAuthenticationFilter extends AbstractUserPasswordAuthentic
         onlyPost = false;
     }
 
+    @Override
     protected String obtainUsername(HttpServletRequest request) {
         String userName = decodeBasicAuthToken(request.getHeader("Authorization"))[0];
         return userName;
     }
 
+    @Override
     protected String obtainPassword(HttpServletRequest request) {
         String password = decodeBasicAuthToken(request.getHeader("Authorization"))[1];
         return password;
@@ -52,7 +54,6 @@ public class BasicHttpAuthenticationFilter extends AbstractUserPasswordAuthentic
      */
     public void loadConfig() {
         enabled = SecurityConfig.get().getLoginConfigurer().isBasicHttp();
-        log.info(" enabled? " + enabled);
         if (enabled)
             if (requiresAuthenticationRequestMatcher == null) {
                 requiresAuthenticationRequestMatcher = new BasicHttpAuthenticationMatcher();

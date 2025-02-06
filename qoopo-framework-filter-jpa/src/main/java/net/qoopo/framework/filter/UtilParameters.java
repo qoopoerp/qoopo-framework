@@ -1,11 +1,16 @@
 package net.qoopo.framework.filter;
 
+import java.util.logging.Logger;
+
+import net.qoopo.framework.data.jpa.JpaParameters;
 import net.qoopo.framework.filter.core.Filter;
 import net.qoopo.framework.filter.core.condition.Condition;
-import net.qoopo.framework.data.jpa.JpaParameters;
 
 public class UtilParameters {
-     public static void getJpaParameters(Condition condition, JpaParameters parameters) {
+
+    private static Logger log = Logger.getLogger("util-parameters");
+
+    public static void getJpaParameters(Condition condition, JpaParameters parameters) {
         if (condition.getValue() != null)
             parameters.add(condition.getValue().getName(), condition.getValue().get());
 

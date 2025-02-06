@@ -81,7 +81,7 @@ public class QoopoReflection {
                         returnValue.add(createNewInstance(clase));
                     } catch (NoSuchMethodException | InvocationTargetException | InstantiationException
                             | IllegalAccessException e) {
-
+                        log.severe("[X] Error instanciando []" + clase.getCanonicalName() + "]");
                         e.printStackTrace();
                     }
                     // log.info("[+] Servicio cargado: [".concat(anotacion.name()));
@@ -140,13 +140,12 @@ public class QoopoReflection {
             Reflections reflections = new Reflections(PREFIX, Scanners.SubTypes);
             Set<Class<?>> clasesAnotadas = reflections.getSubTypesOf(interfaceClass);
             for (Class<?> clase : clasesAnotadas) {
-                if (ignoredClass == null || !ignoredClass.contains(clase)) {
-                    // Service anotacion = clase.getAnnotation(Service.class);
+                if (ignoredClass == null || !ignoredClass.contains(clase)) {                    
                     try {
-                        Object instancedObject = createNewInstance(clase);
-                        returnValue.add(instancedObject);
+                        returnValue.add(createNewInstance(clase));
                     } catch (NoSuchMethodException | InvocationTargetException | InstantiationException
                             | IllegalAccessException e) {
+                        log.severe("[X] Error instanciando []" + clase.getCanonicalName() + "]");
                         e.printStackTrace();
                     }
                 }

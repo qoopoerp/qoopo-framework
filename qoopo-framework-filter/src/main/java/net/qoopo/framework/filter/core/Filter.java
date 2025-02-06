@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import net.qoopo.framework.filter.Util;
 import net.qoopo.framework.filter.core.condition.Condition;
 
 /**
@@ -120,18 +121,19 @@ public class Filter implements Serializable {
         try {
             if (condition != null && !condition.equals(Condition.EMPTY)) {
 
-                // query = "select ".concat(this.selectObject).concat(" from ");
-                // query = query.concat(collection).concat(" o where ");
-                // query = query.concat(condition.buildQuery()).concat(" ");
-                // query = query.concat(next).concat(" ");
-                // query = query.concat(!next.isEmpty() ? orderDirection : "");
+                query = "select ".concat(this.selectObject).concat(" from ");
+                query = query.concat(collection).concat(" o where ");
+                query = query.concat(condition.buildQuery()).concat(" ");
+                query = query.concat(Util.nvl(next)).concat(" ");
+                query = query.concat(!next.isEmpty() ? Util.nvl(orderDirection) : "");
 
-                query = "select ".concat(this.selectObject).concat(" from ").concat(collection).concat(" o where ")
-                        .concat(condition.buildQuery()).concat(" ")
-                        .concat(next).concat(" ").concat(!next.isEmpty() ? orderDirection : "");
+                // query = "select ".concat(this.selectObject).concat(" from
+                // ").concat(collection).concat(" o where ")
+                // .concat(condition.buildQuery()).concat(" ")
+                // .concat(next).concat(" ").concat(!next.isEmpty() ? orderDirection : "");
             } else {
                 query = "select ".concat(this.selectObject).concat(" from ").concat(collection).concat(" o ")
-                        .concat(next).concat(" ").concat(!next.isEmpty() ? orderDirection : "");
+                        .concat(Util.nvl(next)).concat(" ").concat(!next.isEmpty() ? Util.nvl(orderDirection) : "");
             }
             log.log(Level.INFO, "Query Filtro=({0})", query);
             return query;
@@ -149,18 +151,21 @@ public class Filter implements Serializable {
      * @return
      */
     public String buildQueryCount() {
+        String query = null;
         try {
             if (condition != null) {
-                return "select count(o) from ".concat(collection).concat(" o where ").concat(condition.buildQuery())
+                query = "select count(o) from ".concat(collection).concat(" o where ").concat(condition.buildQuery())
                         .concat(" ");
             } else {
-                return "select count(o) from ".concat(collection).concat(" o ");
+                query = "select count(o) from ".concat(collection).concat(" o ");
             }
+            log.log(Level.INFO, "Query Filtro count=({0})", query);
+            return query;
         } catch (Exception e) {
             //
         }
 
-        return null;
+        return query;
     }
 
     @Override

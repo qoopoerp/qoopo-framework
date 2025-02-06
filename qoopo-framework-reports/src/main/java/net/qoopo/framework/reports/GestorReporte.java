@@ -113,7 +113,7 @@ public class GestorReporte {
         } else {
             report = (JasperReport) JRLoader.loadObject(getStream(contentBytes));
         }
-        // Rellenamos el informe con la conexion creada y sus JpaParameterss establecidos
+        // Rellenamos el informe con la conexion creada y sus parameters establecidos
         JasperPrint print = null;
         if (dataSource != null) {
             print = JasperFillManager.fillReport(report, map, dataSource);

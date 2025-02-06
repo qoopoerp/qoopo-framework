@@ -1,12 +1,14 @@
 package net.qoopo.framework.filter.core;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-import net.qoopo.framework.filter.core.condition.Field;
+import net.qoopo.framework.date.FechasUtil;
 import net.qoopo.framework.filter.core.condition.Condition;
+import net.qoopo.framework.filter.core.condition.ConditionCollection;
+import net.qoopo.framework.filter.core.condition.Field;
 import net.qoopo.framework.filter.core.condition.Function;
 import net.qoopo.framework.filter.core.condition.Value;
-import net.qoopo.framework.date.FechasUtil;
 
 public class GeneralFilter {
 
@@ -24,6 +26,19 @@ public class GeneralFilter {
     public static Condition condicionArchivado() {
         return Condition.builder().field(GeneralFilter.ARCHIVADO).function(Function.IGUAL)
                 .value(new Value("archived", Boolean.TRUE)).build().setName("Archivado");
+    }
+
+    /**
+     * Filtros de fecha
+     */
+    public static ConditionCollection dateField(Field field) {
+        return ConditionCollection.of(field.getNombre(),
+                List.of(
+                        GeneralFilter.fechaHoy(field),
+                        GeneralFilter.fechaEsteMes(field),
+                        GeneralFilter.fechaMesAnterior(field),
+                        GeneralFilter.fechaEsteAnio(field),
+                        GeneralFilter.fechaAnioAnterior(field)));
     }
 
     public static Condition fechaHoy(Field field) {
