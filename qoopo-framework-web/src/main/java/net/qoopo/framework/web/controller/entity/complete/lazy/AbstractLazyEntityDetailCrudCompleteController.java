@@ -3,10 +3,12 @@ package net.qoopo.framework.web.controller.entity.complete.lazy;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
+import net.qoopo.framework.data.repository.CrudRepository;
 import net.qoopo.framework.filter.core.Filter;
 import net.qoopo.framework.filter.core.condition.Condition;
 import net.qoopo.framework.filter.core.condition.Field;
-import net.qoopo.framework.data.repository.CrudRepository;
 import net.qoopo.framework.jpa.core.AbstractEntity;
 import net.qoopo.framework.models.OpcionBase;
 import net.qoopo.framework.web.util.FacesUtils;
@@ -18,6 +20,8 @@ import net.qoopo.framework.web.util.FacesUtils;
  * @param <S>
  * @param <T>
  */
+@Getter
+@Setter
 public abstract class AbstractLazyEntityDetailCrudCompleteController<S extends AbstractEntity, T>
         extends AbstractLazyEntityCrudCompleteController<S> {
 
@@ -52,32 +56,8 @@ public abstract class AbstractLazyEntityDetailCrudCompleteController<S extends A
 
     @Override
     public void edit(S item) {
-        super.edit(item); // To change body of generated methods, choose Tools | Templates.
+        super.edit(item);
         listaEliminar.clear();
-    }
-
-    public T getItemDetalle() {
-        return itemDetalle;
-    }
-
-    public void setItemDetalle(T itemDetalle) {
-        this.itemDetalle = itemDetalle;
-    }
-
-    public boolean isEditandoDetalle() {
-        return editandoDetalle;
-    }
-
-    public void setEditandoDetalle(boolean editandoDetalle) {
-        this.editandoDetalle = editandoDetalle;
-    }
-
-    public List<T> getListaEliminar() {
-        return listaEliminar;
-    }
-
-    public void setListaEliminar(List<T> listaEliminar) {
-        this.listaEliminar = listaEliminar;
     }
 
 }

@@ -23,7 +23,7 @@ import net.qoopo.framework.web.vistas.ReporteBean;
 @Setter
 public abstract class InformeBean implements Serializable {
 
-    public static final Logger log = Logger.getLogger("Qoopo");
+    public static final Logger log = Logger.getLogger("InformeBean");
 
     protected PeriodoManager periodoManager;
 

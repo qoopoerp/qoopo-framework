@@ -459,7 +459,7 @@ public abstract class AbstractDtoCrudCompleteController<S extends AbstractEntity
                 chatter.saveProperties(false); // ya no guarda los metadatos pues se guardan en cascada con el edit
                                                // siguiente a esta linea
             }
-            super.save();
+            super.update();
             // Optional<S> tmp = repository.find(objeto.getId());
             // if (tmp.isPresent())
             // objeto = tmp.get();

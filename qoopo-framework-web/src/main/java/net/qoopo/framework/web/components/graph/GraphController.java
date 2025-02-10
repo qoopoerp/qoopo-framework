@@ -30,9 +30,9 @@ public class GraphController<T> implements Serializable {
     protected LanguageProvider languageProvider;
 
     protected QChartJS chart = new QChartJS();
-    protected OpcionBase opcionGrupo = new OpcionBase(-100, 0, "'");
-    protected OpcionBase opcionGrupo2 = new OpcionBase(-100, 0, "'");
-    protected OpcionBase opcionMetrica = new OpcionBase(-100, 0, "'");
+    protected OpcionBase opcionGrupo = new OpcionBase(-100, "", "'");
+    protected OpcionBase opcionGrupo2 = new OpcionBase(-100, "", "'");
+    protected OpcionBase opcionMetrica = new OpcionBase(-100, "", "'");
     protected List<OpcionBase> opcionesGrupo = new ArrayList<>();
     protected List<OpcionBase> opcionesMetrica = new ArrayList<>();
     private Iterable<T> datos;

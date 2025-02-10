@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.primefaces.component.menu.Menu;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.menu.DefaultMenuItem;
@@ -44,7 +43,7 @@ import net.qoopo.framework.models.OpcionBase;
 @AllArgsConstructor
 public class FilterController implements Serializable {
 
-    public static final Logger log = Logger.getLogger("Qoopo");
+    public static final Logger log = Logger.getLogger("FilterController");
 
     private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     private final List<Condition> previas = new ArrayList<>();
@@ -116,11 +115,8 @@ public class FilterController implements Serializable {
     }
 
     public void buildConditionsMenu() {
-        log.info("construyendo conditions");
         conditionsMenuModel = new DefaultMenuModel();
-
         for (Condition condition : condicionesDisponibles) {
-            log.info("[+] Agregando " + condition.getName());
             conditionsMenuModel.getElements().add(buildConditionMenuItem(condition));
         }
         conditionsMenuModel.generateUniqueIds();
@@ -129,10 +125,8 @@ public class FilterController implements Serializable {
     private MenuElement buildConditionMenuItem(Condition condition) {
         try {
             if (condition instanceof ConditionCollection) {
-
                 Submenu subMenu = DefaultSubMenu.builder().label(condition.getName())
                         .build();
-
                 for (Condition child : ((ConditionCollection) condition).getItems())
                     subMenu.getElements().add(buildConditionMenuItem(child));
                 return subMenu;
@@ -181,7 +175,6 @@ public class FilterController implements Serializable {
     }
 
     public void selectCondition(Long id) {
-        log.info("select condtion id -> " + id);
         try {
             if (condicionesDisponibles != null && !condicionesDisponibles.isEmpty()) {
                 condicionesDisponibles.stream().forEach(c -> selectCondition(id, c));
@@ -216,7 +209,6 @@ public class FilterController implements Serializable {
      * @param filtro
      */
     public void seleccionarCondicion(Condition condicion) {
-        log.info("select condition -> " + condicion);
         appendCondition(condicion);
         procesar();
     }

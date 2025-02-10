@@ -422,13 +422,16 @@ public abstract class AbstractCrudCompleteController<Entity extends AbstractEnti
      */
     public void save() {
         try {
+            log.info("[+] save");
             if (objeto instanceof Auditable) {
                 ((Auditable) objeto).setMetadato(sessionBean.addCreatedEvent(((Auditable) objeto).getMetadato()));
                 chatter.saveProperties();
             }
             super.save();
+            log.info("[+] saved");
             edit(objeto);
         } catch (Exception ex) {
+            ex.printStackTrace();
             FacesUtils.addErrorMessage(ex);
             log.log(Level.SEVERE, ex.getMessage(), ex);
         }
@@ -439,6 +442,7 @@ public abstract class AbstractCrudCompleteController<Entity extends AbstractEnti
      */
     public void update() {
         try {
+            log.info("[+] update");
             if (objeto instanceof Auditable) {
                 // solo agrega un metadato en caso que no exista uno
                 if (((Auditable) objeto).getMetadato() == null) {
@@ -447,15 +451,16 @@ public abstract class AbstractCrudCompleteController<Entity extends AbstractEnti
                 chatter.saveProperties(false); // ya no guarda los metadatos pues se guardan en cascada con el edit
                                                // siguiente a esta linea
             }
-            super.save();
+            super.update();
+            log.info("[+] updated");
             // Optional<T> tmp = repository.find(objeto.getId());
             // if (tmp.isPresent())
             // objeto = tmp.get();
             // else
             // log.severe("no se encontro el objeto deespues de actualizar");
-
             edit(objeto);
         } catch (Exception ex) {
+            ex.printStackTrace();
             FacesUtils.addErrorMessage(ex.getMessage());
             log.log(Level.SEVERE, ex.getMessage(), ex);
         }

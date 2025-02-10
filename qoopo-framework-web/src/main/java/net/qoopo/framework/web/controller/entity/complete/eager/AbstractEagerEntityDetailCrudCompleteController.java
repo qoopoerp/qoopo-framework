@@ -43,7 +43,7 @@ public abstract class AbstractEagerEntityDetailCrudCompleteController<S extends 
 
     @Override
     public void edit(S item) {
-        super.edit(item); // To change body of generated methods, choose Tools | Templates.
+        super.edit(item); 
         listaEliminar.clear();
     }
 

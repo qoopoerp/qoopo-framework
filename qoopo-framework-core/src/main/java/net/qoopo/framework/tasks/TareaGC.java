@@ -12,7 +12,7 @@ import java.util.logging.Logger;
         * 60L * 5L, runStart = true)
 public class TareaGC extends TimerTask {
 
-    public static final Logger log = Logger.getLogger("Qoopo");
+    public static final Logger log = Logger.getLogger("TareaGC");
 
     public TareaGC() {
         //

@@ -17,7 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Condition implements Serializable {
-    public static final Logger log = Logger.getLogger("Qoopo");
+    public static final Logger log = Logger.getLogger("Condition");
 
     public static final int RELACION_AND = 1;
 

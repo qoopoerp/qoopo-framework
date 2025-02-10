@@ -47,8 +47,9 @@
 
                             <p:menuButton value="#{texto.text('common.actions')}">
 
-                                <p:menuitem value="#{texto.text('common.delete')}" title="#{texto.text('common.delete')}"
-                                    actionListener="#{crudBean.deleteSelected()}" update="@form">
+                                <p:menuitem value="#{texto.text('common.delete')}"
+                                    title="#{texto.text('common.delete')}" actionListener="#{crudBean.deleteSelected()}"
+                                    update="@form">
                                     <p:confirm header="#{texto.text('common.confirm.title')}"
                                         message="#{texto.text('common.confirm.messsage')}"
                                         icon="pi pi-exclamation-triangle" />
@@ -107,8 +108,7 @@
                     <h:panelGroup rendered="#{viewOption.value==5}">
                         <p:schedule id="schedule" value="#{crudBean.eventModel}" widgetVar="myschedule"
                             view="agendaWeek" locale="#{gestorFecha.locale}">
-                            <p:ajax event="eventSelect" listener="#{crudBean.onEventSelect}"
-                                update="@form" />
+                            <p:ajax event="eventSelect" listener="#{crudBean.onEventSelect}" update="@form" />
                             <p:ajax event="dateSelect" listener="#{crudBean.onDateSelect}" update="@form" />
                             <p:ajax event="eventMove" listener="#{crudBean.onEventMove}" update="@form" />
                             <p:ajax event="eventResize" listener="#{crudBean.onEventResize}" update="@form" />
@@ -163,10 +163,23 @@
                 <div class="q-flex-header q-page-header">
                     <div class="q-block">
                         <div class="float-left">
+
                             <ui:insert name="form-header" />
+
+                            <p:commandButton disabled="#{!mainBean.comandoSeleccionado.create}"
+                                value="#{texto.text('common.save')}" rendered="#{!crudBean.editando}"
+                                actionListener="#{crudBean.save()}" accesskey="s" update="@form" />
+                            <p:commandButton value="#{texto.text('common.update')}" rendered="#{crudBean.editando}"
+                                actionListener="#{crudBean.update()}" accesskey="s" update="@form"
+                                disabled="#{!mainBean.comandoSeleccionado.write}" />
+                            <p:commandButton value="#{texto.text('common.new')}"
+                                disabled="#{!mainBean.comandoSeleccionado.create}" actionListener="#{crudBean.nuevo()}"
+                                accesskey="c" update="@form" />
+
                             <p:commandButton rendered="true" accesskey="b" styleClass="other-button"
-                                value="#{texto.texto(1013)}" update="@form" actionListener="#{crudBean.resetView()}" />
-                            <p:commandButton rendered="false" value="#{texto.texto(1013)}" styleClass="other-button"
+                                value="#{texto.text('common.back')}" update="@form" actionListener="#{crudBean.resetView()}" />
+
+                            <p:commandButton rendered="false" value="#{texto.text('common.back')}" styleClass="other-button"
                                 update="@form" accesskey="b" onclick="window.history.back();" />
                         </div>
 
@@ -196,9 +209,9 @@
                                     rendered="#{crudBean.editando and crudBean.objeto.archived}"
                                     actionListener="#{crudBean.unarchive()}" update="@form" />
 
-                                <p:menuitem icon="pi pi-trash" value="#{texto.text('common.delete')}" title="#{texto.text('common.delete')}"
-                                    rendered="#{crudBean.editando}" actionListener="#{crudBean.delete()}"
-                                    update="@form">
+                                <p:menuitem icon="pi pi-trash" value="#{texto.text('common.delete')}"
+                                    title="#{texto.text('common.delete')}" rendered="#{crudBean.editando}"
+                                    actionListener="#{crudBean.delete()}" update="@form">
                                     <p:confirm header="#{texto.text('common.confirm.title')}"
                                         message="#{texto.text('common.confirm.messsage')}"
                                         icon="pi pi-exclamation-triangle" />
@@ -245,8 +258,8 @@
             </div>
             <hr />
 
-            <p:fileUpload listener="#{crudBean.archivoSubido}" mode="advanced" label="#{texto.text('common.fileupload.select')}" auto="true"
-                allowTypes="/(\.|\/)(csv|xls?x|txt)$/" />
+            <p:fileUpload listener="#{crudBean.archivoSubido}" mode="advanced"
+                label="#{texto.text('common.fileupload.select')}" auto="true" allowTypes="/(\.|\/)(csv|xls?x|txt)$/" />
             <f:facet name="footer">
                 <p:commandButton value="#{texto.texto(1263)}" actionListener='#{crudBean.importar()}' update="@form"
                     oncomplete="PF('importarDG').hide();" />

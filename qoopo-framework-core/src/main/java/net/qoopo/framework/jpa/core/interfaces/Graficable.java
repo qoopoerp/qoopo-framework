@@ -12,7 +12,7 @@ import net.qoopo.framework.models.OpcionBase;
  */
 public interface Graficable {
 
-    public static final OpcionBase UNIDADES = new OpcionBase(-1, 1588, "Cuenta");
+    public static final OpcionBase UNIDADES = new OpcionBase(-1, "common.count", "Cantidad");
 
     /**
      * Devuelve las opciones de metricas para obtener el valor

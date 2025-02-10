@@ -52,13 +52,14 @@ public abstract class AbstractLazyDtoDetailCrudCompleteController<R extends Abst
             }
         } catch (Exception e) {
             FacesUtils.addErrorMessage(languageProvider.getTextValue(20) + e.getMessage());
+            e.printStackTrace();
         }
         super.update();
     }
 
     @Override
     public void edit(DTO item) {
-        super.edit(item); // To change body of generated methods, choose Tools | Templates.
+        super.edit(item);
         listaEliminar.clear();
     }
 

@@ -31,7 +31,7 @@ public abstract class GraphWidget extends Widget {
         this.stacked = stacked;
     }
 
-    public static final Logger log = Logger.getLogger("Qoopo");
+    public static final Logger log = Logger.getLogger("GraphWidget");
 
     protected final transient SimpleDateFormat sdf = new SimpleDateFormat("yy/MM");
 

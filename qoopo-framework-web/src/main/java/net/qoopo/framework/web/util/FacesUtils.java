@@ -20,7 +20,7 @@ import jakarta.servlet.http.HttpSession;
  */
 public class FacesUtils {
 
-    public static final Logger log = Logger.getLogger("Qoopo");
+    public static final Logger log = Logger.getLogger("FacesUtils");
 
     public static void redirect(String page) {
         try {
@@ -158,7 +158,7 @@ public class FacesUtils {
     public static void addErrorMessage(String clientId, String msg) {
         FacesContext.getCurrentInstance().addMessage(clientId,
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, msg));
-        log.severe(msg);
+        log.severe("Error -> " + msg);
     }
 
     public static void addErrorMessageException(Exception ex, String defaultMsg) {

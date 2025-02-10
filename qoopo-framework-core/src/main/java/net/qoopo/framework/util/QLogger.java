@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  */
 public class QLogger {
 
-    private static final Logger GENERAL = Logger.getLogger("Qoopo");
+    private static final Logger GENERAL = Logger.getLogger("QLogger");
 
     private static void removerHandlers(Logger logger) {
         for (Handler handler : logger.getHandlers()) {

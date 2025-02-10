@@ -12,7 +12,7 @@ import net.qoopo.framework.filter.core.Filter;
  */
 public class FilterJpaRepository<T> implements FilterRepository<T> {
 
-    public static final Logger log = Logger.getLogger("Qoopo");
+    public static final Logger log = Logger.getLogger("FilterJpaRepository");
 
     private FilterDAO<T> dao;
 

@@ -17,7 +17,7 @@ import net.qoopo.framework.reflection.QoopoReflection;
 @Deprecated(forRemoval = true)
 public final class QControllerManager {
 
-    public static final Logger log = Logger.getLogger("Qoopo");
+    public static final Logger log = Logger.getLogger("QControllerManager");
     private static final List<QController> INSTANCES = new ArrayList<>();
     private static final Map<String, List<QController>> observers = new HashMap<>();
 

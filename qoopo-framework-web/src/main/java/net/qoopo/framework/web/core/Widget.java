@@ -22,7 +22,7 @@ public abstract class Widget implements Serializable {
     public static final int TYPE_GRAPH = 1;
     public static final int TYPE_TEXT = 2;
 
-    public static final Logger log = Logger.getLogger("Qoopo");
+    public static final Logger log = Logger.getLogger("Widget");
 
     private String name = "--";
     private String title;

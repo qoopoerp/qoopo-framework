@@ -161,7 +161,7 @@ public class FechasUtil {
     }
 
     public static Date fechaFinMes(Date fecha) {
-        return fechaFin(getParteFecha(fecha, 3), getParteFecha(fecha, 2));
+        return fechaFin(getParteFecha(fecha, ANIOS), getParteFecha(fecha, MESES));
     }
 
     public static Date fechaInicioAnio(Date fecha) {

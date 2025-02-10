@@ -21,7 +21,7 @@ import net.sf.jasperreports.engine.JRException;
 @SessionScoped
 public class ReporteBean implements Serializable {
 
-    public static final Logger log = Logger.getLogger("Qoopo");
+    public static final Logger log = Logger.getLogger("ReporteBean");
 
     private Reporte reporte;
 

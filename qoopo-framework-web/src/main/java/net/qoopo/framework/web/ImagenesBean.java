@@ -32,7 +32,7 @@ import net.qoopo.framework.web.util.FacesUtils;
 @SessionScoped
 public class ImagenesBean implements Serializable {
 
-    public static final Logger log = Logger.getLogger("Qoopo");
+    public static final Logger log = Logger.getLogger("ImagenesBean");
 
     private static final String NO_DISPONIBLE = "resources/imagenes/nodisponible.png";
     private static final String NO_DISPONIBLE_FOTO = "resources/imagenes/persona.png";

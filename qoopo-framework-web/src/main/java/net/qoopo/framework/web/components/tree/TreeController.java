@@ -26,13 +26,13 @@ import net.qoopo.framework.web.controller.entity.complete.AbstractEntityCrudComp
 // @SessionScoped
 public class TreeController implements Serializable {
 
-    public static final Logger log = Logger.getLogger("Qoopo");
+    public static final Logger log = Logger.getLogger("TreeController");
 
     // protected List<SelectItem> gruposSeleccionados;
     protected List<OpcionBase> opcionesGrupo = new ArrayList<>();
-    protected OpcionBase opcionGrupo = new OpcionBase(-100, 0, "'");
-    protected OpcionBase opcionGrupo2 = new OpcionBase(-100, 0, "'");
-    protected OpcionBase opcionGrupo3 = new OpcionBase(-100, 0, "'");
+    protected OpcionBase opcionGrupo = new OpcionBase(-100, "", "'");
+    protected OpcionBase opcionGrupo2 = new OpcionBase(-100, "", "'");
+    protected OpcionBase opcionGrupo3 = new OpcionBase(-100, "", "'");
     protected TreeNode nodo = new DefaultTreeNode("Root", null, null);
     private List<Columna> columnas = new ArrayList<>();
     private Iterable datos;
