@@ -9,7 +9,6 @@ import lombok.Setter;
 import net.qoopo.framework.security.authentication.Authentication;
 import net.qoopo.framework.security.authentication.user.UserData;
 import net.qoopo.framework.security.core.context.SecurityContextHolder;
-import net.qoopo.framework.util.exceptions.QoopoException;
 
 @Named
 @SessionScoped
