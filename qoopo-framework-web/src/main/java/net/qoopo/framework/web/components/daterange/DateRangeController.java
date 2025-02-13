@@ -58,7 +58,24 @@ public class DateRangeController implements Serializable {
                                 monthsOfYear(String.valueOf(LocalDate.now().plusYears(-2).getYear()),
                                         LocalDate.now().plusYears(-2)),
                                 monthsOfYear(String.valueOf(LocalDate.now().plusYears(-3).getYear()),
-                                        LocalDate.now().plusYears(-3))
+                                        LocalDate.now().plusYears(-3)),
+                                monthsOfYear(String.valueOf(LocalDate.now().plusYears(-4).getYear()),
+                                        LocalDate.now().plusYears(-4))
+
+                        )));
+
+        itemsDisponibles.add(
+                RangeItemCollection.of("Trimestre",
+                        List.of(
+                                quarterOfYear(String.valueOf(LocalDate.now().getYear()), LocalDate.now()),
+                                quarterOfYear(String.valueOf(LocalDate.now().plusYears(-1).getYear()),
+                                        LocalDate.now().plusYears(-1)),
+                                quarterOfYear(String.valueOf(LocalDate.now().plusYears(-2).getYear()),
+                                        LocalDate.now().plusYears(-2)),
+                                quarterOfYear(String.valueOf(LocalDate.now().plusYears(-3).getYear()),
+                                        LocalDate.now().plusYears(-3)),
+                                quarterOfYear(String.valueOf(LocalDate.now().plusYears(-4).getYear()),
+                                        LocalDate.now().plusYears(-4))
 
                         )));
         itemsDisponibles.add(
@@ -67,7 +84,10 @@ public class DateRangeController implements Serializable {
                                 year(LocalDate.now()),
                                 year(LocalDate.now().plusYears(-1)),
                                 year(LocalDate.now().plusYears(-2)),
-                                year(LocalDate.now().plusYears(-3)))));
+                                year(LocalDate.now().plusYears(-3)),
+                                year(LocalDate.now().plusYears(-4))
+
+                        )));
         buildMenu();
     }
 
@@ -156,10 +176,26 @@ public class DateRangeController implements Serializable {
         List<RangeItem> lstMonts = new ArrayList<>();
         LocalDateTime startDate = FechasUtil.fechaInicioAnio(date);
         for (int i = 1; i <= 12; i++) {
-            LocalDateTime endDate = FechasUtil
-                    .convertToLocalDateTimeViaInstant(FechasUtil.fechaFinMes(FechasUtil.convertLocalDate(startDate)));
+            // LocalDateTime endDate =
+            // FechasUtil.convertToLocalDateTimeViaInstant(FechasUtil.fechaFinMes(FechasUtil.convertLocalDate(startDate)));
+            LocalDateTime endDate = FechasUtil.fechaFinMes(startDate);
             lstMonts.add(range(startDate.getMonth().getDisplayName(TextStyle.FULL, Locale.US), startDate, endDate));
             startDate = startDate.plusMonths(1);
+        }
+        return RangeItemCollection.of(name, lstMonts);
+    }
+
+    private RangeItemCollection quarterOfYear(String name, LocalDate date) {
+        List<RangeItem> lstMonts = new ArrayList<>();
+        LocalDateTime startDate = FechasUtil.fechaInicioAnio(date);
+        for (int i = 1; i <= 4; i++) {
+            LocalDateTime endDate = FechasUtil.fechaFinMes(startDate.plusMonths(2));
+            lstMonts.add(range(
+                    startDate.getMonth().getDisplayName(TextStyle.FULL, Locale.US)
+                            + "-"
+                            + endDate.getMonth().getDisplayName(TextStyle.FULL, Locale.US),
+                    startDate, endDate));
+            startDate = startDate.plusMonths(3);
         }
         return RangeItemCollection.of(name, lstMonts);
     }

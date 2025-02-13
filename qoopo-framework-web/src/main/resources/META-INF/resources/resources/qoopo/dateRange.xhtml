@@ -13,7 +13,7 @@
 <!-- IMPLEMENTATION -->
 <cc:implementation>
     <p:commandButton icon="pi pi-calendar" id="valueBtnSm" type="button" accesskey="w" />
-    <h:outputText value="#{cc.attrs.value.output}"/>
+    <h:outputText styleClass="ml24" value=" #{cc.attrs.value.output}"/>
     <p:tieredMenu trigger="valueBtnSm" model="#{cc.attrs.value.menuModel}" toggleable="true" overlay="true"
         my="left top" at="left bottom" />
 </cc:implementation>

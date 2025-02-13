@@ -124,6 +124,15 @@ public class FechasUtil {
         return c.getTime();
     }
 
+
+    public static LocalDate fechaInicioLD(int anio, int mes) {
+        return LocalDate.of(anio, mes, 1);
+    }
+
+    public static LocalDate fechaFinLD(int anio, int mes) {
+        return LocalDate.of(anio, mes, YearMonth.of(anio, mes).lengthOfMonth());
+    }
+
     public static LocalDateTime fechaInicioLDT(int anio, int mes) {
         return LocalDateTime.of(anio, mes, 1, 0, 0, 0);
     }
@@ -203,6 +212,15 @@ public class FechasUtil {
     public static LocalDateTime fechaFinMes(LocalDateTime fecha) {
         return fechaFinLDT(fecha.getYear(), fecha.getMonthValue());
     }
+
+    public static LocalDate fechaInicioMes(LocalDate fecha) {
+        return fechaInicioLD(fecha.getYear(), fecha.getMonthValue());
+    }
+
+    public static LocalDate fechaFinMes(LocalDate fecha) {
+        return fechaFinLD(fecha.getYear(), fecha.getMonthValue());
+    }
+
 
     public static LocalDateTime fechaInicioAnio(LocalDateTime fecha) {
         return fechaInicioLDT(fecha.getYear(), 1);
