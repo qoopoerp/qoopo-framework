@@ -70,7 +70,7 @@ public abstract class AbstractCrudController<Entity, EntityData, EntityID> imple
     public void save() {
         try {
             objeto = (Entity) repository.save(objeto);
-            // loadData();
+            loadData();
         } catch (Exception ex) {
             ex.printStackTrace();
             log.log(Level.SEVERE, ex.getMessage(), ex);
@@ -83,7 +83,7 @@ public abstract class AbstractCrudController<Entity, EntityData, EntityID> imple
     public void update() {
         try {
             objeto = (Entity) repository.save(objeto);
-            // loadData();
+            loadData();
         } catch (Exception ex) {
             ex.printStackTrace();
             log.log(Level.SEVERE, ex.getMessage(), ex);

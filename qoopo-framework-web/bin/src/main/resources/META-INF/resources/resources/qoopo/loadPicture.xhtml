@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <cc:attribute  name="value" required="true"  />
+        <cc:attribute  name="id" required="true"  />
+        <cc:attribute  name="full" required="false" default="true"  />
+        <!--photo, img-->
+        <cc:attribute  name="type" required="false" default="img"  />
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+
+        <div class="q-form-photo-container float-right">
+            <div class="q-form-image-controls">
+                <div class="float-left">
+                    <p:commandButton icon="pi pi-pencil" styleClass="q-autohide"  title="#{texto.text('common.photo')}" oncomplete="PF('#{cc.attrs.id}uploadPicture').show();" />
+                </div>
+                <div class="float-right">
+                    <p:commandButton icon="pi pi-trash" styleClass="q-autohide"  title="#{texto.text('common.photo.remove')}" update="@form"  >
+                        <f:setPropertyActionListener value="#{null}" target="#{cc.attrs.value}" />
+                    </p:commandButton>
+                </div>
+            </div>
+
+            <div id="picture" class="q-form-photo #{cc.attrs.full?'imgFull':''}"    
+                 style="background-image: url('#{(cc.attrs.type eq photo)?imagenesBean.getPhoto(cc.attrs.value):imagenesBean.getImage(cc.attrs.value)}');" >
+                <!--<p:graphicImage styleClass="q-form-photo" id="foto" value="# {imagenesBean.getPhoto(contactosBean.objeto.foto)}" />-->
+            </div>
+        </div> 
+
+
+        <p:dialog styleClass="dialogo" 
+                  id="#{cc.attrs.id}uploadPicture" 
+                  widgetVar="#{cc.attrs.id}uploadPicture" 
+                  dynamic="false"  
+                  closeOnEscape="true" 
+                  style="width: 1000px;">
+
+            <div style="text-align: center;" class="q-block">
+                <p:commandButton value="#{texto.text('common.ok')}"
+                                 styleClass="ml12"
+                                 oncomplete="PF('#{cc.attrs.id}uploadPicture').hide();"
+                                 update="#{cc.attrs.id} @form"
+                                 >   
+                    <f:setPropertyActionListener value="#{imagenesBean.imagen}" target="#{cc.attrs.value}" />
+                </p:commandButton>
+
+                <p:commandButton value="#{texto.text('common.back')}"
+                                 styleClass="ml12"
+                                 type="button"
+                                 oncomplete="PF('#{cc.attrs.id}uploadPicture').hide();"/>
+            </div>
+            <hr/>
+            <div style="text-align: center;" class="q-block">
+                <p:graphicImage style="max-width: 100%; height: 120px;" 
+                                id="picturePreview" 
+                                value="#{(cc.attrs.type eq 'photo')?imagenesBean.getPhoto(imagenesBean.imagen):imagenesBean.getImage(imagenesBean.imagen)}" />
+
+                <p:fileUpload listener="#{imagenesBean.archivoSubido}"
+                              rendered="true"
+                              mode="advanced"
+                              label="#{texto.texto(184)}"
+                              auto="true"
+                              update="picturePreview"
+                              sizeLimit="1000000"
+                              allowTypes="/(\.|\/)(gif|jpg|jpeg|gif|png|PNG|GIF|JPG|JPEG)$/"
+                              />
+            </div>
+        </p:dialog> 
+    </cc:implementation>
+</html>

@@ -1,0 +1,54 @@
+<div align="center" xmlns="http://www.w3.org/1999/xhtml" xmlns:p="http://primefaces.org/ui"
+    xmlns:h="http://java.sun.com/jsf/html">
+
+    <h:form enctype="multipart/form-data" id="frmReporte">
+        <p:dialog styleClass="dialogo" width="800" height="400" resizable="true" id="mostrarReporte"
+            widgetVar="dlgReporte" header="#{texto.texto(920)}" dynamic="true" minimizable="true" maximizable="true">
+
+            <p:commandButton icon="pi pi-note" title="#{texto.texto(911)}" ajax="false" value="PDF"
+                actionListener="#{reporteBean.descargarPDF()}">
+                <p:fileDownload value="#{reporteBean.reporte.contenido}" />
+            </p:commandButton>
+
+            <p:commandButton icon="pi pi-note" title="#{texto.texto(912)}" ajax="false" value="XLSx"
+                actionListener="#{reporteBean.dscargarXLS()}">
+                <p:fileDownload value="#{reporteBean.reporte.contenido}" />
+            </p:commandButton>
+
+            <p:commandButton icon="pi pi-note" title="#{texto.texto(913)}" ajax="false" value="DOCx"
+                actionListener="#{reporteBean.descargarDOCX()}">
+                <p:fileDownload value="#{reporteBean.reporte.contenido}" />
+            </p:commandButton>
+
+            <p:commandButton icon="pi pi-note" title="#{texto.texto(914)}" ajax="false" value="ODT"
+                actionListener="#{reporteBean.descargarODT()}">
+                <p:fileDownload value="#{reporteBean.reporte.contenido}" />
+            </p:commandButton>
+
+            <p:commandButton icon="pi pi-note" title="#{texto.texto(915)}" ajax="false" value="ODS"
+                actionListener="#{reporteBean.descargarODS()}">
+                <p:fileDownload value="#{reporteBean.reporte.contenido}" />
+            </p:commandButton>
+
+            <p:commandButton icon="pi pi-note" title="#{texto.texto(916)}" ajax="false" value="XML"
+                actionListener="#{reporteBean.descargarXML()}">
+                <p:fileDownload value="#{reporteBean.reporte.contenido}" />
+            </p:commandButton>
+
+            <p:menuButton value="#{texto.texto(929)}">
+                <p:menuitem icon="pi pi-envelope" value="#{texto.texto(930)}" title="#{texto.texto(930)}"
+                    actionListener="#{reporteBean.enviarMail()}" oncomplete="PF('nuevoEmail').show()"
+                    update=":formredactar" />
+                <p:menuitem icon="pi pi-document" value="#{texto.texto(917)}"
+                    actionListener="#{reporteBean.enviarDocumentos()}" />
+            </p:menuButton>
+            <hr />
+            <h:panelGroup id="reporte" rendered="#{reporteBean.contextPath != null}">
+                <p:media value="#{reporteBean.contextPath}" width="100%;" height="100%;">
+                    #{texto.texto(918)}, <h:outputLink value="#{reporteBean.contextPath}">click</h:outputLink>
+                    #{texto.texto(919)}
+                </p:media>
+            </h:panelGroup>
+        </p:dialog>
+    </h:form>
+</div>

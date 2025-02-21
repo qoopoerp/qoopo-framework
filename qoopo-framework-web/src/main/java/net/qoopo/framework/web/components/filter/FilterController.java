@@ -109,6 +109,9 @@ public class FilterController implements Serializable {
 
     public void appendAvalaibleCondition(Condition condicion) {
         if (condicion != null) {
+            if (condicionesDisponibles == null) {
+                condicionesDisponibles = new ArrayList<>();
+            }
             condicionesDisponibles.add(condicion);
         }
 

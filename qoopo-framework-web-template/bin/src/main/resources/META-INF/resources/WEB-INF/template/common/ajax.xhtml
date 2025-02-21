@@ -1,0 +1,37 @@
+<div align="right" xmlns="http://www.w3.org/1999/xhtml" xmlns:p="http://primefaces.org/ui"
+    xmlns:h="http://java.sun.com/jsf/html">
+
+    <!--<p:ajaxStatus onstart="PF('statusDialog').show();"  onsuccess="PF('statusDialog').hide();"  />-->
+    <p:ajaxStatus onstart="startHandler();" oncomplete="endHandler();" />
+
+    <p:dialog modal="true" widgetVar="statusDialog" showHeader="false" draggable="false" closable="false"
+        resizable="false" styleClass="status-dialog">
+        <!--                    
+        <h:graphicImage  library="imagenes" name="ajax.gif" style="height: 25px; width: 200px;" />
+        -->
+        <h:graphicImage library="imagenes" name="loading.gif" style="width: 200px;" />
+    </p:dialog>
+
+    <script>
+
+        //        demora la llamada a mostrar el cuadro despues de 1000 milisegundos
+        var enableAjax;
+        var ajaxInProgress;
+        function startHandler() {
+            enableAjax = true;
+
+            ajaxInProgress = setTimeout(function () {
+                if (enableAjax) {
+                    PF('statusDialog').show();
+                }
+            }, 3000);
+        }
+        function endHandler() {
+            clearTimeout(ajaxInProgress);
+            ajaxInProgress = null;
+            enableAjax = false;
+            PF('statusDialog').hide();
+        }
+
+    </script>
+</div>

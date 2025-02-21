@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html" lang="en">
+
+<head>
+    <title>qoopo-security</title>
+    <link rel="Shortcut Icon" href="./resources/imagenes/favicon.png" type="image/png" />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- <h:outputStylesheet library="bootstrap" name="css/bootstrap.min.css" />
+    <h:outputStylesheet library="css" name="login.css" /> -->
+    <link href="/resources/css/login.css" rel="stylesheet" id="login-css">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <form method="post">
+        <!-- no additional media querie or css is required -->
+        <div class="container">
+            <div class="row justify-content-center align-items-center" style="height:100vh">
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <form action="" autocomplete="off">
+                                <div class="form-group">
+                                    <input type="text" placeholder="username" class="form-control" name="username">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" placeholder="password" class="form-control" name="password">
+                                </div>
+                                <button type="submit" id="sendlogin" class="btn btn-primary">Sign in</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+
+</html>

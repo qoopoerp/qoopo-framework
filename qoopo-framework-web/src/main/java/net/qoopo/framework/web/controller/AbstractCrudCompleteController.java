@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 
+import org.apache.poi.ss.formula.functions.T;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.schedule.ScheduleEntryMoveEvent;
@@ -368,7 +369,31 @@ public abstract class AbstractCrudCompleteController<Entity extends AbstractEnti
                         }
                         chatter.saveProperties();
                     }
-                    update();
+                }
+                update();
+            }
+        } catch (Exception ex) {
+            FacesUtils.addErrorMessage(languageProvider.getTextValue("common.error") + ": " + ex.getMessage());
+            log.log(Level.SEVERE, ex.getMessage(), ex);
+        }
+
+    }
+
+    /**
+     * Metodo que archiva el registro abierto
+     */
+    public void archive(Entity item) {
+        try {
+            if (item instanceof Archivable) {
+                if (validateArchive(item)) {
+                    ((Archivable) item).setArchived(true);
+                    if (item instanceof Auditable) {
+                        // solo agrega un metadato en caso que no exista uno
+                        if (((Auditable) item).getMetadato() == null) {
+                            ((Auditable) item).setMetadato(sessionBean.addEvent(((Auditable) item).getMetadato(),
+                                    "Archivado"));
+                        }
+                    }
                 }
             }
         } catch (Exception ex) {
@@ -377,9 +402,6 @@ public abstract class AbstractCrudCompleteController<Entity extends AbstractEnti
         }
     }
 
-    /**
-     * Metodo que des-archiva el registro abierto
-     */
     public void unarchive() {
         try {
             if (objeto instanceof Archivable) {
@@ -393,6 +415,28 @@ public abstract class AbstractCrudCompleteController<Entity extends AbstractEnti
                     chatter.saveProperties();
                 }
                 update();
+            }
+        } catch (Exception ex) {
+            FacesUtils.addErrorMessage(languageProvider.getTextValue("common.error") + ": " + ex.getMessage());
+            log.log(Level.SEVERE, ex.getMessage(), ex);
+        }
+
+    }
+
+    /**
+     * Metodo que des-archiva el registro abierto
+     */
+    public void unarchive(Entity item) {
+        try {
+            if (item instanceof Archivable) {
+                ((Archivable) item).setArchived(false);
+                if (item instanceof Auditable) {
+                    // solo agrega un metadato en caso que no exista uno
+                    if (((Auditable) item).getMetadato() == null) {
+                        ((Auditable) item).setMetadato(sessionBean.addEvent(((Auditable) item).getMetadato(),
+                                "Desarchivado"));
+                    }
+                }
             }
         } catch (Exception ex) {
             FacesUtils.addErrorMessage(languageProvider.getTextValue("common.error") + ": " + ex.getMessage());

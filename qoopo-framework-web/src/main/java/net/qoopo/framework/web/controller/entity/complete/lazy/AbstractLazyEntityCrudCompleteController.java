@@ -142,9 +142,9 @@ public abstract class AbstractLazyEntityCrudCompleteController<T extends Abstrac
      * @param indice
      */
     @Override
-    public void seleccionar(int indice) {
-        lista.setRowIndex(indice - 1); // los indices van desde 0 a largo -1
+    public void seleccionar(int indice) {     
         try {
+            lista.setRowIndex(indice - 1); // los indices van desde 0 a largo -1
             edit(lista.getRowData());
         } catch (Exception e) {
             //

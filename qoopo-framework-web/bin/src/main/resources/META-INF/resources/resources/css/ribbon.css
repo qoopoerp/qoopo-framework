@@ -1,0 +1,147 @@
+/* etiqueta para agregar a un q-form*/
+.ribbon {
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+  position: absolute;
+}
+
+.ribbon-right {
+  margin-top: -15px;
+  /* contrarestra el padding-top del q-form */
+  right: 0;
+}
+
+.ribbon-right span {
+  left: -15px;
+  top: 30px;
+  transform: rotate(45deg);
+}
+
+.ribbon-left {
+  margin-top: -15px;
+  /* contrarestra el padding-top del q-form */
+  left: 0;
+}
+
+.ribbon-left span {
+  right: -15px;
+  top: 30px;
+  transform: rotate(-45deg);
+}
+
+.ribbon span {
+  z-index: 1;
+  position: absolute;
+  display: grid;
+  align-items: center;
+  width: 180px;
+  height: 30px;
+  padding: 0 44px;
+  /*box-shadow: 0 5px 10px 0px rgb(0 0 0 / 10%);*/
+  color: #fff;
+  font: 700 1.3rem "Lato", sans-serif;
+  text-transform: uppercase;
+  text-align: center;
+  overflow: hidden;
+  user-select: none;
+}
+
+.ribbon-card {
+  width: 60px;
+  height: 60px;
+  overflow: hidden;
+  position: absolute;
+}
+
+.ribbon-card-right {
+  /* contrarestra el padding-top del q-form */
+  right: 0;
+}
+
+.ribbon-card-right span {
+  left: -30px;
+  top: 5px;
+  transform: rotate(45deg);
+}
+
+.ribbon-card-left {
+  left: 0;
+}
+
+.ribbon-card-left span {
+  right: 30px;
+  top: 5px;
+  transform: rotate(-45deg);
+}
+
+.ribbon-card span {
+  z-index: 1;
+  position: absolute;
+  display: grid;
+  align-items: center;
+  width: 140px;
+  height: 30px;
+  padding: 0 44px;
+  color: #fff;
+  font: 700 0.7rem "Lato", sans-serif;
+  text-transform: uppercase;
+  text-align: center;
+  overflow: hidden;
+  user-select: none;
+}
+
+.ribbon-folded {
+  --f: 10px;
+  /* control the folded part*/
+  --r: 15px;
+  /* control the ribbon shape */
+  --t: 10px;
+  /* the top offset */
+
+  position: absolute;
+  inset: var(--t) calc(-1 * var(--f)) auto auto;
+  font: 700 1.3rem "Lato", sans-serif;
+  padding: 1rem 30px 1.5rem calc(30px + var(--r));
+  clip-path: polygon(0 0,
+      100% 0,
+      100% calc(100% - var(--f)),
+      calc(100% - var(--f)) 100%,
+      calc(100% - var(--f)) calc(100% - var(--f)),
+      0 calc(100% - var(--f)),
+      var(--r) calc(50% - var(--f) / 2));
+  box-shadow: 0 calc(-1 * var(--f)) 0 inset #0005;
+}
+
+.ribbon-1 {
+  position: absolute;
+  /*background: #08769b;*/
+  font: 700 1.3rem "Lato", sans-serif;
+  box-shadow: 0 0 0 999px #08769b;
+  clip-path: inset(0 -100%);
+}
+
+.left {
+  inset: 0 auto auto 0;
+  transform-origin: 100% 0;
+  transform: translate(-29.3%) rotate(-45deg);
+}
+
+.right {
+  inset: 0 0 auto auto;
+  transform-origin: 0 0;
+  transform: translate(29.3%) rotate(45deg);
+}
+
+.ribbon-icon-item {
+  position: relative;
+  height: 30px;
+  margin-bottom: -30px;
+  z-index: 1;
+  padding-top: 0.9rem !important;
+  padding-bottom: 0.5rem !important;
+  text-align: center;
+  transform: rotate(-45deg);
+  margin-left: -8%;
+  font: normal 0.8rem "Lato", sans-serif;
+}

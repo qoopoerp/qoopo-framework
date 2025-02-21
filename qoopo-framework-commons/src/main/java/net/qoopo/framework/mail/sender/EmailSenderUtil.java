@@ -5,7 +5,6 @@
 package net.qoopo.framework.mail.sender;
 
 import net.qoopo.framework.mail.EmailAccount;
-import net.qoopo.framework.mail.sender.google.GoogleEmailSender;
 import net.qoopo.framework.mail.sender.smtp.SmtpEmailSender;
 
 /**

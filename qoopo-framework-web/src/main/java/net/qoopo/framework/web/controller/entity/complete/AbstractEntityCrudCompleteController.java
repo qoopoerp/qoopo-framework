@@ -149,9 +149,16 @@ public abstract class AbstractEntityCrudCompleteController<T extends AbstractEnt
                         ((Auditable) item).setMetadato(null);
                         repository.save(item);
                         if (metaDatos != null) {
-                            QoopoJpaRepositorySingleton.deleteAll(metaDatos.getAuditorias());
-                            QoopoJpaRepositorySingleton.deleteAll(metaDatos.getActividades());
-                            QoopoJpaRepositorySingleton.delete(metaDatos);
+                            try {
+                                QoopoJpaRepositorySingleton.edit(item);// para que tambien esté atualizado en este
+                                                                       // contexto
+                                                                       // de persistencia
+                                QoopoJpaRepositorySingleton.deleteAll(metaDatos.getAuditorias());
+                                QoopoJpaRepositorySingleton.deleteAll(metaDatos.getActividades());
+                                QoopoJpaRepositorySingleton.delete(metaDatos);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }
@@ -183,9 +190,15 @@ public abstract class AbstractEntityCrudCompleteController<T extends AbstractEnt
                         ((Auditable) objeto).setMetadato(null);
                         repository.save(objeto);
                         if (metaDatos != null) {
-                            QoopoJpaRepositorySingleton.deleteAll(metaDatos.getAuditorias());
-                            QoopoJpaRepositorySingleton.deleteAll(metaDatos.getActividades());
-                            QoopoJpaRepositorySingleton.delete(metaDatos);
+                            try {
+                                QoopoJpaRepositorySingleton.edit(objeto);// para que tambien esté atualizado en este
+                                                                         // contexto de persistencia
+                                QoopoJpaRepositorySingleton.deleteAll(metaDatos.getAuditorias());
+                                QoopoJpaRepositorySingleton.deleteAll(metaDatos.getActividades());
+                                QoopoJpaRepositorySingleton.delete(metaDatos);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }
@@ -229,6 +242,69 @@ public abstract class AbstractEntityCrudCompleteController<T extends AbstractEnt
             }
         } catch (Exception e) {
             FacesUtils.addErrorMessage(e);
+        }
+        masivo = false;
+    }
+
+    public void archiveSelected() {
+        try {
+            masivo = true;
+            StringBuilder sb = new StringBuilder();
+            boolean error = false;
+            if (selectedData != null && !selectedData.isEmpty()) {
+                for (T item : selectedData) {
+                    try {
+                        archive(item);
+                        repository.save(item);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        // FacesUtils.addErrorMessage(e);
+                        sb.append(e.getLocalizedMessage()).append("\n");
+                        error = true;
+                    }
+                }
+                loadData();
+                if (error) {
+                    FacesUtils.addErrorMessage(sb.toString());
+                }
+            } else {
+                FacesUtils.addWarningMessage(languageProvider.getTextValue(1027));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            // FacesUtils.addErrorMessage(e);
+            FacesUtils.addErrorMessage(languageProvider.getTextValue("common.error") + ": " + ex.getMessage());
+        }
+        masivo = false;
+    }
+
+    public void unarchiveSelected() {
+
+        try {
+            masivo = true;
+            StringBuilder sb = new StringBuilder();
+            boolean error = false;
+            if (selectedData != null && !selectedData.isEmpty()) {
+                for (T item : selectedData) {
+                    try {
+                        unarchive(item);
+                        repository.save(item);
+                    } catch (Exception e) {
+                        // FacesUtils.addErrorMessage(e);
+                        sb.append(e.getLocalizedMessage()).append("\n");
+                        error = true;
+                    }
+                }
+                loadData();
+                if (error) {
+                    FacesUtils.addErrorMessage(sb.toString());
+                }
+            } else {
+                FacesUtils.addWarningMessage(languageProvider.getTextValue(1027));
+            }
+        } catch (Exception ex) {
+            // FacesUtils.addErrorMessage(e);
+            FacesUtils.addErrorMessage(languageProvider.getTextValue("common.error") + ": " + ex.getMessage());
         }
         masivo = false;
     }

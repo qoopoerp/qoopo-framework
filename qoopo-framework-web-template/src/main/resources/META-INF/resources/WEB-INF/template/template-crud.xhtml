@@ -67,6 +67,17 @@
                                     <p:fileDownload value="#{crudBean.contenidoExportar}" />
                                 </p:menuitem>
 
+                                <p:menuitem icon="pi pi-inbox" value="#{texto.texto(4022)}" title="#{texto.texto(4022)}"
+                                    rendered="#{crudBean.canArchive}" actionListener="#{crudBean.archiveSelected()}"
+                                    update="@form">
+                                    <p:confirm header="#{texto.text('common.confirm.title')}"
+                                        message="#{texto.texto(4021)}" icon="pi pi-exclamation-triangle" />
+                                </p:menuitem>
+
+                                <p:menuitem icon="pi pi-sign-out" value="#{texto.texto(4023)}"
+                                    rendered="#{crudBean.canArchive}" title="#{texto.texto(4023)}"
+                                    actionListener="#{crudBean.unarchiveSelected()}" update="@form" />
+
                                 <p:menuitem icon="pi pi-download" value="#{texto.texto(4025)}"
                                     title="#{texto.texto(4025)}" onclick="PF('exportarDG').show();" />
 
@@ -177,10 +188,12 @@
                                 accesskey="c" update="@form" />
 
                             <p:commandButton rendered="true" accesskey="b" styleClass="other-button"
-                                value="#{texto.text('common.back')}" update="@form" actionListener="#{crudBean.resetView()}" />
+                                value="#{texto.text('common.back')}" update="@form"
+                                actionListener="#{crudBean.resetView()}" />
 
-                            <p:commandButton rendered="false" value="#{texto.text('common.back')}" styleClass="other-button"
-                                update="@form" accesskey="b" onclick="window.history.back();" />
+                            <p:commandButton rendered="false" value="#{texto.text('common.back')}"
+                                styleClass="other-button" update="@form" accesskey="b"
+                                onclick="window.history.back();" />
                         </div>
 
                         <div class="float-right">

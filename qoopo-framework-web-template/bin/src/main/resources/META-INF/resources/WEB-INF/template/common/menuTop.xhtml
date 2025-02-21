@@ -1,0 +1,44 @@
+<div xmlns="http://www.w3.org/1999/xhtml" xmlns:p="http://primefaces.org/ui" xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core" xmlns:qoopo="http://xmlns.jcp.org/jsf/composite/qoopo">
+
+    <p:hotkey bind="alt+h" update="@form" action="#{mainBean.verPrincipal()}" />
+    <p:menubar model="#{mainBean.menuHorizontal}">
+        <f:facet name="options">
+            <h:panelGrid columns="10">
+                <div class="cabeceraBtn" accesskey="h">
+                    <p:commandLink accesskey="h" actionListener="#{mainBean.verPrincipal()}" update="@form"
+                        title="#{texto.text('common.home')}">
+                        <div class="cabeceraHome" accesskey="h">
+                            <i class="pi pi-th-large"></i>
+                        </div>
+                    </p:commandLink>
+                </div>
+                <qoopo:activityMonitor value="#{mainBean.activitiesController}" styleClass="header-text" />
+
+                <h:outputText value="#{mainBean.empresaActual.nombre}" styleClass="ml24 mr24 header-text" />
+                <h:panelGroup id="btnMenu_" styleClass="cabeceraBtn">
+                    <p:graphicImage styleClass="cabeceraUsuarioFoto"
+                        value="#{imagenesBean.getPhoto(mainBean.userDto.foto)}" />
+                    <h:outputText styleClass="cabeceraUsuario" value="#{mainBean.userDto.nombre}" />
+                    <i class="fa fa-fw fa-caret-down cabeceraUsuario"></i>
+                </h:panelGroup>
+
+                <p:tieredMenu overlay="true" trigger="btnMenu_" style="width: 200px;" at="right bottom" my="right top">
+                    <p:menuitem icon="pi pi-home" actionListener="#{mainBean.verPrincipal()}" update="@form"
+                        title="#{texto.text('common.home')}" value="#{texto.text('common.home')}" />
+                    <p:menuitem icon="pi pi-envelope" actionListener="#{redactarEmailBean.inicializar()}"
+                        update="@form" oncomplete="PF('nuevoEmail').show();" title="#{texto.text('common.mail.new')}"
+                        value="#{texto.text('common.mail.new')}" />
+                    <p:menuitem icon="pi pi-info" oncomplete="PF('diagAcercade').show();" title="#{texto.text('common.about')}"
+                        value="#{texto.text('common.about')}" />
+                    <p:menuitem rendered="true" icon="pi pi-person" update="@form"
+                        actionListener="#{preferenciasUsuarioBean.edit(mainBean.user)}" title="#{texto.text('common.settings')}"
+                        value="#{texto.text('common.settings')}" oncomplete="window.location.href='/seguridad/modUsuario.jsf'" />
+                    <p:menuitem immediate="true" icon="pi pi-power" actionListener="#{mainBean.cerrarSesion()}"
+                        update="formredactar" title="#{texto.text('common.exit')}" value="#{texto.text('common.exit')}" />
+                </p:tieredMenu>
+            </h:panelGrid>
+
+        </f:facet>
+    </p:menubar>
+</div>

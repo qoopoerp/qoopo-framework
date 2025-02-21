@@ -1,0 +1,117 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+    xmlns:p="http://primefaces.org/ui" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<!-- INTERFACE -->
+<cc:interface>
+    <cc:attribute name="value" required="true" />
+</cc:interface>
+
+<!-- IMPLEMENTATION -->
+<cc:implementation>
+    <div class="widget">
+        <p:outputPanel rendered="#{cc.attrs.value.graph}" deferred="#{sessionBean.cargaDiferida}" deferredMode="visible"
+            toggleable="true">
+            <div class="text-left noWrap">
+                <h:outputText value="#{cc.attrs.value.chart.titulo}" styleClass="widget-title" />
+
+                <ui:repeat rendered="#{cc.attrs.value.showButtons}" value="#{cc.attrs.value.buttons}" var="button">
+                    <p:commandButton value="#{button.name}" title="#{button.description}"
+                        actionListener="#{cc.attrs.value.runAction(button)}" styleClass="pequeno" update="@form"
+                        accesskey="#{button.accessKey}" oncomplete="window.location.href='${button.url}'" />
+                </ui:repeat>
+
+                <p:commandLink style="margin-left: 1rem;" actionListener="#{cc.attrs.value.cargar()}"
+                    styleClass="widget-update-btn" update="chart">
+                    <p:graphicImage rendered="true" library="imagenes" name="#{temas.temaIconos}/general/actualizar.png"
+                        width="12" />
+                </p:commandLink>
+            </div>
+            <hr />
+            <p:commandButton icon="pi pi-chart-bar" title="#{texto.texto(1590)}" update="chart"
+                actionListener="#{cc.attrs.value.updateOpcionGrafico(1)}" />
+            <p:commandButton icon="pi pi-align-left" title="#{texto.texto(4065)}" update="chart"
+                actionListener="#{cc.attrs.value.updateOpcionGrafico(5)}" />
+            <p:commandButton icon="pi pi-chart-line" title="#{texto.texto(1591)}" update="chart"
+                actionListener="#{cc.attrs.value.updateOpcionGrafico(2)}" />
+            <p:commandButton icon="pi pi-chart-pie" title="#{texto.texto(1592)}" update="chart"
+                actionListener="#{cc.attrs.value.updateOpcionGrafico(3)}" />
+            <p:commandButton icon="pi pi-chart-bar" title="#{texto.texto(4027)}" update="chart"
+                actionListener="#{cc.attrs.value.updateOpcionGrafico(4)}" />
+
+            <p:selectBooleanButton title="#{texto.texto(4018)}" onIcon="pi pi-database" offIcon="pi pi-database"
+                value="#{cc.attrs.value.stacked}">
+                <p:ajax update="chart" listener="#{cc.attrs.value.cargar()}" />
+            </p:selectBooleanButton>
+
+            <hr />
+            <h:panelGroup id="chart" styleClass="ui-g-12">
+                <p:barChart rendered="#{cc.attrs.value.opcionGrafico eq 1}" model="#{cc.attrs.value.chart.modeloBarra}"
+                    styleClass="widget-chart" />
+                <p:lineChart rendered="#{cc.attrs.value.opcionGrafico eq 2}" model="#{cc.attrs.value.chart.modeloArea}"
+                    styleClass="widget-chart" />
+                <p:pieChart rendered="#{cc.attrs.value.opcionGrafico eq 3}" model="#{cc.attrs.value.chart.modeloPie}"
+                    styleClass="widget-chart" />
+                <p:barChart rendered="#{cc.attrs.value.opcionGrafico eq 4}" model="#{cc.attrs.value.chart.modeloBarra}"
+                    styleClass="widget-chart" />
+                <p:barChart rendered="#{cc.attrs.value.opcionGrafico eq 5}"
+                    model="#{cc.attrs.value.chart.modeloBarraHorizontal}" styleClass="widget-chart" />
+            </h:panelGroup>
+        </p:outputPanel>
+
+
+        <p:outputPanel rendered="#{cc.attrs.value.text}" deferred="#{sessionBean.cargaDiferida}" deferredMode="visible"
+            toggleable="true">
+            <div class="text-left">
+                <h:outputText value="#{cc.attrs.value.title}" styleClass="widget-title" />
+
+                <p:commandLink style="margin-left: 1rem;" actionListener="#{cc.attrs.value.cargar()}"
+                    styleClass="widget-update-btn" update="@form">
+                    <p:graphicImage rendered="true" library="imagenes" name="#{temas.temaIconos}/general/actualizar.png"
+                        width="12" />
+                </p:commandLink>
+            </div>
+            <hr />
+            <div class="widget-body text-right text-big">
+                <p:commandLink rendered="#{cc.attrs.value.renderActionListener and cc.attrs.value.renderUrl}"
+                    actionListener="#{cc.attrs.value.actionListener}" styleClass="text-right text-big"
+                    oncomplete="window.location.href='#{cc.attrs.value.url}'" update="@form">
+                    <h:outputText value="#{cc.attrs.value.value}" />
+                </p:commandLink>
+
+                <p:commandLink rendered="#{!cc.attrs.value.renderActionListener  and cc.attrs.value.renderUrl}"
+                    styleClass="text-right text-big" oncomplete="window.location.href='#{cc.attrs.value.url}'"
+                    update="@form">
+                    <h:outputText value="#{cc.attrs.value.value}" />
+                </p:commandLink>
+
+                <h:outputText rendered="#{!cc.attrs.value.renderActionListener and !cc.attrs.value.renderUrl}"
+                    value="#{cc.attrs.value.value}" />
+
+            </div>
+            <p:progressBar rendered="#{cc.attrs.value.showProgress}" value="#{cc.attrs.value.progress}"
+                styleClass="widget-progress-bar" />
+            <hr class="#{cc.attrs.value.showProgress?'hidden':''}" />
+            <div class="widget-footer text-right">
+                <div class="float-left">
+                    <ui:repeat rendered="#{cc.attrs.value.showButtons}" value="#{cc.attrs.value.buttons}" var="button">
+                        <p:commandButton value="#{button.name}" title="#{button.description}"
+                            actionListener="#{cc.attrs.value.runAction(button)}" styleClass="pequeno" update="@form"
+                            accesskey="#{button.accessKey}" oncomplete="window.location.href='${button.url}'" />
+                    </ui:repeat>
+                </div>
+                <div class="float-right">
+                    <h:outputText value="#{cc.attrs.value.footerLabel}" styleClass="text-small mr12 ml12" />
+                    <h:outputText value="#{cc.attrs.value.footerValue}" />
+                </div>
+            </div>
+        </p:outputPanel>
+    </div>
+
+
+</cc:implementation>
+
+</html>

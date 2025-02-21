@@ -34,6 +34,7 @@
     <modules>
         <module>qoopo-framework-pattern-eventbus</module>
         <module>qoopo-framework-pattern-specification</module>
+        <module>qoopo-framework-resilience-util</module>
         <module>qoopo-framework-cache</module>
         <module>qoopo-framework-reflection</module>
         <module>qoopo-framework-commons</module>

@@ -1,0 +1,298 @@
+<ui:composition template="/WEB-INF/template/template-main.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:p="http://primefaces.org/ui" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:qoopo="http://xmlns.jcp.org/jsf/composite/qoopo">
+
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{crudBean.procesarParametro()}" />
+    </f:metadata>
+
+    <ui:define name="contenido">
+        <!--  <div class="q-flex q-flex-column"> -->
+        <!--CABECERA VISTA LISTA, ICONO, CALENDARIO O GRAFICO-->
+        <h:panelGroup
+            rendered="#{viewOption.value==1 or viewOption.value==2 or viewOption.value==4 or viewOption.value==5 or viewOption.value==6}">
+            <div class="q-flex q-flex-column ">
+                <div class="q-flex-header q-page-header">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6 pl12">
+                            <ui:insert name="page-title" />
+                            <h:panelGroup id="helpIcon">
+                                <i class="pi pi-info-circle"></i>
+                            </h:panelGroup>
+                            <p:tooltip for="helpIcon" autoHide="false">
+                                <ui:insert name="page-header" />
+                            </p:tooltip>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6 pr12">
+                            <qoopo:filter value="#{crudBean.filter}" />
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="q-block">
+                        <div class="float-left pl12">
+                            <ui:insert name="page-btn-left" />
+
+                            <p:commandButton rendered="false" icon="pi pi-download" title="#{texto.texto(4025)}"
+                                ajax="false" actionListener='#{crudBean.exportar()}'>
+                                <p:fileDownload value="#{crudBean.contenidoExportar}" />
+                            </p:commandButton>
+
+                            <p:commandButton rendered="false" icon="pi pi-download" title="#{texto.texto(4025)}"
+                                oncomplete="PF('exportarDG').show();" />
+
+                            <p:commandButton rendered="false" icon="pi pi-upload" title="#{texto.texto(1263)}"
+                                oncomplete="PF('importarDG').show();" />
+
+                            <p:menuButton value="#{texto.text('common.actions')}">
+
+                                <p:menuitem value="#{texto.text('common.delete')}"
+                                    title="#{texto.text('common.delete')}" actionListener="#{crudBean.deleteSelected()}"
+                                    update="@form">
+                                    <p:confirm header="#{texto.text('common.confirm.title')}"
+                                        message="#{texto.text('common.confirm.messsage')}"
+                                        icon="pi pi-exclamation-triangle" />
+                                </p:menuitem>
+
+                                <ui:insert name="page-actions" />
+
+                                <p:menuitem icon="pi pi-inbox" value="#{texto.texto(4022)}" title="#{texto.texto(4022)}"
+                                    actionListener="#{crudBean.archiveSelected()}" update="@form">
+                                    <p:confirm header="#{texto.text('common.confirm.title')}"
+                                        message="#{texto.texto(4021)}" icon="pi pi-exclamation-triangle" />
+                                </p:menuitem>
+
+                                <p:menuitem icon="pi pi-sign-out" value="#{texto.texto(4023)}"
+                                    title="#{texto.texto(4023)}" actionListener="#{crudBean.unarchiveSelected()}"
+                                    update="@form" />
+
+                                <p:menuitem icon="pi pi-download" value="#{texto.texto(4025)}"
+                                    title="#{texto.texto(4025)}" onclick="PF('exportarDG').show();" />
+
+                                <p:menuitem icon="pi pi-upload" value="#{texto.texto(1263)}"
+                                    title="#{texto.texto(1263)}" onclick="PF('importarDG').show();" />
+                            </p:menuButton>
+                        </div>
+
+                        <div class="float-right pr12">
+                            <ui:insert name="page-view-options">
+                                <qoopo:viewOption value="#{viewOption}" />
+                            </ui:insert>
+
+                            <span class="ml12" />
+
+                            <p:commandLink actionListener="#{crudBean.loadData()}" accesskey="r"
+                                styleClass="widget-update-btn" update=":frmMain:contenido">
+                                <p:graphicImage rendered="true" library="imagenes"
+                                    name="#{temas.temaIconos}/general/actualizar.png" styleClass="q-refresh-button" />
+                            </p:commandLink>
+
+                            <!--<ui:insert name="page-btn-rigth" />-->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="q-flex-content q-flex-autoscroll q-view-container ui-g ui-g-nopad" id="q-view-container">
+                    <!--VISTA LISTA-->
+                    <h:panelGroup rendered="#{viewOption.value==1}">
+                        <ui:insert name="page-list" />
+                    </h:panelGroup>
+
+                    <!--VISTA ICONO-->
+                    <h:panelGroup rendered="#{viewOption.value==2}">
+                        <ui:insert name="page-icon" />
+                    </h:panelGroup>
+
+                    <!--VISTA CALENDARIO-->
+                    <h:panelGroup rendered="#{viewOption.value==5}">
+                        <p:schedule id="schedule" value="#{crudBean.eventModel}" widgetVar="myschedule"
+                            view="agendaWeek" locale="#{gestorFecha.locale}">
+                            <p:ajax event="eventSelect" listener="#{crudBean.onEventSelect}" update="@form" />
+                            <p:ajax event="dateSelect" listener="#{crudBean.onDateSelect}" update="@form" />
+                            <p:ajax event="eventMove" listener="#{crudBean.onEventMove}" update="@form" />
+                            <p:ajax event="eventResize" listener="#{crudBean.onEventResize}" update="@form" />
+                        </p:schedule>
+                    </h:panelGroup>
+
+                    <!--VISTA GRAFICO-->
+                    <h:panelGroup rendered="#{viewOption.value==4}">
+                        <ui:insert name="page-graph" />
+                        <h:panelGroup id="grafico">
+                            <qoopo:graph value="#{crudBean.graph}" />
+                        </h:panelGroup>
+                    </h:panelGroup>
+
+                    <!--VISTA TIMELINE-->
+                    <h:panelGroup rendered="#{viewOption.value==6}">
+                        <p:timeline id="timeline" value="#{crudBean.timeLineModel}" editable="true" eventMargin="10"
+                            eventMarginAxis="0" start="#{crudBean.timeLineStart}" end="#{crudBean.timeLineEnd}"
+                            stackEvents="true" widgetVar="timelineWdgt" maxHeight="600" orientationItem="bottom"
+                            verticalScroll="true" horizontalScroll="true" orientationAxis="both" var="item"
+                            varGroup="group" zoomKey="ctrlKey">
+                            <f:facet name="menu">
+                                <p:commandButton type="button" icon="pi pi-chevron-left" styleClass="ml-2"
+                                    onclick="PF('timelineWdgt').move(-0.3);" />
+                                <p:commandButton type="button" icon="pi pi-chevron-right" styleClass="ml-2"
+                                    onclick="PF('timelineWdgt').move(0.3);" />
+                                <p:commandButton type="button" icon="pi pi-search-minus" styleClass="ml-2"
+                                    onclick="PF('timelineWdgt').zoom(-0.5);" />
+                                <p:commandButton type="button" icon="pi pi-search-plus" styleClass="ml-2"
+                                    onclick="PF('timelineWdgt').zoom(0.5);" />
+                            </f:facet>
+
+                            <p:ajax event="select" listener="#{crudBean.onTimeLineSelect}" update="@form" />
+                            <p:ajax event="edit" listener="#{crudBean.onTimeLineEdit}" update="@form" />
+                            <p:ajax event="delete" listener="#{crudBean.onTimeLineDelete}" update="@form" />
+
+                            <ui:insert name="timeline-item" />
+
+                            <f:facet name="loading">
+                                <h1>Loading please wait...</h1>
+                            </f:facet>
+                        </p:timeline>
+                    </h:panelGroup>
+                </div>
+            </div>
+        </h:panelGroup>
+
+
+        <!--VISTA q-form-->
+        <h:panelGroup rendered="#{viewOption.value==3}">
+            <div class="q-flex q-flex-column ">
+                <div class="q-flex-header q-page-header">
+                    <div class="q-block">
+                        <div class="float-left">
+
+                            <ui:insert name="form-header" />
+
+                            <p:commandButton disabled="#{!mainBean.comandoSeleccionado.create}"
+                                value="#{texto.text('common.save')}" rendered="#{!crudBean.editando}"
+                                actionListener="#{crudBean.save()}" accesskey="s" update="@form" />
+                            <p:commandButton value="#{texto.text('common.update')}" rendered="#{crudBean.editando}"
+                                actionListener="#{crudBean.update()}" accesskey="s" update="@form"
+                                disabled="#{!mainBean.comandoSeleccionado.write}" />
+                            <p:commandButton value="#{texto.text('common.new')}"
+                                disabled="#{!mainBean.comandoSeleccionado.create}" actionListener="#{crudBean.nuevo()}"
+                                accesskey="c" update="@form" />
+
+                            <p:commandButton rendered="true" accesskey="b" styleClass="other-button"
+                                value="#{texto.text('common.back')}" update="@form"
+                                actionListener="#{crudBean.resetView()}" />
+
+                            <p:commandButton rendered="false" value="#{texto.text('common.back')}"
+                                styleClass="other-button" update="@form" accesskey="b"
+                                onclick="window.history.back();" />
+                        </div>
+
+                        <div class="float-right">
+                            <ui:insert name="form-nav" />
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="q-block">
+                        <div class="float-left">
+                            <ui:insert name="form-actions" />
+
+                            <p:menuButton value="#{texto.text('common.actions')}">
+                                <ui:insert name="form-other-actions" />
+                                <p:menuitem icon="pi pi-copy" value="#{texto.texto(1652)}" title="#{texto.texto(1653)}"
+                                    actionListener="#{crudBean.clonar()}" update="@form" />
+
+                                <p:menuitem icon="pi pi-inbox" value="#{texto.texto(4022)}" title="#{texto.texto(4022)}"
+                                    rendered="#{crudBean.editando and !crudBean.objeto.archived and crudBean.canArchive}"
+                                    actionListener="#{crudBean.archive()}" update="@form">
+                                    <p:confirm header="#{texto.text('common.confirm.title')}"
+                                        message="#{texto.texto(4021)}" icon="pi pi-exclamation-triangle" />
+                                </p:menuitem>
+
+                                <p:menuitem icon="pi pi-sign-out" value="#{texto.texto(4023)}"
+                                    title="#{texto.texto(4023)}"
+                                    rendered="#{crudBean.editando and crudBean.objeto.archived}"
+                                    actionListener="#{crudBean.unarchive()}" update="@form" />
+
+                                <p:menuitem icon="pi pi-trash" value="#{texto.text('common.delete')}"
+                                    title="#{texto.text('common.delete')}" rendered="#{crudBean.editando}"
+                                    actionListener="#{crudBean.delete()}" update="@form">
+                                    <p:confirm header="#{texto.text('common.confirm.title')}"
+                                        message="#{texto.text('common.confirm.messsage')}"
+                                        icon="pi pi-exclamation-triangle" />
+                                </p:menuitem>
+                            </p:menuButton>
+                        </div>
+                        <div class="float-right">
+                            <ui:insert name="form-states" />
+                        </div>
+                    </div>
+                </div>
+                <div class="q-flex-content q-flex-autoscroll q-view-container ui-g ui-g-nopad" id="q-view-container">
+                    <div class="ui-g-12 ui-xl-9">
+                        <div class="q-form position-relative">
+                            <qoopo:ribbon value="#{texto.texto(4024)}" color="bg-alert"
+                                mostrar="#{crudBean.objeto.archived}" />
+                            <p:fragment>
+                                <ui:insert name="form-content" />
+                            </p:fragment>
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-3 ui-g-nopad">
+                        <div class="q-chatter-container ">
+                            <p:fragment>
+                                <qoopo:chatter id="frmChatter" value="#{crudBean.chatter}" />
+                            </p:fragment>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:panelGroup>
+
+        <p:dialog styleClass="dialogo" id="ingImportar" widgetVar="importarDG" modal="true" dynamic="false"
+            closeOnEscape="true">
+            <div class="ui-g-12">
+                <h:outputText styleClass="ui-g-12 ui-md-3" value="#{texto.texto(4026)}:" />
+                <p:selectOneRadio styleClass="ui-g-12 ui-md-9" value="#{crudBean.importerType}">
+                    <f:selectItem itemLabel="CSV" itemValue="1" />
+                    <f:selectItem itemLabel="XLS" itemValue="2" />
+                    <f:selectItem itemLabel="XLSx" itemValue="3" />
+                    <f:selectItem itemLabel="JSON" itemValue="4" />
+                    <p:ajax listener="#{crudBean.updateImporter()}" />
+                </p:selectOneRadio>
+            </div>
+            <hr />
+
+            <p:fileUpload listener="#{crudBean.archivoSubido}" mode="advanced"
+                label="#{texto.text('common.fileupload.select')}" auto="true" allowTypes="/(\.|\/)(csv|xls?x|txt)$/" />
+            <f:facet name="footer">
+                <p:commandButton value="#{texto.texto(1263)}" actionListener='#{crudBean.importar()}' update="@form"
+                    oncomplete="PF('importarDG').hide();" />
+                <p:commandButton value="#{texto.text('common.back')}" oncomplete="PF('importarDG').hide();" />
+            </f:facet>
+        </p:dialog>
+
+        <p:dialog styleClass="dialogo" id="dlgExportar" widgetVar="exportarDG" modal="true" dynamic="false"
+            closeOnEscape="true">
+            <div class="ui-g-12">
+                <h:outputText styleClass="ui-g-12 ui-md-3" value="#{texto.texto(4026)}:" />
+                <p:selectOneRadio styleClass="ui-g-12 ui-md-9" value="#{crudBean.exporterType}">
+                    <f:selectItem itemLabel="CSV" itemValue="1" />
+                    <f:selectItem itemLabel="XLS" itemValue="2" />
+                    <f:selectItem itemLabel="XLSx" itemValue="3" />
+                    <f:selectItem itemLabel="JSON" itemValue="4" />
+                    <p:ajax listener="#{crudBean.updateExporter()}" />
+                </p:selectOneRadio>
+            </div>
+            <f:facet name="footer">
+                <p:commandButton icon="pi pi-download" value="#{texto.texto(4025)}" title="#{texto.texto(4025)}"
+                    ajax="false" actionListener='#{crudBean.exportar()}'>
+                    <p:fileDownload value="#{crudBean.contenidoExportar}" />
+                </p:commandButton>
+                <p:commandButton value="#{texto.text('common.back')}" oncomplete="PF('exportarDG').hide();" />
+            </f:facet>
+        </p:dialog>
+
+
+
+        <ui:insert name="form-includes" />
+        <!--</div>-->
+    </ui:define>
+</ui:composition>
