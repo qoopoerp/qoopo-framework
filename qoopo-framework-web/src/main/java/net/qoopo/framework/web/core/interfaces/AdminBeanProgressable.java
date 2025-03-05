@@ -22,11 +22,6 @@ public interface AdminBeanProgressable {
      */
     public String getProgressStatus();
 
-    // /**
-    // * Permite actualizar el porcentaje
-    // * @param progress
-    // */
-    // public void setProgress(Integer progress);
     /**
      * Metodo llamado cuanto el proceso finalice
      */

@@ -2,9 +2,11 @@ package net.qoopo.framework.util;
 
 import java.util.HashMap;
 
-import net.qoopo.framework.serializacion.Serializer;
+import net.qoopo.framework.serialization.ByteSerializer;
 
 public class MapaUtil {
+
+    private static ByteSerializer serializer = new ByteSerializer();
 
     private MapaUtil() {
         //
@@ -14,7 +16,7 @@ public class MapaUtil {
         HashMap<String, Object> mapa;
         if (origen != null) {
             try {
-                mapa = (HashMap<String, Object>) Serializer.read(origen);
+                mapa = (HashMap<String, Object>) serializer.read(origen);
             } catch (Exception e) {
                 mapa = new HashMap<>();
             }
@@ -22,14 +24,14 @@ public class MapaUtil {
             mapa = new HashMap<>();
         }
         mapa.put(clave, valor);
-        return Serializer.write(mapa);
+        return serializer.write(mapa);
     }
 
     public static Object leerValor(String clave, byte[] origen) {
         HashMap<String, Object> mapa;
         if (origen != null) {
             try {
-                mapa = (HashMap<String, Object>) Serializer.read(origen);
+                mapa = (HashMap<String, Object>) serializer.read(origen);
             } catch (Exception e) {
                 mapa = new HashMap<>();
             }

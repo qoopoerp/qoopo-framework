@@ -1,4 +1,4 @@
-package net.qoopo.framework.serializacion;
+package net.qoopo.framework.serialization;
 
 import java.io.File;
 import java.io.FileInputStream;
