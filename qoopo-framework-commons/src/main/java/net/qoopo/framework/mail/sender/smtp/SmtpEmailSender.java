@@ -30,7 +30,8 @@ public class SmtpEmailSender implements EmailSender {
         //
     }
 
-    // public static SendEmailResponse enviarEmail(Email email, EmailAccount cuenta) {
+    // public static SendEmailResponse enviarEmail(Email email, EmailAccount cuenta)
+    // {
     // try {
     // return enviarEmail(email, cuenta, false);
     // } catch (Exception e) {
@@ -49,9 +50,9 @@ public class SmtpEmailSender implements EmailSender {
         return email;
     }
 
-    public SendEmailResponse sendEmail(Email email, EmailAccount cuenta, HashMap<String,String> params) {
+    public SendEmailResponse sendEmail(Email email, EmailAccount cuenta, HashMap<String, String> params) {
         try {
-            return sendEmail(email, cuenta,params, false);
+            return sendEmail(email, cuenta, params, false);
         } catch (Exception e) {
             log.log(Level.SEVERE, "Error al enviar mail :{0}", e.getLocalizedMessage());
             log.log(Level.SEVERE, null, e);
@@ -59,7 +60,8 @@ public class SmtpEmailSender implements EmailSender {
         return null;
     }
 
-    public SendEmailResponse sendEmail(Email email, EmailAccount cuenta, HashMap<String,String> params, boolean lanzarError) throws Exception {
+    public SendEmailResponse sendEmail(Email email, EmailAccount cuenta, HashMap<String, String> params,
+            boolean lanzarError) throws Exception {
         Properties props;
         props = new Properties();
         props.put("mail.transport.protocol", cuenta.getServerProtocolo());
@@ -84,7 +86,7 @@ public class SmtpEmailSender implements EmailSender {
                     message.addRecipient(Message.RecipientType.TO, new InternetAddress(cleanAddress(unico.trim())));
                 }
             }
-            message.setSubject(email.getAsunto());
+            message.setSubject(email.getAsunto(), "utf-8");
             message.setSentDate(new Date());
             message.setContent(email.getCuerpo());
             Transport t = session.getTransport(cuenta.getServerProtocolo());

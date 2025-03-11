@@ -96,7 +96,7 @@ public class QoopoReflection {
      * Busca una implementacion/herencia de una interfaz/clase
      * 
      * @param interfaceClass
-     * @return Lista de los ojetos instanciados de las implementacione sencontradas
+     * @return Lista de los ojetos instanciados de las implementaciones encontradas
      */
     public static List getBeanImplemented(Class interfaceClass) {
         return getBeanImplemented(interfaceClass, true, null);

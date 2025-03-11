@@ -33,6 +33,9 @@
 
     <modules>
         <module>qoopo-framework-pattern-eventbus</module>
+
+        <module>qoopo-framework-eventbus-kafka</module>
+
         <module>qoopo-framework-pattern-specification</module>
         <module>qoopo-framework-resilience-util</module>
         <module>qoopo-framework-cache</module>
@@ -41,7 +44,6 @@
         <module>qoopo-framework-commons-date</module>
         <module>qoopo-framework-data</module>
         <module>qoopo-framework-core</module>
-        <module>qoopo-framework-eventbus</module>
 
 
         <module>qoopo-framework-filter</module>

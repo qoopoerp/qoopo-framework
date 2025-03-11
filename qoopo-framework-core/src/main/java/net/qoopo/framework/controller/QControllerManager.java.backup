@@ -1,0 +1,60 @@
+package net.qoopo.framework.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import net.qoopo.framework.reflection.QoopoReflection;
+
+/**
+ * Administrador de los controller registrados en Qoopo-framework
+ *
+ * @author alberto
+ */
+// @Deprecated(forRemoval = true)
+public final class QControllerManager {
+
+    public static final Logger log = Logger.getLogger("QControllerManager");
+    private static final List<QController> INSTANCES = new ArrayList<>();
+
+    public static void load() {
+        try {
+            INSTANCES.clear();
+            // observers.clear();
+            List<Object> cargados = QoopoReflection.getBeanImplemented(QController.class);
+            cargados.forEach(objeto -> {
+                QController controller = (QController) objeto;
+                log.info("[+] Controller cargado: [".concat(controller.getName()).concat("] ")
+                        .concat(controller.getClass().getName()));
+                INSTANCES.add(controller);
+            });
+        } catch (Exception e) {
+            log.log(Level.SEVERE, e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Devuelve el controllador con el nombre name.
+     *
+     * @param name nombre del controllador. Tambien puede indicar la ruta
+     *             completa de la clase
+     * @return
+     */
+    public static QController get(String name) {
+        try {
+            for (QController controller : INSTANCES) {
+                if (controller.getName().equals(name)) {
+                    return controller;
+                }
+            }
+            // si no se encuentra, se intenta crear una nueva instanacia
+            log.log(Level.WARNING, "SE INTENTA INSTANCIAR CONTROLLER PARA LA CLASE    [{0}]", name);
+            return ((QController) Class.forName(name).newInstance());
+        } catch (Exception e) {
+            log.log(Level.SEVERE, name, e);
+        }
+        return null;
+    }
+
+}

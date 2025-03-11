@@ -10,13 +10,13 @@ import java.util.stream.IntStream;
 import org.junit.jupiter.api.Test;
 
 import net.qoopo.framework.pattern.eventbus.common.EventRecord;
+import net.qoopo.framework.pattern.eventbus.impl.EventBusMemoryImpl;
 import net.qoopo.framework.pattern.eventbus.message.EventMessage;
 import net.qoopo.framework.pattern.eventbus.message.MessageHeaders;
-import net.qoopo.framework.pattern.eventbus.testcase.eventbusimple.EventBusMemoryImpl;
+import net.qoopo.framework.pattern.eventbus.message.MessageService;
 import net.qoopo.framework.pattern.eventbus.testcase.eventbusimple.ProductConsumer;
 import net.qoopo.framework.pattern.eventbus.testcase.eventbusimple.ProductConsumerSuscription;
 import net.qoopo.framework.pattern.eventbus.testcase.eventbusimple.ProductProducer;
-import net.qoopo.framework.pattern.eventbus.testcase.message.ProductMessageService;
 import net.qoopo.framework.pattern.eventbus.testcase.model.Color;
 import net.qoopo.framework.pattern.eventbus.testcase.model.Product;
 
@@ -27,6 +27,7 @@ public class EventBusTest {
         @Test
         public void testEventbus() {
                 try {
+                        log.info("\n\n\n\n\n\n\n\n");
                         // Declaramos un bus de eventos
                         EventBusMemoryImpl<String, Product> bus = new EventBusMemoryImpl<>();
 
@@ -45,6 +46,7 @@ public class EventBusTest {
                                                 .description("Product " + c + " - gamer")
                                                 .color(Color.RED)
                                                 .build();
+
                                 producer.send(new EventRecord<String, Product>("product.saved", product));
                                 producer.send(new EventRecord<String, Product>("product.deleted", product));
                                 producer.send(new EventRecord<String, Product>("product.archived", product));
@@ -60,6 +62,7 @@ public class EventBusTest {
         @Test
         public void testSuscriptionConsumer() {
                 try {
+                        log.info("\n\n\n\n\n\n\n\n");
                         // Declaramos un bus de eventos
                         EventBusMemoryImpl<String, Product> bus = new EventBusMemoryImpl<>();
 
@@ -93,33 +96,41 @@ public class EventBusTest {
         @Test
         public void testMessages() {
                 try {
+                        log.info("\n\n\n\n\n\n\n\n");
                         log.info("PROBANDO MESSAGES");
                         // Declaramos un bus de eventos
                         EventBusMemoryImpl<String, EventMessage<Product>> bus = new EventBusMemoryImpl<>();
+                        // bus.setDebug(true);
 
-                        ProductMessageService service = new ProductMessageService(bus);
+                        MessageService<Product> service = new MessageService<Product>(bus);
 
                         service.receiveEvents("product.saved", message -> {
-                                log.info("[message] - Headers -> " + message.toString());
-                                log.info("[message] -> Producto guardado ->"
+                                // log.info("[message] - Suscriptor 1 -- Message -> " + message.toString());
+                                log.info("[message] -  Suscriptor 1-> Producto guardado ->"
+                                                + ((Product) message.getPayload()).getName());
+                        });
+
+                        service.receiveEvents("product.saved", message -> {
+                                // log.info("[message] - Suscriptor 2 - Message -> " + message.toString());
+                                log.info("[message] - Suscriptor 2  -> Producto guardado ->"
                                                 + ((Product) message.getPayload()).getName());
                         });
 
                         service.receiveEvents("product.deleted", message -> {
-                                log.info("[message] - Headers -> " + message.toString());
+                                // log.info("[message] - Message -> " + message.toString());
                                 log.info("[message] -> Producto eliminado ->"
                                                 + ((Product) message.getPayload()).getName());
                         });
 
                         service.receiveEvents("product.archived", message -> {
-                                log.info("[message] - Headers -> " + message.toString());
+                                // log.info("[message] - Message -> " + message.toString());
                                 log.info("[message] -> Producto archivado ->"
                                                 + ((Product) message.getPayload()).getName());
                         });
 
-                        IntStream.range(1, 25).forEach(c -> {
-                                Product product = Product.builder().name("ProductMEssage " + c)
-                                                .description("ProductSuscription  " + c + " - gamer")
+                        IntStream.range(1, 30).forEach(c -> {
+                                Product product = Product.builder().name("ProductMessage " + c)
+                                                .description("ProductMessage  " + c + " - gamer")
                                                 .color(Color.RED)
                                                 .build();
                                 service.sendEvent("product.saved", new EventMessage<Product>(
@@ -153,9 +164,11 @@ public class EventBusTest {
                                                                 .build(),
                                                 product));
                                 try {
-                                        // cada 5 espera 3 segundos
-                                        if (c % 5 == 0)
+                                        // cada 5, espera un tiempo para probar las respuestas
+                                        if (c % 5 == 0) {
+                                                log.info("\n\n\n\n\n\n\n\n");
                                                 Thread.sleep(3000);
+                                        }
                                 } catch (InterruptedException e) {
                                         // TODO Auto-generated catch block
                                         e.printStackTrace();
@@ -163,7 +176,7 @@ public class EventBusTest {
 
                         });
 
-                        // damos tiempo que los lectoes lean los mensajes
+                        // damos tiempo que los lectores lean los mensajes
                         Thread.sleep(1500);
 
                         assertTrue(true);

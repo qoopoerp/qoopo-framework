@@ -1,12 +1,10 @@
 package net.qoopo.framework;
 
-
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.qoopo.framework.controller.QControllerManager;
 import net.qoopo.framework.exception.NullArgumentException;
 import net.qoopo.framework.multitenant.MultitenantConfigurer;
 import net.qoopo.framework.services.QServiceLoader;
@@ -35,7 +33,7 @@ public class QoopoFramework {
 
     private String dataSourceName;
 
-    private MultitenantConfigurer multitenantConfigurer=new MultitenantConfigurer();
+    private MultitenantConfigurer multitenantConfigurer = new MultitenantConfigurer();
 
     private QoopoFramework() {
         //
@@ -53,7 +51,6 @@ public class QoopoFramework {
         return this;
     }
 
-   
     public QoopoFramework multitenancy(Supplier<MultitenantConfigurer> config) {
         if (config == null)
             throw new NullArgumentException();
@@ -75,6 +72,6 @@ public class QoopoFramework {
     public void load() {
         QTaskLoader.load();
         QServiceLoader.load();
-        QControllerManager.load();
+        // QControllerManager.load();
     }
 }

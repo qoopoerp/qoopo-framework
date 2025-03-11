@@ -20,14 +20,20 @@ public final class QServiceLoader {
     public static final Logger log = Logger.getLogger("QServiceLoader");
     private static final List<Runnable> INSTANCES = new ArrayList<>();
 
+    private static final List<Service> INSTANCES_SERVICES = new ArrayList<>();
+
     public static void load() {
+        loadBackgroundServices();
+        loadServices();
+    }
+
+    private static void loadBackgroundServices() {
         try {
             INSTANCES.clear();
-            log.info("[+] Cargando servicios ");
-
-            List<Object> services = QoopoReflection.getBeanAnnotaded(Service.class);
+            log.info("[+] Cargando servicios background");
+            List<Object> services = QoopoReflection.getBeanAnnotaded(BackgroundService.class);
             for (Object instancia : services) {
-                Service anotacion = instancia.getClass().getAnnotation(Service.class);
+                BackgroundService anotacion = instancia.getClass().getAnnotation(BackgroundService.class);
                 if (instancia instanceof Runnable) {
                     INSTANCES.add((Runnable) instancia);
                     log.info("[+] Servicio cargado: [".concat(anotacion.name()));
@@ -37,6 +43,22 @@ public final class QServiceLoader {
             log.log(Level.SEVERE, e.getMessage(), e);
         } finally {
             start();
+        }
+    }
+
+    private static void loadServices() {
+        try {
+            INSTANCES_SERVICES.clear();
+            log.info("[+] Cargando servicios");
+            // List<Object> cargados = QoopoReflection.getBeanImplemented(Service.class);
+            List<Object> cargados = QoopoReflection.getBeanAnnotaded(Service.class);
+            cargados.forEach(objeto -> {
+                Service controller = (Service) objeto;
+                log.info("[+] Service cargado: [".concat(controller.getClass().getName()).concat("] "));
+                INSTANCES_SERVICES.add(controller);
+            });
+        } catch (Exception e) {
+            log.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
