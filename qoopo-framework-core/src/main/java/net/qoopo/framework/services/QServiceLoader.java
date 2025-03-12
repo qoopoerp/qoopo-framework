@@ -20,7 +20,7 @@ public final class QServiceLoader {
     public static final Logger log = Logger.getLogger("QServiceLoader");
     private static final List<Runnable> INSTANCES = new ArrayList<>();
 
-    private static final List<Service> INSTANCES_SERVICES = new ArrayList<>();
+    private static final List<Object> INSTANCES_SERVICES = new ArrayList<>();
 
     public static void load() {
         loadBackgroundServices();
@@ -52,10 +52,11 @@ public final class QServiceLoader {
             log.info("[+] Cargando servicios");
             // List<Object> cargados = QoopoReflection.getBeanImplemented(Service.class);
             List<Object> cargados = QoopoReflection.getBeanAnnotaded(Service.class);
-            cargados.forEach(objeto -> {
-                Service controller = (Service) objeto;
-                log.info("[+] Service cargado: [".concat(controller.getClass().getName()).concat("] "));
-                INSTANCES_SERVICES.add(controller);
+            cargados.forEach(instancia -> {
+                // Service controller = (Service) instancia;
+                // Service anotacion = instancia.getClass().getAnnotation(Service.class);
+                log.info("[+] Service cargado: [".concat(instancia.getClass().getName()).concat("] "));
+                INSTANCES_SERVICES.add(instancia);
             });
         } catch (Exception e) {
             log.log(Level.SEVERE, e.getMessage(), e);
