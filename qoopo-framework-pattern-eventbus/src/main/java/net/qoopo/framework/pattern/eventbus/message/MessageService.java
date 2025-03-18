@@ -19,14 +19,14 @@ public class MessageService<T> implements EventMessagingService<T> {
 
     private static Logger log = Logger.getLogger("message-service");
 
-    private EventBus<String, EventMessage<T>> bus;
+    private EventBus<String, T> bus;
     private MessageProducer<T> producer;
     private Duration sleepDuration = Duration.ofSeconds(1);
     private Duration pollDuration = Duration.ofSeconds(3);
 
-    private Map<String, List<EventMessageHandler>> handlersMap;
+    private Map<String, List<EventMessageHandler<T>>> handlersMap;
 
-    public MessageService(EventBus<String, EventMessage<T>> bus) {
+    public MessageService(EventBus<String, T> bus) {
         this.bus = bus;
         // configuramos con producer y luego un consumer
         producer = new MessageProducer<T>(bus);
@@ -34,14 +34,14 @@ public class MessageService<T> implements EventMessagingService<T> {
     }
 
     @Override
-    public void sendEvent(String destination, EventMessage<T> message) {
-        EventRecord<String, EventMessage<T>> record = new EventRecord<String, EventMessage<T>>(null, destination,
+    public void sendEvent(String destination, T message) {
+        EventRecord<String, T> record = new EventRecord<String, T>(null, destination,
                 message);
         producer.send(record);
     }
 
     @Override
-    public void receiveEvents(String destination, EventMessageHandler handler) {
+    public void receiveEvents(String destination, EventMessageHandler<T> handler) {
         log.info("[+] Registering handler for -> " + destination);
         if (!handlersMap.containsKey(destination)) {
             handlersMap.put(destination, new ArrayList<>());

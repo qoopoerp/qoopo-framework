@@ -10,14 +10,12 @@ import lombok.ToString;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 @ToString
-public class Product {
+@NoArgsConstructor
+public class Customer {
     private String name;
-    private LocalDateTime createAt;
-    private String description;
-    private Double price;
-    private Color color;
-    private Size size;
+    private String lastName;
+    private LocalDateTime birthDay;
+    private Double age;
 }

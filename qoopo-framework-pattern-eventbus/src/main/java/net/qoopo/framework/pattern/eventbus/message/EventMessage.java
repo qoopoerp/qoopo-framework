@@ -2,16 +2,24 @@ package net.qoopo.framework.pattern.eventbus.message;
 
 import java.io.Serializable;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import lombok.Getter;
+import lombok.Setter;
 
-@AllArgsConstructor
-@Builder
-@Data
-@ToString
-public class EventMessage<T> implements Serializable {
-    private MessageHeaders headers;
-    private T payload;
+@Getter
+@Setter
+public abstract class EventMessage<T> implements Serializable {
+    protected MessageHeaders headers;
+    protected String type = this.getClass().getName();
+    protected T payload;
+
+    public EventMessage() {
+        headers = null;
+        payload = null;
+    }
+
+    public EventMessage(MessageHeaders headers, T payload) {
+        this.headers = headers;
+        this.payload = payload;
+    }
+
 }

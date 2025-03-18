@@ -11,20 +11,20 @@ import net.qoopo.framework.pattern.eventbus.consumer.ConsumerPoll;
 /**
  * Consumidor de mensajes para un EventBus indicado
  */
-public class MessageConsumerPoll<T> implements ConsumerPoll<String, EventMessage<T>> {
+public class MessageConsumerPoll<T> implements ConsumerPoll<String, T> {
 
-    private EventBus<String, EventMessage<T>> bus;
+    private EventBus<String, T> bus;
     private String topic;
     private UUID uuid;
 
-    public MessageConsumerPoll(EventBus<String, EventMessage<T>> bus, String topic) {
+    public MessageConsumerPoll(EventBus<String, T> bus, String topic) {
         this.bus = bus;
         this.topic = topic;
         uuid = UUID.randomUUID();
     }
 
     @Override
-    public List<EventRecord<String, EventMessage<T>>> poll(Duration duration) {
+    public List<EventRecord<String, T>> poll(Duration duration) {
         return bus.getEvents(uuid.toString(), topic, duration);
     }
 

@@ -16,6 +16,11 @@ public class DefaultResilientQueue<TYPE> implements ResilientQueue<TYPE> {
         this.repository = repository;
     }
 
+    public DefaultResilientQueue(Queue<TYPE> queue, ResilientQueueRepository<TYPE> repository) {
+        this.queue = queue;
+        this.repository = repository;
+    }
+
     public void add(TYPE item) {
         new Thread(() -> {
             if (repository != null)

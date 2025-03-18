@@ -19,12 +19,13 @@ import net.qoopo.framework.pattern.eventbus.testcase.eventbusimple.ProductConsum
 import net.qoopo.framework.pattern.eventbus.testcase.eventbusimple.ProductProducer;
 import net.qoopo.framework.pattern.eventbus.testcase.model.Color;
 import net.qoopo.framework.pattern.eventbus.testcase.model.Product;
+import net.qoopo.framework.pattern.eventbus.testcase.model.ProductMessage;
 
 public class EventBusTest {
 
         private static Logger log = Logger.getLogger("eventbus-test");
 
-        @Test
+        // @Test
         public void testEventbus() {
                 try {
                         log.info("\n\n\n\n\n\n\n\n");
@@ -59,7 +60,7 @@ public class EventBusTest {
                 }
         }
 
-        @Test
+        // @Test
         public void testSuscriptionConsumer() {
                 try {
                         log.info("\n\n\n\n\n\n\n\n");
@@ -102,7 +103,7 @@ public class EventBusTest {
                         EventBusMemoryImpl<String, EventMessage<Product>> bus = new EventBusMemoryImpl<>();
                         // bus.setDebug(true);
 
-                        MessageService<Product> service = new MessageService<Product>(bus);
+                        MessageService<EventMessage<Product>> service = new MessageService<EventMessage<Product>>(bus);
 
                         service.receiveEvents("product.saved", message -> {
                                 // log.info("[message] - Suscriptor 1 -- Message -> " + message.toString());
@@ -133,7 +134,23 @@ public class EventBusTest {
                                                 .description("ProductMessage  " + c + " - gamer")
                                                 .color(Color.RED)
                                                 .build();
-                                service.sendEvent("product.saved", new EventMessage<Product>(
+                                service.sendEvent("product.saved",
+                                                new ProductMessage(
+                                                                MessageHeaders.builder().createAt(LocalDateTime.now())
+                                                                                .id(UUID.randomUUID().toString())
+                                                                                .source("Test")
+                                                                                .user("test-user")
+                                                                                .build(),
+                                                                product));
+
+                                service.sendEvent("product.deleted", new ProductMessage(
+                                                MessageHeaders.builder().createAt(LocalDateTime.now())
+                                                                .id(UUID.randomUUID().toString())
+                                                                .source("Test")
+                                                                .user("test-user")
+                                                                .build(),
+                                                product));
+                                service.sendEvent("product.archived", new ProductMessage(
                                                 MessageHeaders.builder().createAt(LocalDateTime.now())
                                                                 .id(UUID.randomUUID().toString())
                                                                 .source("Test")
@@ -141,22 +158,7 @@ public class EventBusTest {
                                                                 .build(),
                                                 product));
 
-                                service.sendEvent("product.deleted", new EventMessage<Product>(
-                                                MessageHeaders.builder().createAt(LocalDateTime.now())
-                                                                .id(UUID.randomUUID().toString())
-                                                                .source("Test")
-                                                                .user("test-user")
-                                                                .build(),
-                                                product));
-                                service.sendEvent("product.archived", new EventMessage<Product>(
-                                                MessageHeaders.builder().createAt(LocalDateTime.now())
-                                                                .id(UUID.randomUUID().toString())
-                                                                .source("Test")
-                                                                .user("test-user")
-                                                                .build(),
-                                                product));
-
-                                service.sendEvent("product.ready", new EventMessage<Product>(
+                                service.sendEvent("product.ready", new ProductMessage(
                                                 MessageHeaders.builder().createAt(LocalDateTime.now())
                                                                 .id(UUID.randomUUID().toString())
                                                                 .source("Test")

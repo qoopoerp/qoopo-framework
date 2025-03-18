@@ -2,6 +2,7 @@ package net.qoopo.framework.kafka;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -20,13 +21,19 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 
-import com.google.gson.reflect.TypeToken;
-
+import net.qoopo.framework.kafka.core.QKafkaConfig;
 import net.qoopo.framework.kafka.core.QKafkaConsumer;
 import net.qoopo.framework.kafka.core.QKafkaProducer;
 import net.qoopo.framework.kafka.message.QKafkaMessageService;
 import net.qoopo.framework.kafka.model.Color;
+import net.qoopo.framework.kafka.model.Customer;
+import net.qoopo.framework.kafka.model.CustomerMessage;
 import net.qoopo.framework.kafka.model.Product;
+import net.qoopo.framework.kafka.model.ProductMessage;
+import net.qoopo.framework.kafka.serialization.gson.GsonDeserializer;
+import net.qoopo.framework.kafka.serialization.gson.GsonSerializer;
+import net.qoopo.framework.kafka.serialization.jsonb.JsonbDeserializer;
+import net.qoopo.framework.kafka.serialization.jsonb.JsonbSerializer;
 import net.qoopo.framework.pattern.eventbus.common.EventRecord;
 import net.qoopo.framework.pattern.eventbus.message.EventMessage;
 import net.qoopo.framework.pattern.eventbus.message.MessageHeaders;
@@ -35,10 +42,12 @@ public class KafkaTest {
 
     private static Logger log = Logger.getLogger("kafka-test");
 
-    private static final String TOPIC = "mi_topic";
-    private static final String GROUP_ID = "test_kafka_7";
+    private static final String TOPIC = "qoopo.framework.eventbus.kafka.test";
+    private static final String GROUP_ID = "test_kafka_1";
 
-    private static final String host = "laptop:9092";// 192.168.200.19:9092
+    // private static final String host =
+    // "localhost:29092,localhost:39092,localhost:49092";// "laptop:9092";
+    private static final String host = "laptop:9092";
 
     // @Test
     public void testNativeProducer() {
@@ -139,22 +148,20 @@ public class KafkaTest {
 
     // @Test
     public void testString() {
-
+        QKafkaConfig config = QKafkaConfig.builder().kafkaHost(host).groupId(GROUP_ID).build();
         try {
             log.info("\n\n\n\n\n\n\n\n");
             log.info("PROBANDO Producer String");
-            QKafkaProducer<String> producer = new QKafkaProducer<>(host);
+
+            QKafkaProducer<String> producer = new QKafkaProducer<>(config);
 
             IntStream.range(1, 100).parallel().forEach(c -> {
                 Product product = Product.builder().name("Product " + c)
                         .description("Product " + c + " - gamer")
                         .color(Color.RED)
                         .build();
+                producer.send(new EventRecord<String, String>(TOPIC, product.toString()));
 
-                producer.send(new EventRecord<String, String>("product.saved", product.toString()));
-                producer.send(new EventRecord<String, String>("product.deleted", product.toString()));
-                producer.send(new EventRecord<String, String>("product.archived", product.toString()));
-                producer.send(new EventRecord<String, String>("product.ready", product.toString()));
             });
 
             assertTrue(true);
@@ -166,21 +173,13 @@ public class KafkaTest {
         try {
             log.info("\n\n\n\n\n\n\n\n");
             log.info("PROBANDO Consumer String");
-            QKafkaConsumer<String> consumerSaved = new QKafkaConsumer<>(host, GROUP_ID, "product.saved");
-            QKafkaConsumer<String> consumerDeleted = new QKafkaConsumer<>(host, GROUP_ID, "product.deleted");
-            QKafkaConsumer<String> consumerReady = new QKafkaConsumer<>(host, GROUP_ID, "product.ready");
+            QKafkaConsumer<String> consumerSaved = new QKafkaConsumer<>(config, TOPIC);
             int mensajesRecibidos = 0;
             while (mensajesRecibidos < 5) {
                 for (EventRecord<String, String> event : consumerSaved.poll(Duration.ofSeconds(3))) {
                     mensajesRecibidos++;
                     log.info("Evento recibido Producto guardado -> " + event.getValue());
                 }
-            }
-            for (EventRecord<String, String> event : consumerDeleted.poll(Duration.ofSeconds(3))) {
-                log.info("Evento recibido Producto eliminado -> " + event.getValue());
-            }
-            for (EventRecord<String, String> event : consumerReady.poll(Duration.ofSeconds(3))) {
-                log.info("Evento recibido Producto listo -> " + event.getValue());
             }
             assertTrue(true);
         } catch (Exception ex) {
@@ -191,25 +190,29 @@ public class KafkaTest {
 
     // @Test
     public void testbinary() {
+
+        Properties aditionalProperties = new Properties();
+        aditionalProperties.setProperty(GsonDeserializer.TYPE, Product.class.getName());
+        aditionalProperties.setProperty(JsonbDeserializer.TYPE, Product.class.getName());
+
+        QKafkaConfig config = QKafkaConfig.builder().kafkaHost(host).groupId(GROUP_ID)
+                .valueSerializerClass(JsonbSerializer.class.getName())
+                .valueDeserializerClass(JsonbDeserializer.class.getName())
+                .properties(aditionalProperties)
+                .build();
         try {
             log.info("\n\n\n\n\n\n\n\n");
             log.info("PROBANDO Producer binary ");
-            QKafkaProducer<Product> producer = new QKafkaProducer<>(host);
+            QKafkaProducer<Product> producer = new QKafkaProducer<>(config);
 
-            IntStream.range(1, 100).parallel().forEach(c -> {
+            IntStream.range(1, 10).parallel().forEach(c -> {
                 Product product = Product.builder().name("Product " + c)
                         .description("Product " + c + " - gamer")
+                        .createAt(LocalDateTime.now())
                         .color(Color.RED)
                         .build();
 
-                producer.send(new EventRecord<String, Product>("product.bin.saved",
-                        product));
-                producer.send(new EventRecord<String, Product>("product.bin.deleted",
-                        product));
-                producer.send(new EventRecord<String, Product>("product.bin.archived",
-                        product));
-                producer.send(new EventRecord<String, Product>("product.bin.ready",
-                        product));
+                producer.send(new EventRecord<String, Product>(TOPIC, product));
             });
 
             assertTrue(true);
@@ -221,24 +224,13 @@ public class KafkaTest {
         try {
             log.info("\n\n\n\n\n\n\n\n");
             log.info("PROBANDO Consumer object");
-            QKafkaConsumer<Product> consumerSaved = new QKafkaConsumer<>(host, GROUP_ID,
-                    "product.bin.saved");
-            QKafkaConsumer<Product> consumerDeleted = new QKafkaConsumer<>(host,
-                    GROUP_ID, "product.bin.deleted");
-            QKafkaConsumer<Product> consumerReady = new QKafkaConsumer<>(host, GROUP_ID,
-                    "product.bin.ready");
+            QKafkaConsumer<Product> consumerSaved = new QKafkaConsumer<>(config, TOPIC);
             int mensajesRecibidos = 0;
             while (mensajesRecibidos < 5) {
                 for (EventRecord<String, Product> event : consumerSaved.poll(Duration.ofSeconds(3))) {
                     mensajesRecibidos++;
                     log.info("Evento recibido Producto guardado -> " + event.getValue());
                 }
-            }
-            for (EventRecord<String, Product> event : consumerDeleted.poll(Duration.ofSeconds(3))) {
-                log.info("Evento recibido Producto eliminado -> " + event.getValue());
-            }
-            for (EventRecord<String, Product> event : consumerReady.poll(Duration.ofSeconds(3))) {
-                log.info("Evento recibido Producto listo -> " + event.getValue());
             }
             assertTrue(true);
         } catch (Exception ex) {
@@ -252,72 +244,39 @@ public class KafkaTest {
         try {
             log.info("\n\n\n\n\n\n\n\n");
             log.info("PROBANDO MESSAGES");
-            // Declaramos un bus de eventos
 
-            // bus.setDebug(true);
+            QKafkaConfig config = QKafkaConfig.builder().kafkaHost(host).groupId(GROUP_ID)
+                    .valueSerializerClass(GsonSerializer.class.getName())
+                    .valueDeserializerClass(GsonDeserializer.class.getName())
+                    .build();
 
-            QKafkaMessageService<Product> service = new QKafkaMessageService<Product>(host, GROUP_ID,
-                    new TypeToken<EventMessage<Product>>() {
-                    }.getType());
+            QKafkaMessageService<EventMessage<Product>> service = new QKafkaMessageService<EventMessage<Product>>(
+                    config);
 
-            service.receiveEvents("message.product.saved", message -> {
-                // log.info("[message] - Suscriptor 1 -- Message -> " + message.toString());
-                log.info("Tipo ? " + message.getPayload().getClass());
-                log.info(
-                        "[message] - Suscriptor 1-> Producto guardado ->" + ((Product) message.getPayload()).getName());
-            });
+            service.receiveEvents(TOPIC,
+                    message -> log.info("[Evento]  Producto guardado ->" + ((Product) message.getPayload()).getName()));
 
-            service.receiveEvents("message.product.saved", message -> {
-                // log.info("[message] - Suscriptor 2 - Message -> " + message.toString());
-                log.info("[message] - Suscriptor 2 -> Producto guardado ->"
-                        + ((Product) message.getPayload()).getName());
-            });
+            try {
+                Thread.sleep(3000);
+            } catch (Exception e) {
 
-            service.receiveEvents("message.product.deleted", message -> {
-                // log.info("[message] - Message -> " + message.toString());
-                log.info("[message] -> Producto eliminado ->" + ((Product) message.getPayload()).getName());
-            });
+            }
 
-            service.receiveEvents("message.product.archived", message -> {
-                // log.info("[message] - Message -> " + message.toString());
-                log.info("[message] -> Producto archivado ->" + ((Product) message.getPayload()).getName());
-            });
-
-            IntStream.range(1, 51).forEach(c -> {
+            IntStream.range(1, 15).forEach(c -> {
                 Product product = Product.builder().name("ProductMessage " + c)
                         .description("ProductMessage " + c + " - gamer")
+                        .createAt(LocalDateTime.now())
                         .color(Color.RED)
                         .build();
-                service.sendEvent("message.product.saved", new EventMessage<Product>(
-                        MessageHeaders.builder().createAt(LocalDateTime.now())
-                                .id(UUID.randomUUID().toString())
-                                .source("Test")
-                                .user("test-user")
-                                .build(),
-                        product));
+                service.sendEvent(TOPIC,
+                        new ProductMessage(
+                                MessageHeaders.builder().createAt(LocalDateTime.now())
+                                        .id(UUID.randomUUID().toString())
+                                        .source("Test")
+                                        .user("test-user")
+                                        .build(),
+                                product));
 
-                service.sendEvent("message.product.deleted", new EventMessage<Product>(
-                        MessageHeaders.builder().createAt(LocalDateTime.now())
-                                .id(UUID.randomUUID().toString())
-                                .source("Test")
-                                .user("test-user")
-                                .build(),
-                        product));
-                service.sendEvent("message.product.archived", new EventMessage<Product>(
-                        MessageHeaders.builder().createAt(LocalDateTime.now())
-                                .id(UUID.randomUUID().toString())
-                                .source("Test")
-                                .user("test-user")
-                                .build(),
-                        product));
-
-                service.sendEvent("message.product.ready", new EventMessage<Product>(
-                        MessageHeaders.builder().createAt(LocalDateTime.now())
-                                .id(UUID.randomUUID().toString())
-                                .source("Test")
-                                .user("test-user")
-                                .build(),
-                        product));
                 try {
                     // cada 5, espera un tiempo para probar las respuestas
                     if (c % 5 == 0) {
@@ -341,4 +300,99 @@ public class KafkaTest {
         }
     }
 
+    // @Test
+    public void testMessagesGeneric() {
+        try {
+            log.info("\n\n\n\n\n\n\n\n");
+            log.info("PROBANDO MESSAGES Generic");
+
+            QKafkaConfig config = QKafkaConfig.builder().kafkaHost(host).groupId(GROUP_ID)
+                    .valueSerializerClass(JsonbSerializer.class.getName())
+                    .valueDeserializerClass(JsonbDeserializer.class.getName())
+                    .build();
+
+            QKafkaMessageService<EventMessage<?>> service = new QKafkaMessageService<EventMessage<?>>(config);
+
+            service.receiveEvents(TOPIC, message -> {
+                if (message.getClass().isAssignableFrom(ProductMessage.class))
+                    log.info(
+                            "[PRODUCTO] -> Llegó Evento de producto ->"
+                                    + ((Product) message.getPayload()).toString());
+
+                if (message.getClass().isAssignableFrom(CustomerMessage.class))
+                    log.info(
+                            "[CUSTOMER] -  Llegó Evento de Customer ->"
+                                    + ((Customer) message.getPayload()).toString());
+            });
+
+            IntStream.range(1, 20).forEach(c -> {
+                Product product = Product.builder().name("ProductMessage " + c)
+                        .description("ProductMessage " + c + " - gamer")
+                        .createAt(LocalDateTime.now())
+                        .color(Color.RED)
+                        .build();
+                Customer customer = Customer.builder().name("Customer " + c)
+                        .age(new SecureRandom().nextDouble() * 50 + 1)
+                        .birthDay(LocalDateTime.now().plusYears(-1 * (new SecureRandom().nextInt(50) + 1)))
+                        .lastName(" Jaime")
+                        .build();
+                service.sendEvent(TOPIC,
+                        new ProductMessage(
+                                MessageHeaders.builder().createAt(LocalDateTime.now())
+                                        .id(UUID.randomUUID().toString())
+                                        .source("Test")
+                                        .user("test-user")
+                                        .build(),
+                                product));
+
+                service.sendEvent(TOPIC,
+                        new CustomerMessage(
+                                MessageHeaders.builder().createAt(LocalDateTime.now())
+                                        .id(UUID.randomUUID().toString())
+                                        .source("Customers")
+                                        .user("test-user")
+                                        .build(),
+                                customer));
+
+                try {
+                    // cada 5, espera un tiempo para probar las respuestas
+                    if (c % 5 == 0) {
+                        log.info("\n\n\n\n\n\n\n\n");
+                        Thread.sleep(5000);
+                    }
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            });
+
+            // damos tiempo que los lectores lean los mensajes
+            Thread.sleep(5000);
+
+            assertTrue(true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    // // @Test
+    // public void testStringP() {
+    // String linea = "<campoAdicional nombre=\"SALDO
+    // ANTERIOR\">0.00</campoAdicional>";
+    // log.info("Atributo=" + linea.substring(linea.indexOf("\"") + 1,
+    // linea.indexOf("\"", linea.indexOf("\"") + 1)));
+    // log.info("Valor=" + linea.substring(linea.indexOf(">") + 1,
+    // linea.indexOf("</")));
+    // assertTrue(true);
+
+    // linea = "<detAdicional nombre=\"imei/imsi\" valor=\"4521858552218585414\"/>";
+    // int pUbicacion = linea.indexOf("nombre=\"") + 8;
+    // log.info("Atributo=" + linea.substring(pUbicacion, linea.indexOf("\"",
+    // pUbicacion + 1)));
+    // pUbicacion = linea.indexOf("valor=\"") + 7;
+    // log.info("Valor=" + linea.substring(pUbicacion, linea.indexOf("\"",
+    // pUbicacion + 1)));
+    // }
 }
