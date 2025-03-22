@@ -43,11 +43,13 @@ public class KafkaTest {
     private static Logger log = Logger.getLogger("kafka-test");
 
     private static final String TOPIC = "qoopo.framework.eventbus.kafka.test";
+
     private static final String GROUP_ID = "test_kafka_1";
 
     // private static final String host =
     // "localhost:29092,localhost:39092,localhost:49092";// "laptop:9092";
     private static final String host = "laptop:9092";
+    // private static final String host = "172.18.95.8:9092";
 
     // @Test
     public void testNativeProducer() {

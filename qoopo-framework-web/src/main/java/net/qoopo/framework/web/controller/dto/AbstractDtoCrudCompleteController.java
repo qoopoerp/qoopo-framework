@@ -27,7 +27,7 @@ import net.qoopo.framework.filter.core.condition.Condition;
 import net.qoopo.framework.filter.core.condition.Field;
 import net.qoopo.framework.filter.core.condition.Value;
 import net.qoopo.framework.jpa.core.AbstractEntity;
-import net.qoopo.framework.jpa.core.dtos.DtoBase;
+import net.qoopo.framework.jpa.core.dtos.AbstractDto;
 import net.qoopo.framework.jpa.core.interfaces.Agrupable;
 import net.qoopo.framework.jpa.core.interfaces.Auditable;
 import net.qoopo.framework.jpa.core.interfaces.CoreMetadata;
@@ -53,7 +53,7 @@ import net.qoopo.framework.web.util.FacesUtils;
 
 @Getter
 @Setter
-public abstract class AbstractDtoCrudCompleteController<S extends AbstractEntity, T extends DtoBase>
+public abstract class AbstractDtoCrudCompleteController<S extends AbstractEntity, T extends AbstractDto>
         extends AbstractCrudCompleteController<S, T, Long>
         implements AdminBeanProgressable {
 
@@ -584,11 +584,11 @@ public abstract class AbstractDtoCrudCompleteController<S extends AbstractEntity
     public void edit(T item) {
         log.info("dto edit ->" + entityClassName);
         long tInicio = System.currentTimeMillis();
-        if (item instanceof DtoBase) {
+        if (item instanceof AbstractDto) {
             try {
                 editItem(findEntity(item));
-                ((DtoBase) item).setEntity(findEntity(item));
-                editItem((S) ((DtoBase) item).getEntity());
+                ((AbstractDto) item).setEntity(findEntity(item));
+                editItem((S) ((AbstractDto) item).getEntity());
             } catch (ClassCastException e) {
                 e.printStackTrace();
             }

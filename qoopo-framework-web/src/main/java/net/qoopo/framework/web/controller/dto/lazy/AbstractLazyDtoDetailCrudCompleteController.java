@@ -10,7 +10,7 @@ import net.qoopo.framework.filter.core.Filter;
 import net.qoopo.framework.filter.core.condition.Condition;
 import net.qoopo.framework.filter.core.condition.Field;
 import net.qoopo.framework.jpa.core.AbstractEntity;
-import net.qoopo.framework.jpa.core.dtos.DtoBase;
+import net.qoopo.framework.jpa.core.dtos.AbstractDto;
 import net.qoopo.framework.models.OpcionBase;
 import net.qoopo.framework.web.util.FacesUtils;
 
@@ -23,7 +23,7 @@ import net.qoopo.framework.web.util.FacesUtils;
  */
 @Getter
 @Setter
-public abstract class AbstractLazyDtoDetailCrudCompleteController<R extends AbstractEntity, DTO extends DtoBase, T>
+public abstract class AbstractLazyDtoDetailCrudCompleteController<R extends AbstractEntity, DTO extends AbstractDto, T>
         extends AbstractLazyDtoCrudCompleteController<R, DTO> {
 
     public AbstractLazyDtoDetailCrudCompleteController(String entityClassName, Class<DTO> entityClass, Filter inicial,

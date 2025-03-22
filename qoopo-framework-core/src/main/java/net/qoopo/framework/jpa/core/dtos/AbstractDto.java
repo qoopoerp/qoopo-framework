@@ -11,11 +11,12 @@ import net.qoopo.framework.jpa.core.AbstractEntity;
 // @MappedSuperclass
 @Getter
 @Setter
-public abstract class DtoBase extends AbstractEntity {
+public abstract class AbstractDto extends AbstractEntity {
 
     @Column(name = "id")
     private Long id;
 
+    // @JsonIgnore
     private AbstractEntity entity;
 
 }
