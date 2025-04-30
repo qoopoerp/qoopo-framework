@@ -15,7 +15,7 @@ public class WidgetLoader {
     public static void load() {
         try {
             INSTANCES.clear();
-            List<Object> cargados = QoopoReflection.getBeanImplemented(Widget.class);
+            List<Widget> cargados = QoopoReflection.getBeansImplemented(Widget.class);
             cargados.forEach(instance -> {
                 Widget widget = (Widget) instance;
                 try {

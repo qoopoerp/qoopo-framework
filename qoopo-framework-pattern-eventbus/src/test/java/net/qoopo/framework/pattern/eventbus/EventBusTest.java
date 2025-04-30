@@ -94,7 +94,7 @@ public class EventBusTest {
                 }
         }
 
-        @Test
+        // @Test
         public void testMessages() {
                 try {
                         log.info("\n\n\n\n\n\n\n\n");

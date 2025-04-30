@@ -1,13 +1,14 @@
 package net.qoopo.framework.web.controller;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
-import org.apache.poi.ss.formula.functions.T;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.schedule.ScheduleEntryMoveEvent;
@@ -23,10 +24,14 @@ import org.primefaces.model.timeline.TimelineModel;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.event.ActionEvent;
+import jakarta.faces.event.ComponentSystemEvent;
 import jakarta.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
 import net.qoopo.framework.Accion;
+import net.qoopo.framework.filter.core.condition.Condition;
+import net.qoopo.framework.filter.core.condition.Field;
+import net.qoopo.framework.filter.core.condition.Value;
 import net.qoopo.framework.jpa.core.AbstractEntity;
 import net.qoopo.framework.jpa.core.interfaces.Agrupable;
 import net.qoopo.framework.jpa.core.interfaces.Archivable;
@@ -38,6 +43,7 @@ import net.qoopo.framework.models.OpcionBase;
 import net.qoopo.framework.multitenant.TenantProvider;
 import net.qoopo.framework.reports.Reporte;
 import net.qoopo.framework.util.QLogger;
+import net.qoopo.framework.util.QoopoUtil;
 import net.qoopo.framework.web.AppSessionBeanInterface;
 import net.qoopo.framework.web.ImagenesBean;
 import net.qoopo.framework.web.SecurityContextBean;
@@ -99,6 +105,8 @@ public abstract class AbstractCrudCompleteController<Entity extends AbstractEnti
 
     protected final Class<EntityData> entityClass;
 
+    private static boolean loadingParameters = false;
+
     /**
      * Accion que se ejecuta para la actualizacion del valor de progress
      *
@@ -117,13 +125,6 @@ public abstract class AbstractCrudCompleteController<Entity extends AbstractEnti
         }
     };
 
-    /**
-     * Accion que se ejecuta en los filtros, predeterminado cargar lista
-     */
-    // protected Accion accion=new Accion(){@Override public Object
-    // ejecutar(Object...parameters){loadData();if(sessionBean!=null&&viewOption!=null){sessionBean.addUrlParam("view",viewOption.getStringValue());}return
-    // null;}};
-
     protected final ViewOption viewOption = new ViewOption(accion);
 
     protected abstract void initChatter();
@@ -138,6 +139,7 @@ public abstract class AbstractCrudCompleteController<Entity extends AbstractEnti
         graph = new GraphController<EntityData>(languageProvider);
         tree = new TreeController();
         initChatter();
+        parseUrlParams();
     }
 
     protected void loadData(Iterable<EntityData> data) {
@@ -152,6 +154,7 @@ public abstract class AbstractCrudCompleteController<Entity extends AbstractEnti
         loadTimeLine(data);
         sessionBean.addUrlParam("view", viewOption.getStringValue());
         log.info("[+] load data [" + QLogger.getTimeFormater(System.currentTimeMillis() - tInicio));
+        parseUrlParams();
     }
 
     /**
@@ -444,6 +447,12 @@ public abstract class AbstractCrudCompleteController<Entity extends AbstractEnti
         }
     }
 
+    public void resetView() {
+        sessionBean.removeUrlParam("id");
+        viewOption.reset();
+        sessionBean.addUrlParam("view", viewOption.getStringValue());
+    }
+
     /**
      * Método que debe ser llamado cuando se presione el botón "Crear" de las
      * plantillas
@@ -453,11 +462,22 @@ public abstract class AbstractCrudCompleteController<Entity extends AbstractEnti
         super.nuevo();
         sessionBean.removeUrlParam("id");
         viewOption.setValue(ViewOption.FORM);
-        sessionBean.addUrlParam("view", "form");
+        sessionBean.addUrlParam("view", viewOption.getStringValue());
         if (objeto instanceof Auditable) {
             chatter.mostrar(((Auditable) objeto).getMetadato(), (Auditable) objeto);
         } else {
             chatter.mostrar(null, null);
+        }
+    }
+
+    public void edit(Entity item) {
+        super.edit(item);
+        if (!masivo)
+            viewOption.setValue(ViewOption.FORM);
+        // cambio la url para mostrar el id actual
+        if (item != null && !masivo) {
+            sessionBean.addUrlParam("id", String.valueOf(item.getId()));
+            sessionBean.addUrlParam("view", viewOption.getStringValue());
         }
     }
 
@@ -507,6 +527,96 @@ public abstract class AbstractCrudCompleteController<Entity extends AbstractEnti
             ex.printStackTrace();
             FacesUtils.addErrorMessage(ex.getMessage());
             log.log(Level.SEVERE, ex.getMessage(), ex);
+        }
+    }
+
+    public void preRenderView(ComponentSystemEvent event) {
+        parseUrlParams();
+    }
+
+    /**
+     * Procesa el parametro id para cargar un registro
+     */
+    protected abstract void processIdParam(String id);
+
+    public Entity getObjeto() {
+        parseUrlParams();
+        log.info("[!!] getObjeto desde crudcompletecontroller , si se envio a parsear urlParams");
+        return super.getObjeto();
+    }
+
+    /**
+     * Procesa los parametros
+     */
+    public void parseUrlParams() {
+        try {
+            if (loadingParameters)
+                return;
+            loadingParameters = true;
+
+            log.info("[+] leyendo parametro " + entityClassName);
+            String filterValueTmp = "";
+            if (FacesUtils.getRequestParameter("filterValue") != null) {
+                filterValueTmp = FacesUtils.getRequestParameter("filterValue");
+            }
+            String filterValue = filterValueTmp;
+            log.info("filter value-> " + filterValue);
+            if (FacesUtils.getRequestParameter("filter") != null) {
+                filterName = FacesUtils.getRequestParameter("filter");
+                if (condicionesDisponibles != null && !condicionesDisponibles.isEmpty()) {
+                    condicionesDisponibles.stream()
+                            .filter(c -> c.getName().equals(filterName))
+                            .collect(Collectors.toList())
+                            .forEach(c1 -> {
+                                Condition c2 = c1.clonar();
+                                if (filterValue != null && !filterValue.isEmpty()) {
+                                    switch (c2.getField().getTipo()) {
+                                        case Field.INTEGER:
+                                            c2.setValue(new Value(Integer.valueOf(filterValue)));
+                                            break;
+                                        case Field.LONG:
+                                            c2.setValue(new Value(Long.valueOf(filterValue)));
+                                            break;
+                                        case Field.BOLEANO:
+                                            c2.setValue(new Value(Boolean.valueOf(filterValue)));
+                                            break;
+                                        case Field.NUMERICO:
+                                            c2.setValue(new Value(new BigDecimal(filterValue)));
+                                            break;
+                                        case Field.FECHA:
+                                            c2.setValue(new Value(
+                                                    LocalDateTime.from(QoopoUtil.getSDF().parse(filterValue))));
+                                            break;
+                                        case Field.STRING:
+                                        default:
+                                            c2.setValue(new Value(filterValue));
+                                            break;
+                                    }
+                                    c2.setName(filterName + " = " + filterValue);
+                                    log.info("[+] cambiando valor del filtro " + filterName + " a " + filterValue);
+                                }
+                                // filter.limpiar();
+                                filter.seleccionarCondicion(c2);
+                            });
+                }
+            }
+
+            // parámetro del tipo vista
+            if (FacesUtils.getRequestParameter("view") != null) {
+                log.info("[+] Cambiando view type to => " + FacesUtils.getRequestParameter("view"));
+                viewOption.setValue(FacesUtils.getRequestParameter("view"));
+            }
+
+            if (viewOption.getValue() == ViewOption.FORM) {
+                // carga un objeto con el id del parámetro
+                if (FacesUtils.getRequestParameter("id") != null) {
+                    processIdParam(FacesUtils.getRequestParameter("id"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            loadingParameters = false;
         }
     }
 
@@ -577,4 +687,5 @@ public abstract class AbstractCrudCompleteController<Entity extends AbstractEnti
             FacesUtils.addErrorMessage(ex);
         }
     }
+
 }

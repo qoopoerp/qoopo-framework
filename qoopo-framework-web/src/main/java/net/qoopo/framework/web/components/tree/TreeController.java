@@ -23,7 +23,7 @@ import net.qoopo.framework.web.controller.entity.complete.AbstractEntityCrudComp
  * @author ALBERTO
  */
 // @Named
-// @SessionScoped
+// @ViewScoped
 public class TreeController implements Serializable {
 
     public static final Logger log = Logger.getLogger("TreeController");

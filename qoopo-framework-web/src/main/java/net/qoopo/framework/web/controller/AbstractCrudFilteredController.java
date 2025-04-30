@@ -52,9 +52,6 @@ public abstract class AbstractCrudFilteredController<Entity, EntityData, EntityI
         @Override
         public Object ejecutar(Object... parameters) {
             loadData();
-            // if (sessionBean != null && viewOption != null) {
-            // sessionBean.addUrlParam("view", viewOption.getStringValue());
-            // }
             return null;
         }
     };

@@ -13,7 +13,7 @@
         <repository>
             <id>repo-qoopo-releases</id>
             <name>Repositorio local de Qoopo</name>
-            <url>http://127.0.0.1:8081/repository/maven-public</url>
+            <url>https://nexus.qoopo.net/repository/maven-public</url>
         </repository>
     </repositories>
 
@@ -22,20 +22,18 @@
         <repository>
             <id>repo-qoopo-releases</id>
             <name>Repositorio local de Qoopo</name>
-            <url>http://127.0.0.1:8081/repository/maven-releases/</url>
+            <url>https://nexus.qoopo.net/repository/maven-releases/</url>
         </repository>
         <snapshotRepository>
             <id>repo-qoopo-snapshots</id>
             <name>snapshots</name>
-            <url>http://127.0.0.1:8081/repository/maven-snapshots/</url>
+            <url>https://nexus.qoopo.net/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
     <modules>
         <module>qoopo-framework-pattern-eventbus</module>
-
         <module>qoopo-framework-eventbus-kafka</module>
-
         <module>qoopo-framework-pattern-specification</module>
         <module>qoopo-framework-resilience-util</module>
         <module>qoopo-framework-cache</module>
@@ -44,8 +42,6 @@
         <module>qoopo-framework-commons-date</module>
         <module>qoopo-framework-data</module>
         <module>qoopo-framework-core</module>
-
-
         <module>qoopo-framework-filter</module>
         <module>qoopo-framework-filter-jpa</module>
         <module>qoopo-framework-security</module>

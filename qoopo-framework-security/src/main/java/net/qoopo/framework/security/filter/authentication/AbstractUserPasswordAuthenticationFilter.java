@@ -125,7 +125,7 @@ public abstract class AbstractUserPasswordAuthenticationFilter extends AbstractA
      * 
      */
     private UserService getUserService() {
-        List<UserService> implementations = QoopoReflection.getBeanImplemented(UserService.class,
+        List<UserService> implementations = QoopoReflection.getBeansImplemented(UserService.class,
                 List.of(DefaultUserService.class));
         UserService userService = null;
         if (implementations != null && !implementations.isEmpty()) {
@@ -142,7 +142,7 @@ public abstract class AbstractUserPasswordAuthenticationFilter extends AbstractA
      * En caso de no encontrar usara una de generación aleatoria
      */
     private UserRepository getUserRepository() {
-        List<UserRepository> implementations = QoopoReflection.getBeanImplemented(UserRepository.class,
+        List<UserRepository> implementations = QoopoReflection.getBeansImplemented(UserRepository.class,
                 List.of(RandomUserRepository.class, InMemoryUserRepository.class));
         UserRepository userRepository = null;
         if (implementations != null && !implementations.isEmpty()) {

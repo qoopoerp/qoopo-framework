@@ -8,7 +8,7 @@
     <artifactId>qoopo-framework-commons-date</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
-    <repositories>
+    <!-- <repositories>
         <repository>
             <id>openmind</id>
             <name>Repo OpenMind para javaflow</name>
@@ -17,23 +17,11 @@
         <repository>
             <id>repo-qoopo-releases</id>
             <name>Repositorio local de Qoopo</name>
-            <url>http://127.0.0.1:8081/repository/maven-public/</url>
+            <url>https://nexus.qoopo.net/repository/maven-public/</url>
         </repository>
-    </repositories>
+    </repositories> -->
 
 
-    <distributionManagement>
-        <repository>
-            <id>repo-qoopo-releases</id>
-            <name>Repositorio local de Qoopo</name>
-            <url>http://127.0.0.1:8081/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>repo-qoopo-snapshots</id>
-            <name>snapshots</name>
-            <url>http://127.0.0.1:8081/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
     <parent>
         <groupId>net.qoopo</groupId>
         <artifactId>qoopo-framework</artifactId>
@@ -44,8 +32,8 @@
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
     </properties>
 
 </project>

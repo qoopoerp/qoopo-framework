@@ -12,6 +12,7 @@ import org.primefaces.event.DragDropEvent;
 import org.primefaces.event.ReorderEvent;
 
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.ComponentSystemEvent;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
@@ -62,62 +63,14 @@ public abstract class AbstractEntityCrudCompleteController<T extends AbstractEnt
         log.info("adminabstractclass ->" + entityClassName);
     }
 
-    public void procesarParametro() {
+    public void processIdParam(String idParam) {
         try {
-            String filterValueTmp = "";
-            if (FacesUtils.getRequestParameter("filterValue") != null) {
-                filterValueTmp = FacesUtils.getRequestParameter("filterValue");
-            }
-            String filterValue = filterValueTmp;
-            if (FacesUtils.getRequestParameter("filter") != null) {
-                filterName = FacesUtils.getRequestParameter("filter");
-                if (condicionesDisponibles != null && !condicionesDisponibles.isEmpty()) {
-                    condicionesDisponibles.stream()
-                            .filter(c -> c.getName().equals(filterName))
-                            .collect(Collectors.toList())
-                            .forEach(c1 -> {
-                                Condition c2 = c1.clonar();
-                                if (filterValue != null && !filterValue.isEmpty()) {
-                                    switch (c2.getField().getTipo()) {
-                                        case Field.INTEGER:
-                                            c2.setValue(new Value(Integer.valueOf(filterValue)));
-                                            break;
-                                        case Field.LONG:
-                                            c2.setValue(new Value(Long.valueOf(filterValue)));
-                                            break;
-                                        case Field.BOLEANO:
-                                            c2.setValue(new Value(Boolean.valueOf(filterValue)));
-                                            break;
-                                        case Field.NUMERICO:
-                                            c2.setValue(new Value(new BigDecimal(filterValue)));
-                                            break;
-                                        case Field.FECHA:
-                                            c2.setValue(new Value(
-                                                    LocalDateTime.from(QoopoUtil.getSDF().parse(filterValue))));
-                                            break;
-                                        case Field.STRING:
-                                        default:
-                                            c2.setValue(new Value(filterValue));
-                                            break;
-                                    }
-                                    c2.setName(filterName + " = " + filterValue);
-                                    log.info("[+] cambiando valor del filtro " + filterName + " a " + filterValue);
-                                }
-                                // filter.limpiar();
-                                filter.seleccionarCondicion(c2);
-                            });
-                }
-            }
-
-            // JpaParameters del tipo vista
-            if (FacesUtils.getRequestParameter("view") != null) {
-                viewOption.setValue(FacesUtils.getRequestParameter("view"));
-            }
-
             if (viewOption.getValue() == ViewOption.FORM) {
-                // carga un objeto con el id del JpaParameters
-                if (FacesUtils.getRequestParameter("id") != null) {
-                    Optional<T> tmp = repository.find(Long.valueOf(FacesUtils.getRequestParameter("id")));
+
+                // carga un objeto con el id del parámetro
+                if (idParam != null) {
+                    log.info("[+] Cargando registro con el id=" + idParam);
+                    Optional<T> tmp = repository.find(Long.valueOf(idParam));
                     if (tmp.isPresent()) {
                         log.info("Se encontro el id parametrer y se va a edit");
                         edit(tmp.get());
@@ -126,6 +79,8 @@ public abstract class AbstractEntityCrudCompleteController<T extends AbstractEnt
             }
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+
         }
     }
 
@@ -318,17 +273,7 @@ public abstract class AbstractEntityCrudCompleteController<T extends AbstractEnt
     public void edit(T item) {
         super.edit(item);
         log.info("edit ->" + entityClassName + " -> " + item);
-
         long tInicio = System.currentTimeMillis();
-        // camba la url para mostrar el id actual
-        if (item != null && !masivo) {
-            sessionBean.addUrlParam("id", String.valueOf(item.getId()));
-            sessionBean.addUrlParam("view", "form");
-        }
-
-        if (!masivo)
-            viewOption.setValue(ViewOption.FORM);
-
         if (chatter != null) {
             if (item instanceof Auditable) {
                 // en caso que este objeto no tenga metadato creamos uno
@@ -446,9 +391,8 @@ public abstract class AbstractEntityCrudCompleteController<T extends AbstractEnt
         FacesUtils.addInfoMessage(languageProvider.getTextValue(1938));
     }
 
-    public void resetView() {
-        sessionBean.removeUrlParam("id");
-        viewOption.reset();
-        sessionBean.addUrlParam("view", viewOption.getStringValue());
+    @Override
+    protected void loadData(Iterable<T> data) {
+        super.loadData(data);
     }
 }

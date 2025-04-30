@@ -18,8 +18,7 @@ import net.qoopo.framework.reflection.QoopoReflection;
 public final class QServiceLoader {
 
     public static final Logger log = Logger.getLogger("QServiceLoader");
-    private static final List<Runnable> INSTANCES = new ArrayList<>();
-
+    private static final List<Runnable> INSTANCES_BACKGROUND_SERVICES = new ArrayList<>();
     private static final List<Object> INSTANCES_SERVICES = new ArrayList<>();
 
     public static void load() {
@@ -29,13 +28,13 @@ public final class QServiceLoader {
 
     private static void loadBackgroundServices() {
         try {
-            INSTANCES.clear();
+            INSTANCES_BACKGROUND_SERVICES.clear();
             log.info("[+] Cargando servicios background");
             List<Object> services = QoopoReflection.getBeanAnnotaded(BackgroundService.class);
             for (Object instancia : services) {
                 BackgroundService anotacion = instancia.getClass().getAnnotation(BackgroundService.class);
                 if (instancia instanceof Runnable) {
-                    INSTANCES.add((Runnable) instancia);
+                    INSTANCES_BACKGROUND_SERVICES.add((Runnable) instancia);
                     log.info("[+] Servicio cargado: [".concat(anotacion.name()));
                 }
             }
@@ -50,12 +49,9 @@ public final class QServiceLoader {
         try {
             INSTANCES_SERVICES.clear();
             log.info("[+] Cargando servicios");
-            // List<Object> cargados = QoopoReflection.getBeanImplemented(Service.class);
-            List<Object> cargados = QoopoReflection.getBeanAnnotaded(Service.class);
-            cargados.forEach(instancia -> {
-                // Service controller = (Service) instancia;
-                // Service anotacion = instancia.getClass().getAnnotation(Service.class);
-                log.info("[+] Service cargado: [".concat(instancia.getClass().getName()).concat("] "));
+            QoopoReflection.getBeanAnnotaded(Service.class).forEach(instancia -> {
+                log.info("[+] Service cargado: [".concat(instancia.getClass().getName()).concat("] is null?=> [ ")
+                        .concat(String.valueOf(instancia == null)).concat("]"));
                 INSTANCES_SERVICES.add(instancia);
             });
         } catch (Exception e) {
@@ -64,12 +60,28 @@ public final class QServiceLoader {
     }
 
     /**
+     * Obtiene un servicio registrado
+     *
+     * @param <T>
+     * @param clazz
+     * @return
+     */
+    public static <T> T getService(Class<T> clazz) {
+        for (Object service : INSTANCES_SERVICES) {
+            if (clazz.isInstance(service)) {
+                return clazz.cast(service);
+            }
+        }
+        return null;
+    }
+
+    /**
      * Inicia los servicios registrados
      */
     private static void start() {
         try {
             log.info("Ejecutando Servicios.");
-            for (Runnable service : INSTANCES) {
+            for (Runnable service : INSTANCES_BACKGROUND_SERVICES) {
                 log.log(Level.INFO, "QoopoService--> Ejecutando servicio [{0}]", service.getClass().getName());
                 new Thread(service).start();
             }

@@ -16,6 +16,7 @@ import org.primefaces.model.DefaultScheduleEvent;
 import org.primefaces.model.timeline.TimelineEvent;
 
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.ComponentSystemEvent;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
@@ -81,68 +82,24 @@ public abstract class AbstractDtoCrudCompleteController<S extends AbstractEntity
         log.info("AdminDtoabstractClass ->" + entityClassName);
     }
 
-    public void procesarParametro() {
+    public void processIdParam(String idParam) {
         try {
-            String filterValueTmp = "";
-            if (FacesUtils.getRequestParameter("filterValue") != null) {
-                filterValueTmp = FacesUtils.getRequestParameter("filterValue");
-            }
-            String filterValue = filterValueTmp;
-            if (FacesUtils.getRequestParameter("filter") != null) {
-                filterName = FacesUtils.getRequestParameter("filter");
-                if (condicionesDisponibles != null && !condicionesDisponibles.isEmpty()) {
-                    condicionesDisponibles.stream()
-                            .filter(c -> c.getName().equals(filterName))
-                            .collect(Collectors.toList())
-                            .forEach(c1 -> {
-                                Condition c2 = c1.clonar();
-                                if (filterValue != null && !filterValue.isEmpty()) {
-                                    switch (c2.getField().getTipo()) {
-                                        case Field.INTEGER:
-                                            c2.setValue(new Value(Integer.valueOf(filterValue)));
-                                            break;
-                                        case Field.LONG:
-                                            c2.setValue(new Value(Long.valueOf(filterValue)));
-                                            break;
-                                        case Field.BOLEANO:
-                                            c2.setValue(new Value(Boolean.valueOf(filterValue)));
-                                            break;
-                                        case Field.NUMERICO:
-                                            c2.setValue(new Value(new BigDecimal(filterValue)));
-                                            break;
-                                        case Field.FECHA:
-                                            c2.setValue(new Value(
-                                                    LocalDateTime.from(QoopoUtil.getSDF().parse(filterValue))));
-                                            break;
-                                        case Field.STRING:
-                                        default:
-                                            c2.setValue(new Value(filterValue));
-                                            break;
-                                    }
-                                    c2.setName(filterName + " = " + filterValue);
-                                    log.info("[+] cambiando valor del filtro " + filterName + " a " + filterValue);
-                                }
-                                // filter.limpiar();
-                                filter.seleccionarCondicion(c2);
-                            });
+            log.info("[+] procesando parametro " + entityClassName);
+            // carga un objeto con el id del parámetro
+            if (viewOption.getValue() == ViewOption.FORM) {
+                if (idParam != null) {
+                    log.info("[+] Cargando registro con el id=" + idParam);
+                    Optional<S> tmp = repository.find(Long.valueOf(idParam));
+                    if (tmp.isPresent()) {
+                        log.info("Se encontro el id parametrer y se va a edit");
+                        editItem(tmp.get());
+                    }
                 }
             }
-            // JpaParameters del tipo vista
-            if (FacesUtils.getRequestParameter("view") != null) {
-                viewOption.setValue(FacesUtils.getRequestParameter("view"));
-            }
-
-            // carga un objeto con el id del JpaParameters
-            if (FacesUtils.getRequestParameter("id") != null) {
-                Optional<S> tmp = repository.find(Long.valueOf(FacesUtils.getRequestParameter("id")));
-                if (tmp.isPresent()) {
-                    log.info("Se encontro el id parametrer y se va a edit");
-                    editItem(tmp.get());
-                }
-            }
-
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+
         }
     }
 
@@ -612,14 +569,7 @@ public abstract class AbstractDtoCrudCompleteController<S extends AbstractEntity
         super.edit(item);
 
         log.info("editItem ->" + entityClassName + " -> " + item);
-        // cambio la url para mostrar el id actual
-        if (item != null && !masivo) {
-            sessionBean.addUrlParam("id", String.valueOf(item.getId()));
-            sessionBean.addUrlParam("view", "form");
-        }
 
-        if (!masivo)
-            viewOption.setValue(ViewOption.FORM);
         if (chatter != null) {
             if (item instanceof Auditable) {
                 // en caso que este objeto no tenga metadato creamos uno
@@ -736,12 +686,6 @@ public abstract class AbstractDtoCrudCompleteController<S extends AbstractEntity
     @Override
     public void onComplete() {
         FacesUtils.addInfoMessage(languageProvider.getTextValue(1938));
-    }
-
-    public void resetView() {
-        sessionBean.removeUrlParam("id");
-        viewOption.reset();
-        sessionBean.addUrlParam("view", viewOption.getStringValue());
     }
 
     protected abstract S findEntity(T dto);

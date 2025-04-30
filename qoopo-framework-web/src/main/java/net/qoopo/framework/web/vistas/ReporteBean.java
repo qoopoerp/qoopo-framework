@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.view.ViewScoped;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import jakarta.servlet.ServletContext;
@@ -18,7 +18,7 @@ import net.sf.jasperreports.engine.JRException;
  * @author ALBERTO
  */
 @Named
-@SessionScoped
+@ViewScoped
 public class ReporteBean implements Serializable {
 
     public static final Logger log = Logger.getLogger("ReporteBean");

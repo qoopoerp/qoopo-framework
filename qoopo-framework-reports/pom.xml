@@ -12,22 +12,10 @@
         <repository>
             <id>repo-qoopo-releases</id>
             <name>Repositorio local de Qoopo</name>
-            <url>http://127.0.0.1:8081/repository/maven-public/</url>
+            <url>https://nexus.qoopo.net/repository/maven-public/</url>
         </repository>
     </repositories>
 
-    <distributionManagement>
-        <repository>
-            <id>repo-qoopo-releases</id>
-            <name>Repositorio local de Qoopo</name>
-            <url>http://127.0.0.1:8081/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>repo-qoopo-snapshots</id>
-            <name>snapshots</name>
-            <url>http://127.0.0.1:8081/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
 
 
     <parent>
@@ -40,7 +28,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.24</version>
+            <version>1.18.36</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

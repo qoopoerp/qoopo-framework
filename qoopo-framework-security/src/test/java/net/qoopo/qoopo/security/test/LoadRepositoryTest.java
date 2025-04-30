@@ -19,7 +19,7 @@ public class LoadRepositoryTest {
     public void testRepository() {
         try {
             List<UserRepository> userRepositoryList = QoopoReflection
-                    .getBeanImplemented(UserRepository.class);
+                    .getBeansImplemented(UserRepository.class);
 
             assertTrue(userRepositoryList != null && !userRepositoryList.isEmpty());
             log.info("repositorios cargados->" + userRepositoryList.size());

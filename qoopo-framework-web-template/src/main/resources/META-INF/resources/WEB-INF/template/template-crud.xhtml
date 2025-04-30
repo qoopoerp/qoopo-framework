@@ -1,11 +1,15 @@
-<ui:composition template="/WEB-INF/template/template-main.xhtml" xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:p="http://primefaces.org/ui" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:qoopo="http://xmlns.jcp.org/jsf/composite/qoopo">
-
+<!-- <f:view xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui" xmlns:qoopo="http://xmlns.jcp.org/jsf/composite/qoopo" contentType="text/html">
 
     <f:metadata>
-        <f:event type="preRenderView" listener="#{crudBean.procesarParametro()}" />
-    </f:metadata>
+        <f:event type="preRenderView" listener="#{crudBean.parseUrlParams()}" />
+    </f:metadata> -->
+
+<ui:composition template="/WEB-INF/template/template-main.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+    xmlns:qoopo="http://xmlns.jcp.org/jsf/composite/qoopo">
 
     <ui:define name="contenido">
         <!--  <div class="q-flex q-flex-column"> -->
@@ -307,3 +311,4 @@
         <!--</div>-->
     </ui:define>
 </ui:composition>
+<!-- </f:view> -->

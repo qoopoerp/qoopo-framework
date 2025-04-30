@@ -17,7 +17,7 @@ import javax.imageio.ImageIO;
 
 import org.primefaces.event.FileUploadEvent;
 
-import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.view.ViewScoped;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import jakarta.servlet.ServletContext;
@@ -29,7 +29,7 @@ import net.qoopo.framework.web.util.FacesUtils;
  * @author ALBERTO
  */
 @Named
-@SessionScoped
+@ViewScoped
 public class ImagenesBean implements Serializable {
 
     public static final Logger log = Logger.getLogger("ImagenesBean");

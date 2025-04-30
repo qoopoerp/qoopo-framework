@@ -48,7 +48,6 @@ public abstract class AbstractCrudExportableController<Entity, EntityData, Entit
     public abstract void importar();
 
     public void updateExporter() {
-        log.info("actualizando exporter " + exporterType);
         switch (exporterType) {
             case 1:
                 exporter = new CsvExporter();
@@ -66,7 +65,6 @@ public abstract class AbstractCrudExportableController<Entity, EntityData, Entit
     }
 
     public void updateImporter() {
-        log.info("actualizando importer " + importerType);
         switch (importerType) {
             case 1:
                 importer = new CsvImporter();
