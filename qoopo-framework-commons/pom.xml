@@ -9,11 +9,11 @@
     <version>1.0.0</version>
     <packaging>jar</packaging>
     <repositories>
-        <repository>
+        <!-- <repository>
             <id>openmind</id>
             <name>Repo OpenMind para javaflow</name>
             <url>https://repository.openmindonline.it/</url>
-        </repository>
+        </repository> -->
         <repository>
             <id>repo-qoopo-releases</id>
             <name>Repositorio local de Qoopo</name>
@@ -118,11 +118,11 @@
             <artifactId>commons-io</artifactId>
             <version>2.4</version>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>commons-javaflow</groupId>
             <artifactId>commons-javaflow</artifactId>
             <version>r306555</version>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
