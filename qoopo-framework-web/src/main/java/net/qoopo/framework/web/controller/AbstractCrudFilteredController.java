@@ -2,6 +2,7 @@ package net.qoopo.framework.web.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import jakarta.inject.Inject;
 import lombok.Getter;
@@ -27,6 +28,8 @@ import net.qoopo.framework.web.components.filter.FilterController;
 @Setter
 public abstract class AbstractCrudFilteredController<Entity, EntityData, EntityID>
         extends AbstractCrudExportableController<Entity, EntityData, EntityID> {
+
+    private static Logger log = Logger.getLogger("abstract-crud-filtered-controller");
 
     @Inject
     protected TenantProvider tenantProvider;
@@ -100,8 +103,6 @@ public abstract class AbstractCrudFilteredController<Entity, EntityData, EntityI
             if (canArchive) {
                 filter.appendAvalaibleCondition(ConditionCollection.of("Archivado",
                         List.of(GeneralFilter.condicionActivo(), GeneralFilter.condicionArchivado())));
-                // filter.appendAvalaibleCondition(GeneralFilter.condicionActivo());
-                // filter.appendAvalaibleCondition(GeneralFilter.condicionArchivado());
             }
             if ((condicionesDisponibles != null && !condicionesDisponibles.isEmpty())
                     || canArchive) {

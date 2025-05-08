@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.primefaces.event.FileUploadEvent;
@@ -64,6 +65,8 @@ import net.qoopo.framework.web.vistas.ReporteBean;
 @Setter
 public abstract class AbstractCrudCompleteController<Entity extends AbstractEntity, EntityData extends AbstractEntity, EntityID>
         extends AbstractCrudFilteredController<Entity, EntityData, EntityID> {
+
+    private static Logger log = Logger.getLogger("abstract-crud-complete-controller");
 
     @Inject
     protected SecurityContextBean securityBean;

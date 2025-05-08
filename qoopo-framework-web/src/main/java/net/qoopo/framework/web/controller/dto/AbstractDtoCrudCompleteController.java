@@ -1,14 +1,12 @@
 package net.qoopo.framework.web.controller.dto;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
+import java.util.logging.Logger;
 
 import org.primefaces.event.DragDropEvent;
 import org.primefaces.event.ReorderEvent;
@@ -16,7 +14,6 @@ import org.primefaces.model.DefaultScheduleEvent;
 import org.primefaces.model.timeline.TimelineEvent;
 
 import jakarta.faces.context.FacesContext;
-import jakarta.faces.event.ComponentSystemEvent;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,7 +23,6 @@ import net.qoopo.framework.filter.FilterJpaRepository;
 import net.qoopo.framework.filter.core.Filter;
 import net.qoopo.framework.filter.core.condition.Condition;
 import net.qoopo.framework.filter.core.condition.Field;
-import net.qoopo.framework.filter.core.condition.Value;
 import net.qoopo.framework.jpa.core.AbstractEntity;
 import net.qoopo.framework.jpa.core.dtos.AbstractDto;
 import net.qoopo.framework.jpa.core.interfaces.Agrupable;
@@ -38,7 +34,6 @@ import net.qoopo.framework.jpa.core.interfaces.Ordenable;
 import net.qoopo.framework.models.OpcionBase;
 import net.qoopo.framework.repository.QoopoJpaRepositorySingleton;
 import net.qoopo.framework.util.QLogger;
-import net.qoopo.framework.util.QoopoUtil;
 import net.qoopo.framework.web.components.kanban.KanbanColumn;
 import net.qoopo.framework.web.components.viewoption.ViewOption;
 import net.qoopo.framework.web.controller.AbstractCrudCompleteController;
@@ -57,6 +52,8 @@ import net.qoopo.framework.web.util.FacesUtils;
 public abstract class AbstractDtoCrudCompleteController<S extends AbstractEntity, T extends AbstractDto>
         extends AbstractCrudCompleteController<S, T, Long>
         implements AdminBeanProgressable {
+
+    private static Logger log = Logger.getLogger("abstract-dto-crud-complete-controller");
 
     protected boolean entitiesLoaded = false;
 

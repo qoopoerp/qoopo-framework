@@ -34,6 +34,8 @@ import net.qoopo.framework.web.util.FacesUtils;
 public abstract class AbstractLazyDtoCrudCompleteController<S extends AbstractEntity, T extends AbstractDto>
         extends AbstractDtoCrudCompleteController<S, T> {
 
+    private static Logger log = Logger.getLogger("abstract-lazy-dto-crud-complete-controller");
+
     public AbstractLazyDtoCrudCompleteController(String entityClassName, Class<T> entityClass, Filter inicial,
             List<Condition> condicionesDisponibles,
             List<Field> campos, List<OpcionBase> opcionesGrupos) {
@@ -142,7 +144,7 @@ public abstract class AbstractLazyDtoCrudCompleteController<S extends AbstractEn
      * @param indice
      */
     @Override
-    public void seleccionar(int indice) {       
+    public void seleccionar(int indice) {
         try {
             lista.setRowIndex(indice - 1); // los indices van desde 0 a largo -1
             edit(lista.getRowData());

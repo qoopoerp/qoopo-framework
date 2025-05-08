@@ -2,6 +2,7 @@ package net.qoopo.framework.web.controller.dto.lazy;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,8 @@ import net.qoopo.framework.web.util.FacesUtils;
 @Setter
 public abstract class AbstractLazyDtoDetailCrudCompleteController<R extends AbstractEntity, DTO extends AbstractDto, T>
         extends AbstractLazyDtoCrudCompleteController<R, DTO> {
+
+    private static Logger log = Logger.getLogger("abstract-lazy-dto-detail-crud-complete-controller");
 
     public AbstractLazyDtoDetailCrudCompleteController(String entityClassName, Class<DTO> entityClass, Filter inicial,
             List<Condition> condicionesDisponibles,

@@ -1,6 +1,7 @@
 package net.qoopo.framework.web.controller.entity.complete.eager;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +21,10 @@ import net.qoopo.framework.web.controller.entity.complete.AbstractEntityCrudComp
  */
 @Getter
 @Setter
-public abstract class AbstractEagerEntityCrudCompleteController<T extends AbstractEntity> extends AbstractEntityCrudCompleteController<T> {
+public abstract class AbstractEagerEntityCrudCompleteController<T extends AbstractEntity>
+        extends AbstractEntityCrudCompleteController<T> {
+
+    private static Logger log = Logger.getLogger("abstract-eager-entity-crud-complete-controller");
 
     public AbstractEagerEntityCrudCompleteController(String entityClassName, Class<T> entityClass, Filter inicial,
             List<Condition> condicionesDisponibles,
@@ -99,7 +103,7 @@ public abstract class AbstractEagerEntityCrudCompleteController<T extends Abstra
      */
     public void loadData() {
         setLista(filterRepository.apply(filter.getFiltro()));
-        selectedData.clear();        
+        selectedData.clear();
     }
 
 }

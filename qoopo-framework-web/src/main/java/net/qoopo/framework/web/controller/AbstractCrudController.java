@@ -19,7 +19,8 @@ import net.qoopo.framework.web.components.nav.NavController;
 @Setter
 public abstract class AbstractCrudController<Entity, EntityData, EntityID> implements Serializable {
 
-    protected static Logger log = Logger.getLogger("abstract-admin-controller");
+    private static Logger log = Logger.getLogger("abstract-crud-controller");
+    
     protected Entity objeto = null;
     protected List<EntityData> selectedData = new ArrayList<>();
     protected Iterable<EntityData> data = new ArrayList<>();

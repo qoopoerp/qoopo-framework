@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -31,6 +32,8 @@ import net.qoopo.framework.web.util.FacesUtils;
 @Setter
 public abstract class AbstractCrudExportableController<Entity, EntityData, EntityID>
         extends AbstractCrudController<Entity, EntityData, EntityID> {
+
+    private static Logger log = Logger.getLogger("abstract-crud-exportable-controller");
 
     protected transient StreamedContent contenidoExportar;
     protected transient InputStream inputArchivoImport;

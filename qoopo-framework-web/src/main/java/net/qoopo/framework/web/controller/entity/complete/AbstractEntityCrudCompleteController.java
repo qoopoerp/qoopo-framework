@@ -1,18 +1,15 @@
 package net.qoopo.framework.web.controller.entity.complete;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
+import java.util.logging.Logger;
 
 import org.primefaces.event.DragDropEvent;
 import org.primefaces.event.ReorderEvent;
 
 import jakarta.faces.context.FacesContext;
-import jakarta.faces.event.ComponentSystemEvent;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +19,6 @@ import net.qoopo.framework.filter.FilterJpaRepository;
 import net.qoopo.framework.filter.core.Filter;
 import net.qoopo.framework.filter.core.condition.Condition;
 import net.qoopo.framework.filter.core.condition.Field;
-import net.qoopo.framework.filter.core.condition.Value;
 import net.qoopo.framework.jpa.core.AbstractEntity;
 import net.qoopo.framework.jpa.core.interfaces.Auditable;
 import net.qoopo.framework.jpa.core.interfaces.CoreMetadata;
@@ -30,7 +26,6 @@ import net.qoopo.framework.jpa.core.interfaces.Ordenable;
 import net.qoopo.framework.models.OpcionBase;
 import net.qoopo.framework.repository.QoopoJpaRepositorySingleton;
 import net.qoopo.framework.util.QLogger;
-import net.qoopo.framework.util.QoopoUtil;
 import net.qoopo.framework.web.components.viewoption.ViewOption;
 import net.qoopo.framework.web.controller.AbstractCrudCompleteController;
 import net.qoopo.framework.web.core.interfaces.AdminBeanProgressable;
@@ -48,6 +43,8 @@ import net.qoopo.framework.web.util.FacesUtils;
 public abstract class AbstractEntityCrudCompleteController<T extends AbstractEntity>
         extends AbstractCrudCompleteController<T, T, Long>
         implements AdminBeanProgressable {
+
+    private static Logger log = Logger.getLogger("abstract-entity-crud-complete-controller");
 
     public AbstractEntityCrudCompleteController(String entityClassName, Class<T> entityClass, Filter inicial,
             List<Condition> condicionesDisponibles,

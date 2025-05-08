@@ -43,7 +43,7 @@ public abstract class AbstractEagerEntityDetailCrudCompleteController<S extends 
 
     @Override
     public void edit(S item) {
-        super.edit(item); 
+        super.edit(item);
         listaEliminar.clear();
     }
 
